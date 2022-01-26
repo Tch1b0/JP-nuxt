@@ -1,5 +1,7 @@
 <template>
-    <header><top-bar></top-bar></header>
+    <header>
+        <top-bar></top-bar>
+    </header>
 </template>
 
 <script lang="ts">
@@ -8,10 +10,5 @@ import TopBar from "~~/components/TopBar.vue";
 
 export default defineComponent({
     components: { TopBar },
-    setup() {
-        useMeta({
-            title: "Johannes Pour - German Developer",
-        });
-    },
 });
 </script>

@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     css: ["@/assets/styles/styles.css"],
     serverMiddleware: [
         {
-            path: "/api",
+            path: "/api/",
             handler: "~/server/api.ts",
         },
     ],
