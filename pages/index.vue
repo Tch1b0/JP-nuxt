@@ -18,5 +18,4 @@ useMeta({
 
 const { data } = await useAsyncData("repository", () => $fetch("/api/repos"));
 const repos = [data.value[30], data.value[29], data.value[28]];
-console.log(repos);
 </script>
