@@ -1,10 +1,7 @@
 <template>
-    <div></div>
-    <!-- Some Project/Post -->
+    <div>
+        <!-- Some Project/Post -->
+    </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({});
-</script>
+<script setup lang="ts"></script>

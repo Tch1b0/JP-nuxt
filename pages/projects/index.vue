@@ -1,14 +1,16 @@
 <template>
-    <header>
-        <top-bar></top-bar>
-    </header>
+    <div>
+        <header>
+            <top-bar></top-bar>
+        </header>
+        <div class="grid grid-cols-4 w-max gap-5">
+            <project-card v-for="repo in repos" :repo="repo"></project-card>
+        </div>
+    </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import TopBar from "~~/components/TopBar.vue";
+<script setup lang="ts">
+const resp = useAsyncData("repositories", () => $fetch("/api/repos"));
 
-export default defineComponent({
-    components: { TopBar },
-});
+const repos = resp.data.value;
 </script>
