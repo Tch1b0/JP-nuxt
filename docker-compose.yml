@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+  server:
+    build: .
+    container_name: jp-nuxt
+    restart: always
+    ports:
+      - "3000:3000"
