@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "http";
-import { getProfile, getPublicRepos } from "./github";
+import { getProfile, getPublicRepos, getRate } from "./github";
 
 const username: string = "Tch1b0";
 
@@ -27,4 +27,5 @@ async function handleRoute(req: IncomingMessage, res: ServerResponse) {
 export default async (req: IncomingMessage, res: ServerResponse) => {
     res.setHeader("charset", "utf-8");
     await handleRoute(req, res);
+    res.end();
 };
