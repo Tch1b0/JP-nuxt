@@ -1,6 +1,7 @@
 import { Octokit } from "@octokit/rest";
 
 let repos: any;
+let profile: any;
 
 export async function getPublicRepos(username: string) {
     if (repos !== undefined) {
@@ -16,12 +17,18 @@ export async function getPublicRepos(username: string) {
 }
 
 export async function getProfile(username: string) {
-    const api = new Octokit();
-    const profile = await api.rest.users.getByUsername({ username });
+    if (profile !== undefined) {
+        console.log("NOT Fetching Profile");
+        return profile;
+    }
 
-    return profile.data;
+    const api = new Octokit();
+    const fetchedProfile = await api.rest.users.getByUsername({ username });
+    profile = fetchedProfile.data;
+
+    return fetchedProfile.data;
 }
 
 export async function getRate() {
-    return new Octokit().rateLimit.get();
+    return await new Octokit().rateLimit.get();
 }
