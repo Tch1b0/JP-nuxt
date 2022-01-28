@@ -1,5 +1,5 @@
 <template>
-    <div class="max-w-sm rounded overflow-hidden shadow-lg">
+    <div class="max-w-sm rounded overflow-hidden shadow-lg h-full">
         <div class="px-6 py-4 background-color">
             <div class="font-bold text-xl mb-2 background-color">
                 <a
@@ -13,7 +13,7 @@
                 {{ repo.description }}
             </p>
         </div>
-        <div class="px-6 pt-4 pb-2 background-color">
+        <div class="px-6 pt-4 pb-2 background-color h-full sticky">
             <tag-block v-for="tag of repo.topics" :key="tag"
                 >#{{ tag }}</tag-block
             >

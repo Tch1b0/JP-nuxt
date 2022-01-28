@@ -3,7 +3,7 @@
         <a @click="$router.push('/')">
             <img
                 class="hover:cursor-pointer hover:opacity-90 transition"
-                src="assets/icons/logo.png"
+                src="~~/public/logo.png"
                 width="70px"
                 alt="" />
         </a>

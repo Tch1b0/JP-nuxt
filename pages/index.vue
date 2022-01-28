@@ -10,14 +10,22 @@
                     class="pt-5"></project-card>
             </div>
         </div>
+        <div class="flex justify-center items-center">
+            <button
+                class="bg-slate-800 p-2 hover:bg-slate-700 rounded-lg transition shadow-sm"
+                @click="$router.push('/projects')">
+                All Projects
+            </button>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 useMeta({
     title: "Johannes Pour - German Developer",
+    meta: [{ description: "This website is about me & my projects" }],
 });
 
-const { data } = await useAsyncData("repository", () => $fetch("/api/repos"));
+const { data } = await useAsyncData("repositories", () => $fetch("/api/repos"));
 const repos = [data.value[30], data.value[29], data.value[28]];
 </script>
