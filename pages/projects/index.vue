@@ -1,10 +1,12 @@
 <template>
     <div>
-        <header>
+        <header class="mb-5">
             <top-bar></top-bar>
         </header>
-        <div class="grid grid-cols-4 w-max gap-5">
-            <project-card v-for="repo in repos" :repo="repo"></project-card>
+        <div class="flex justify-center items-center mb-5">
+            <div class="grid grid-cols-4 w-max gap-5">
+                <project-card v-for="repo in repos" :repo="repo"></project-card>
+            </div>
         </div>
     </div>
 </template>

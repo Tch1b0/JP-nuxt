@@ -3,7 +3,8 @@
         <div class="px-6 py-4 background-color">
             <div class="font-bold text-xl mb-2 background-color">
                 <a
-                    class="font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-blue-500 to-purple-500"
+                    class="font-extrabold text-transparent bg-clip-text bg-gradient-to-br"
+                    :class="[fromColor, toColor]"
                     :href="repo.html_url">
                     {{ repo.name }}
                 </a>
@@ -24,6 +25,13 @@
 defineProps({
     repo: Object,
 });
+const gradients = [
+    ["from-blue-500", "to-purple-500"],
+    ["from-green-400", "to-emerald-500"],
+    ["from-red-400", "to-red-600"],
+];
+const [fromColor, toColor] =
+    gradients[Math.floor(Math.random() * gradients.length)];
 </script>
 
 <style>
