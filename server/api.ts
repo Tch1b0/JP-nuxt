@@ -37,9 +37,13 @@ const handlers = {
             return 404;
         }
     },
+    async "/post-ids"(_: any) {
+        return JSON.stringify(postCollection.posts.map((post) => post.id));
+    },
     async "/viewed"(params: any[]) {
         const id = getIdFromParams(params);
         const post = postCollection.getById(id)[0];
+        console.log("Here");
         if (post !== undefined) {
             post.views++;
             return "";

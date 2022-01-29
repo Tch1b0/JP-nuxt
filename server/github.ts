@@ -1,9 +1,32 @@
 import { Octokit } from "@octokit/rest";
 
+export interface Repository {
+    name: string;
+    id: number;
+    description: string;
+    url: string;
+    html_url: string;
+}
+
+export interface Profile {
+    // The Username
+    login: string;
+
+    // Real name
+    name: string;
+    id: number;
+    url: string;
+    html_url: string;
+    avatar_url: string;
+    location: string;
+    followers: number;
+    following: number;
+}
+
 export default class GitHub {
     username: string;
-    _repos: any[];
-    _profile: any;
+    _repos: Repository[];
+    _profile: Profile;
     api: Octokit;
 
     constructor(username: string) {
@@ -11,18 +34,18 @@ export default class GitHub {
         this.api = new Octokit();
     }
 
-    async getRepos(): Promise<any[]> {
+    async getRepos(): Promise<Repository[]> {
         if (this._repos === undefined) {
             await this.fetchRepos();
         }
         return this._repos;
     }
 
-    setRepos(value: any[]) {
+    setRepos(value: Repository[]) {
         this._repos = value;
     }
 
-    async getProfile(): Promise<any> {
+    async getProfile(): Promise<Profile> {
         if (this._profile === undefined) {
             await this.fetchProfile();
         }
