@@ -23,6 +23,10 @@ export default class Post {
         return this.projectId;
     }
 
+    viewed() {
+        this.views++;
+    }
+
     public static fromJSON(json: string | object): Post {
         if (typeof json === "string") json = JSON.parse(json);
 

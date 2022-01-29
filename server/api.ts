@@ -31,6 +31,7 @@ const handlers = {
     async "/post"(params: string[]) {
         const id = getIdFromParams(params);
         const post = postCollection.getById(id)[0];
+        post.viewed();
         if (post !== undefined) {
             return JSON.stringify(post);
         } else {
@@ -43,9 +44,7 @@ const handlers = {
     async "/viewed"(params: string[]) {
         const id = getIdFromParams(params);
         const post = postCollection.getById(id)[0];
-        console.log("Here");
         if (post !== undefined) {
-            post.views++;
             return "";
         } else {
             return 404;
