@@ -1,34 +1,75 @@
 import { Octokit } from "@octokit/rest";
 
-let repos: any;
-let profile: any;
+export default class GitHub {
+    username: string;
+    _repos: any[];
+    _profile: any;
+    api: Octokit;
 
-export async function getPublicRepos(username: string) {
-    if (repos !== undefined) {
-        console.log("NOT Fetching Data");
-        return repos.data;
+    constructor(username: string) {
+        this.username = username;
+        this.api = new Octokit();
     }
 
-    const api = new Octokit();
-    repos = await api.rest.repos.listForUser({ username, per_page: 100 });
-    console.log("Fetching Data...");
-
-    return repos.data;
-}
-
-export async function getProfile(username: string) {
-    if (profile !== undefined) {
-        console.log("NOT Fetching Profile");
-        return profile;
+    async getRepos(): Promise<any[]> {
+        if (this._repos === undefined) {
+            await this.fetchRepos();
+        }
+        return this._repos;
     }
 
-    const api = new Octokit();
-    const fetchedProfile = await api.rest.users.getByUsername({ username });
-    profile = fetchedProfile.data;
+    setRepos(value: any[]) {
+        this._repos = value;
+    }
 
-    return fetchedProfile.data;
-}
+    async getProfile(): Promise<any> {
+        if (this._profile === undefined) {
+            await this.fetchProfile();
+        }
+        return this._profile;
+    }
 
-export async function getRate() {
-    return await new Octokit().rateLimit.get();
+    async setProfile(value: any) {
+        this._profile = value;
+    }
+
+    async fetchRepos() {
+        console.log("Fetching Repos");
+        this.setRepos(
+            (
+                await this.api.rest.repos.listForUser({
+                    username: this.username,
+                    per_page: 100,
+                })
+            ).data,
+        );
+    }
+
+    async fetchProfile() {
+        console.log("Fetching Profile");
+        this.setProfile(
+            (
+                await this.api.rest.users.getByUsername({
+                    username: this.username,
+                })
+            ).data,
+        );
+    }
+
+    /**
+     * Get a certain repository by its id
+     * @param id The id that is supposed to match the repos one
+     * @returns The matching repository
+     */
+    async getRepo(id: number) {
+        return (await this.getRepos()).filter((repo) => repo.id === id);
+    }
+
+    /**
+     * Get the request rate of the github API
+     * @returns The request rate object
+     */
+    async getRate() {
+        return (await this.api.rateLimit.get()).data;
+    }
 }
