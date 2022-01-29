@@ -19,7 +19,7 @@ import { Remarkable } from "remarkable";
 
 const projectId = useRoute().params.project;
 
-const repo: any = (
+const repo = (
     await useAsyncData<Repository>("repository", () =>
         $fetch(`/api/repo/${projectId}`),
     )
