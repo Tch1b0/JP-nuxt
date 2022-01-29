@@ -1,21 +1,25 @@
 <template>
     <div>
-        <h1>Hi!</h1>
+        <h1>{{ repo.name }}</h1>
+        <p>{{ repo.description }}</p>
+        <br />
+        <p>{{ post.article }}</p>
     </div>
 </template>
 
 <script setup lang="ts">
+import { Repository } from "~~/server/github";
+import Post from "~~/server/post";
+
 const projectId = useRoute().params.project;
 
-async function getData(name: string, uri: string) {
-    const { data, error } = await useAsyncData(name, () => $fetch(uri));
-    if (error !== undefined) {
-        navigateTo({ path: "/projects" });
-    } else {
-        return data.value;
-    }
-}
+const repo: any = (
+    await useAsyncData<Repository>("repository", () =>
+        $fetch(`/api/repo/${projectId}`),
+    )
+).data.value;
 
-const repo = await getData("repository", `/api/repo/${projectId}`);
-const post = await getData("post", `/api/post/${projectId}`);
+const post = (
+    await useAsyncData<Post>("post", () => $fetch(`/api/post/${projectId}`))
+).data.value;
 </script>

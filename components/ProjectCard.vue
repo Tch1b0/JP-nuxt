@@ -1,13 +1,21 @@
 <template>
     <div class="max-w-sm rounded overflow-hidden shadow-lg h-full">
         <div class="px-6 py-4 background-color">
-            <div class="font-bold text-xl mb-2 background-color">
+            <div class="flex font-bold text-xl mb-2 background-color">
                 <a
-                    class="font-extrabold text-transparent bg-clip-text bg-gradient-to-br"
-                    :class="[fromColor, toColor]"
+                    class="font-extrabold text-transparent bg-clip-text bg-gradient-to-br transition hover:text-yellow-500"
+                    :class="[fromColor, toColor, hasPost ? 'flex-1' : '']"
                     :href="repo.html_url">
                     {{ repo.name }}
                 </a>
+                <div class="flex-1 text-right background-color">
+                    <button
+                        v-if="hasPost"
+                        @click="$router.push(`/projects/${repo.id}`)"
+                        class="border-2 border-green-700 pl-2 pr-2 pb-1 rounded-xl text-green-600 text-sm md:text-lg transition hover:border-green-500 hover:text-green-400">
+                        read article
+                    </button>
+                </div>
             </div>
             <p class="text-gray-400 text-base background-color">
                 {{ repo.description }}
@@ -24,6 +32,10 @@
 <script setup lang="ts">
 defineProps({
     repo: Object,
+    hasPost: {
+        type: Boolean,
+        default: false,
+    },
 });
 const gradients = [
     ["from-blue-500", "to-purple-500"],
@@ -34,7 +46,7 @@ const [fromColor, toColor] =
     gradients[Math.floor(Math.random() * gradients.length)];
 </script>
 
-<style>
+<style scoped>
 .background-color {
     /* noinspection CssInvalidAtRule */
     @apply bg-gray-800;
