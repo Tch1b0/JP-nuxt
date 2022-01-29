@@ -27,3 +27,8 @@ npm build
 ```
 
 Checkout the [deployment documentation](https://v3.nuxtjs.org/docs/deployment).
+
+## TODO
+
+-   [ ] Add Banner
+        https://github-readme-stats.vercel.app/api/top-langs/?username=Tch1b0&layout=compact&theme=tokyonight
