@@ -9,7 +9,7 @@ export function splitUrl(url: string): { endpoint: string; params: string[] } {
     };
 }
 
-export function getIdFromParams(params: any[]): number {
+export function getIdFromParams(params: string[]): number {
     const [rawId] = params;
     return Number(rawId);
 }

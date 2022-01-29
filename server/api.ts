@@ -13,7 +13,7 @@ const handlers = {
     async "/repos"(_: any) {
         return JSON.stringify(await github.getRepos());
     },
-    async "/repo"(params: any[]) {
+    async "/repo"(params: string[]) {
         const id = getIdFromParams(params);
         const repo = (await github.getRepo(id))[0];
         if (repo !== undefined) {
@@ -28,7 +28,7 @@ const handlers = {
     async "/posts"(_: any) {
         return JSON.stringify(postCollection.posts);
     },
-    async "/post"(params: any[]) {
+    async "/post"(params: string[]) {
         const id = getIdFromParams(params);
         const post = postCollection.getById(id)[0];
         if (post !== undefined) {
@@ -40,7 +40,7 @@ const handlers = {
     async "/post-ids"(_: any) {
         return JSON.stringify(postCollection.posts.map((post) => post.id));
     },
-    async "/viewed"(params: any[]) {
+    async "/viewed"(params: string[]) {
         const id = getIdFromParams(params);
         const post = postCollection.getById(id)[0];
         console.log("Here");
