@@ -1,6 +1,5 @@
 <template>
     <div>
-        <header><top-bar></top-bar></header>
         <div>
             <img
                 :src="profile.avatar_url"

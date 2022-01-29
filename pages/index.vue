@@ -1,6 +1,5 @@
 <template>
     <div>
-        <header><top-bar></top-bar></header>
         <div class="flex justify-center items-center">
             <div
                 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-max gap-3 mb-5">
