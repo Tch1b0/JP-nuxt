@@ -7,7 +7,7 @@ export default class PostCollection {
         this.posts = posts || [];
     }
 
-    getByKey(key: number) {
-        return this.posts.filter((post) => post.key === key);
+    getById(id: number) {
+        return this.posts.filter((post) => post.id === id);
     }
 }

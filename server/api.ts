@@ -2,11 +2,11 @@ import type { IncomingMessage, ServerResponse } from "http";
 import GitHub from "./github";
 import Post from "./post";
 import PostCollection from "./postCollection";
-import { splitUrl } from "./utility";
+import { getIdFromParams, splitUrl } from "./utility";
 
 const github = new GitHub("Tch1b0");
 const postCollection = new PostCollection([
-    new Post(393051778, "This is a test Post.", []),
+    new Post(393051778, "This is a test Post.", [], 0),
 ]);
 
 const handlers = {
@@ -14,9 +14,8 @@ const handlers = {
         return JSON.stringify(await github.getRepos());
     },
     async "/repo"(params: any[]) {
-        const [rawKey] = params;
-        const key = Number(rawKey);
-        const repo = (await github.getRepo(key))[0];
+        const id = getIdFromParams(params);
+        const repo = (await github.getRepo(id))[0];
         if (repo !== undefined) {
             return JSON.stringify(repo);
         } else {
@@ -30,11 +29,20 @@ const handlers = {
         return JSON.stringify(postCollection.posts);
     },
     async "/post"(params: any[]) {
-        const [rawKey] = params;
-        const key = Number(rawKey);
-        const post = postCollection.getByKey(key)[0];
+        const id = getIdFromParams(params);
+        const post = postCollection.getById(id)[0];
         if (post !== undefined) {
             return JSON.stringify(post);
+        } else {
+            return 404;
+        }
+    },
+    async "/viewed"(params: any[]) {
+        const id = getIdFromParams(params);
+        const post = postCollection.getById(id)[0];
+        if (post !== undefined) {
+            post.views++;
+            return "";
         } else {
             return 404;
         }

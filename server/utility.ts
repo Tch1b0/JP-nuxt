@@ -8,3 +8,8 @@ export function splitUrl(url: string): { endpoint: string; params: string[] } {
         params,
     };
 }
+
+export function getIdFromParams(params: any[]): number {
+    const [rawId] = params;
+    return Number(rawId);
+}
