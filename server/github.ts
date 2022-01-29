@@ -40,6 +40,7 @@ export default class GitHub {
                 await this.api.rest.repos.listForUser({
                     username: this.username,
                     per_page: 100,
+                    sort: "updated",
                 })
             ).data,
         );
