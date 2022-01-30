@@ -1,32 +1,19 @@
-# Nuxt 3 Minimal Starter
+# JP-nuxt
 
-We recommend to look at the [documentation](https://v3.nuxtjs.org).
+My personal website
 
-## Setup
+## Built with
 
-Make sure to install the dependencies
-
-```bash
-npm install
-```
-
-## Development
-
-Start the development server on http://localhost:3000
-
-```bash
-npm dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm build
-```
-
-Checkout the [deployment documentation](https://v3.nuxtjs.org/docs/deployment).
+-   [TypeScript](https://www.typescriptlang.org/)
+-   [Vue.js v3](https://v3.vuejs.org/)
+-   [Nuxt 3](http://v3.nuxtjs.org/)
+-   [tailwindcss](https://tailwindcss.com/)
+-   [docker](https://www.docker.com/)
+-   [redis](https://redis.io/)/[redis.js](https://github.com/redis/node-redis)
+-   Smaller JavaScript libraries:
+    -   [remarkable](https://www.npmjs.com/package/remarkable)
+    -   [highlight.js](https://www.npmjs.com/package/highlight.js)
+    -   [dracula theme](https://github.com/dracula/highlightjs)
 
 ## TODO
 
