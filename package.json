@@ -19,6 +19,7 @@
         "@octokit/rest": "^18.12.0",
         "@types/redis": "^4.0.11",
         "@types/remarkable": "^2.0.3",
+        "highlight.js": "^11.4.0",
         "redis": "^4.0.2",
         "remarkable": "^2.0.1"
     }
