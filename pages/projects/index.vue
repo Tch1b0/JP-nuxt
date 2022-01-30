@@ -17,11 +17,16 @@ useMeta({
     title: "Johannes Pour - Projects",
 });
 
-const repos = (
+const rawRepos = (
     await useAsyncData<Repository[]>("repositories", () => $fetch("/api/repos"))
 ).data.value;
 
 const postIds = (
     await useAsyncData<number[]>("post-ids", () => $fetch("/api/post-ids"))
 ).data.value;
+
+// Sort the repos that have a post in front of those that don't
+const reposWithPosts = rawRepos.filter((repo) => postIds.includes(repo.id));
+const reposWithoutPosts = rawRepos.filter((repo) => !postIds.includes(repo.id));
+const repos = reposWithPosts.concat(reposWithoutPosts);
 </script>
