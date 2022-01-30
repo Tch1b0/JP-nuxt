@@ -6,7 +6,30 @@ import { getIdFromParams, splitUrl } from "./utility";
 
 const github = new GitHub("Tch1b0");
 const postCollection = new PostCollection([
-    new Post(393051778, "This is a test Post.", [], 0),
+    new Post(
+        355929028,
+        `# What is a BattleSnake?
+## Non-technical view
+A BattleSnake is a bot that competes against other bots in the famous [snake game](https://en.wikipedia.org/wiki/Snake_(video_game_genre)).
+
+## Technical view
+A BattleSnake is a http-Server with the endpoints \`/start\`, \`/move\` and \`/end\`. The BattleSnake Servers send a new request each turn, containing all the
+nessecary information.
+
+# Example response
+\`\`\`json
+{
+    "move": "up",
+    "shout": "WHY ARE WE SHOUTING?"
+}
+\`\`\`
+        `,
+        [
+            "https://api.johannespour.de/post/MoGo/logo",
+            "https://api.johannespour.de/post/MoGo/logo",
+        ],
+        0,
+    ),
 ]);
 
 const handlers = {
