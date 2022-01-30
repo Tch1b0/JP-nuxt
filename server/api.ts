@@ -9,24 +9,67 @@ const postCollection = new PostCollection([
     new Post(
         355929028,
         `# What is a BattleSnake?
-## Non-technical view
+
+## Non-technical View
+
 A BattleSnake is a bot that competes against other bots in the famous [snake game](https://en.wikipedia.org/wiki/Snake_(video_game_genre)).
 
-## Technical view
+## Technical View
+
 A BattleSnake is a http-Server with the endpoints \`/start\`, \`/move\` and \`/end\`. The BattleSnake Servers send a new request each turn, containing all the
 nessecary information.
 
-# Example response
+## Example Response
+
 \`\`\`json
 {
     "move": "up",
     "shout": "WHY ARE WE SHOUTING?"
 }
 \`\`\`
-        `,
+# Deconstructing Data
+Deconstructing data is **super easy**, thanks to the great interfaces in go!
+
+
+### JSON request
+
+\`\`\`json
+{
+    "id": "game-00fe20da-94ad-11ea-bb37",
+    "ruleset": {
+        "name": "standard",
+        "version": "v.1.2.3"
+    },
+    "timeout": 500
+}
+\`\`\`
+
+### Matching interfaces for deconstruction in go
+
+\`\`\`go
+type Game struct {
+	Id      string  \`json:"id"\`
+	Ruleset Ruleset \`json:"ruleset"\`
+	Timeout int     \`json:"timeout"\`
+}
+
+type Ruleset struct {
+	Name    string \`json:"name"\`
+	Version string \`json:"version"\`
+}
+\`\`\`
+
+# What I learned
+
+- how interfaces work in go
+- http servers in go
+- deconstructing json objects to interfaces in go
+- how apis work and how I can make them
+`,
         [
-            "https://api.johannespour.de/post/MoGo/logo",
-            "https://api.johannespour.de/post/MoGo/logo",
+            "https://pbs.twimg.com/profile_images/1407776521759051780/MNn7hJTM_400x400.jpg",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgblobscdn.gitbook.com%2Fassets%252F-M76ZsDOynN6TRQo1L1E%252F-MVwmCvFAbWdo1E5OJAS%252F-MVwxA3PZGn7vxSSD52p%252FConstrictor_Game.png%3Falt%3Dmedia%26token%3Daa551116-6b0b-4b96-924f-b1d0672d5cc2&f=1&nofb=1",
+            "https://blog.battlesnake.com/content/images/2021/06/MediumSocial-1.png",
         ],
         0,
     ),
