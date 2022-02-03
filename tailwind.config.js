@@ -1,5 +1,6 @@
 module.exports = {
     content: [
+        "./utility/*.{vue,js,ts}",
         "./assets/**/*.css",
         "./components/*.{vue,js,ts}",
         "./components/**/*.{vue,js,ts}",
