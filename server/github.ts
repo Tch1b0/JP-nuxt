@@ -6,6 +6,8 @@ export interface Repository {
     description: string;
     url: string;
     html_url: string;
+    topics: string[];
+    language: string;
 }
 
 export interface Profile {
@@ -41,7 +43,7 @@ export default class GitHub {
         return this._repos;
     }
 
-    setRepos(value: Repository[]) {
+    setRepos(value: any[]) {
         this._repos = value;
     }
 
