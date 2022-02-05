@@ -1,8 +1,17 @@
-import type { IncomingMessage, ServerResponse } from "http";
 import GitHub from "./classes/github";
 import Post from "./classes/post";
 import PostCollection from "./classes/postCollection";
-import { getIdFromParams, splitUrl } from "./utility";
+import Router, { sendJson } from "./router";
+import { IncomingMessage, ServerResponse } from "http";
+import { useBody } from "h3";
+import { User } from "./classes/user";
+
+const app = new Router();
+const admin = new User(
+    process.env["JP_USERNAME"] || "TestUser",
+    process.env["JP_PASSWORD"] || "TestPassword",
+);
+admin.genToken();
 
 const github = new GitHub("Tch1b0");
 const postCollection = new PostCollection([
@@ -75,77 +84,75 @@ type Ruleset struct {
     ),
 ]);
 
-const handlers = {
-    async "/repos"(_: any) {
-        return JSON.stringify(await github.getRepos());
-    },
-    async "/repo"(params: string[]) {
-        const id = getIdFromParams(params);
-        const repo = (await github.getRepo(id))[0];
-        if (repo !== undefined) {
-            return JSON.stringify(repo);
-        } else {
-            return 404;
-        }
-    },
-    async "/profile"(_: any) {
-        return JSON.stringify(await github.getProfile());
-    },
-    async "/posts"(_: any) {
-        return JSON.stringify(postCollection.posts);
-    },
-    async "/post"(params: string[]) {
-        const id = getIdFromParams(params);
-        const post = postCollection.getById(id)[0];
-        post.viewed();
-        if (post !== undefined) {
-            return JSON.stringify(post);
-        } else {
-            return 404;
-        }
-    },
-    async "/post-ids"(_: any) {
-        return JSON.stringify(postCollection.posts.map((post) => post.id));
-    },
-    async "/viewed"(params: string[]) {
-        const id = getIdFromParams(params);
-        const post = postCollection.getById(id)[0];
-        if (post !== undefined) {
-            return "";
-        } else {
-            return 404;
-        }
-    },
-};
-
-async function handleRoute(req: IncomingMessage, res: ServerResponse) {
-    const { endpoint, params } = splitUrl(req.url);
-
-    if (Object.keys(handlers).includes(endpoint)) {
-        res.setHeader("Content-Type", "application/json");
-
-        // response is string if data is sent or number if an error
-        // occured and needs to be handled
-        const response: string | number = await handlers[endpoint](params);
-        if (typeof response === "string") {
-            res.statusCode = 200;
-            res.end(response);
-        } else {
-            res.statusCode = response;
-            res.end();
-        }
-    } else {
-        res.setHeader("Content-Type", "text/plain");
-        res.statusCode = 404;
-        res.end(
-            `error: route '${
-                req.url
-            }' does not exist. Available endpoints: ${Object.keys(handlers)}`,
-        );
-    }
+function idFromReq(req: IncomingMessage) {
+    return Number(req.url.split("/")[2]);
 }
 
-export default async (req: IncomingMessage, res: ServerResponse) => {
-    res.setHeader("charset", "utf-8");
-    await handleRoute(req, res);
-};
+app.get("/", (req, res) => {
+    res.end("Ok");
+});
+app.get("/repos", async (req, res) => {
+    sendJson(res, await github.getRepos());
+});
+app.get("/repo", async (req, res) => {
+    const id = idFromReq(req);
+    const repo = (await github.getRepo(id))[0];
+    sendJson(res, repo);
+});
+app.get("/profile", async (req, res) => {
+    sendJson(res, await github.getProfile());
+});
+app.get("/posts", (req, res) => {
+    sendJson(res, postCollection.posts);
+});
+app.get("/post", (req, res) => {
+    const id = idFromReq(req);
+    const post = postCollection.getById(id)[0];
+    post.viewed();
+    sendJson(res, post.toJSON());
+});
+app.get("/post-ids", (req, res) => {
+    sendJson(
+        res,
+        postCollection.posts.map((post) => post.id),
+    );
+});
+app.get("/viewed/:id", (req, res) => {
+    const id = idFromReq(req);
+    const post = postCollection.getById(id)[0];
+    post.viewed();
+    res.end("Ok");
+});
+
+app.post("/login", async (req, res) => {
+    let body = await useBody(req);
+
+    const username = body.username._value;
+    const password = body.password._value;
+
+    if (username === admin.username && admin.comparePassword(password)) {
+        sendJson(res, { token: admin.token });
+    } else {
+        res.statusCode = 401;
+        res.end();
+    }
+});
+
+app.post("/validate", async (req, res) => {
+    const { token, "respond-json": respondJson } = await useBody<{
+        token: string;
+        "respond-json"?: boolean;
+    }>(req);
+
+    if (respondJson) {
+        sendJson(res, {
+            valid: admin.token === token,
+        });
+    } else {
+        res.statusCode = admin.token === token ? 200 : 401;
+        res.end();
+    }
+});
+
+export default (req: IncomingMessage, res: ServerResponse) =>
+    app.handle(req, res);
