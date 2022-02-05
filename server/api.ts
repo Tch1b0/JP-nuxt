@@ -1,7 +1,7 @@
 import GitHub from "./classes/github";
 import Post from "./classes/post";
 import PostCollection from "./classes/postCollection";
-import Router, { sendJson } from "./router";
+import Router, { sendJson, sendUnauthorized } from "./router";
 import { IncomingMessage, ServerResponse } from "http";
 import { useBody } from "h3";
 import { User } from "./classes/user";
@@ -88,6 +88,10 @@ function idFromReq(req: IncomingMessage) {
     return Number(req.url.split("/")[2]);
 }
 
+async function validate(req: IncomingMessage): Promise<boolean> {
+    return (await useBody<{ token: string }>(req)).token === admin.token;
+}
+
 app.get("/", (req, res) => {
     res.end("Ok");
 });
@@ -127,29 +131,58 @@ app.get("/viewed/:id", (req, res) => {
 app.post("/login", async (req, res) => {
     let body = await useBody(req);
 
-    const username = body.username._value;
-    const password = body.password._value;
+    const username = body.username;
+    const password = body.password;
 
     if (username === admin.username && admin.comparePassword(password)) {
         sendJson(res, { token: admin.token });
     } else {
-        res.statusCode = 401;
-        res.end();
+        sendUnauthorized(res);
     }
 });
 
 app.post("/validate", async (req, res) => {
-    const { token, "respond-json": respondJson } = await useBody<{
-        token: string;
-        "respond-json"?: boolean;
+    res.statusCode = (await validate(req)) ? 200 : 401;
+    res.end();
+});
+
+app.post("/post", async (req, res) => {
+    if (!(await validate(req))) {
+        sendUnauthorized(res);
+        return;
+    }
+
+    const {
+        "project-id": projectId,
+        article,
+        images,
+    } = await useBody<{
+        "project-id": number;
+        article: string;
+        images: string[];
     }>(req);
 
-    if (respondJson) {
-        sendJson(res, {
-            valid: admin.token === token,
-        });
+    const newPost = new Post(projectId, article, images, 0);
+    postCollection.add(newPost);
+    sendJson(res, newPost.toJSON());
+});
+
+app.delete("/post", async (req, res) => {
+    if (!(await validate(req))) {
+        sendUnauthorized(res);
+        return;
+    }
+
+    const { "project-id": projectId } = await useBody<{
+        "project-id": number;
+    }>(req);
+
+    const post = postCollection.getById(projectId)[0];
+    if (post) {
+        postCollection.remove(post);
+        sendJson(res, post);
     } else {
-        res.statusCode = admin.token === token ? 200 : 401;
+        res.statusCode = 404;
         res.end();
     }
 });
