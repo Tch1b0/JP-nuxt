@@ -8,7 +8,6 @@
         "start": "node .output/server/index.mjs"
     },
     "devDependencies": {
-        "@nuxtjs/svg": "^0.3.0",
         "@tch1b0/prettier-config": "^1.0.0",
         "autoprefixer": "^10.4.2",
         "nuxt3": "^3.0.0-27389502.88da719",
@@ -17,8 +16,10 @@
     },
     "dependencies": {
         "@octokit/rest": "^18.12.0",
+        "@types/bcrypt": "^5.0.0",
         "@types/redis": "^4.0.11",
         "@types/remarkable": "^2.0.3",
+        "bcrypt": "^5.0.1",
         "highlight.js": "^11.4.0",
         "redis": "^4.0.2",
         "remarkable": "^2.0.1"
