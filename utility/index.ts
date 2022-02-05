@@ -24,3 +24,19 @@ export async function getRepos(): Promise<Repository[]> {
 
     return response.data.value;
 }
+
+/*
+ * Validate that the current User is logged in
+ */
+export async function validate(): Promise<boolean> {
+    const auth = useCookie("Authorization");
+    if (auth.value === undefined) return false;
+
+    const token = auth.value.replace("Bearer ", "");
+    let valid: boolean;
+    await $fetch("/api/validate", { method: "POST", body: { token } })
+        .then(() => (valid = true))
+        .catch(() => (valid = false));
+
+    return valid;
+}
