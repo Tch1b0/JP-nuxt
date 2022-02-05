@@ -22,17 +22,16 @@
 </template>
 
 <script setup lang="ts">
-import { Repository } from "~~/server/github";
+import { getRepos } from "~~/utility";
 
 useMeta({
     title: "Johannes Pour - German Developer",
     meta: [{ description: "This website is about me & my projects" }],
 });
 
-const rawRepos = (
-    await useAsyncData<Repository[]>("repositories", () => $fetch("/api/repos"))
-).data.value;
-const repos = [rawRepos[0], rawRepos[1], rawRepos[2]];
+const repos = await getRepos();
+// Only take the first 3 repos
+repos.splice(3);
 
 const postIds = (
     await useAsyncData<number[]>("post-ids", () => $fetch("/api/post-ids"))

@@ -13,6 +13,10 @@
 import { Repository } from "~~/server/github";
 import { colorFromLang } from "~~/utility";
 
+useMeta({
+    title: "Johannes Pour - Topics",
+});
+
 const repos = (
     await useAsyncData<Repository[]>("repositories", () => $fetch("/api/repos"))
 ).data.value;

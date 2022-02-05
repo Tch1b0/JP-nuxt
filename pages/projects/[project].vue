@@ -30,8 +30,8 @@
 </template>
 
 <script setup lang="ts">
-import { Repository } from "~~/server/github";
-import Post from "~~/server/post";
+import { Repository } from "~~/server/classes/github";
+import Post from "~~/server/classes/post";
 import { Remarkable } from "remarkable";
 import hljs from "highlight.js";
 import "assets/styles/dracula-theme.css";
@@ -44,6 +44,12 @@ const repo = (
         $fetch(`/api/repo/${projectId}`),
     )
 ).data.value;
+
+useMeta({
+    title: `Johannes Pour - ${repo.name}`,
+    meta: [{ name: "description", content: repo.description }],
+});
+
 const post = (
     await useAsyncData<Post>("post", () => $fetch(`/api/post/${projectId}`))
 ).data.value;

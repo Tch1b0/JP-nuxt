@@ -22,16 +22,28 @@
             </p>
         </div>
         <div class="px-6 pt-4 pb-2 background-color h-full sticky">
-            <tag-block v-for="tag of repo.topics" :key="tag"
-                >#{{ tag }}</tag-block
+            <tag-block
+                v-for="topic of repo.topics"
+                :key="topic"
+                :clickable="clickableTags"
+                @click="$emit('tagClicked', topic)"
+                >#{{ topic }}</tag-block
             >
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+defineEmits<{
+    (event: "tagClicked", topic: string): void;
+}>();
+
 defineProps({
     repo: Object,
+    clickableTags: {
+        type: Boolean,
+        default: false,
+    },
     hasPost: {
         type: Boolean,
         default: false,
