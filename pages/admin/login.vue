@@ -15,7 +15,7 @@
                 <button
                     @click="login"
                     class="border-2 btn hover:bg-green-600 border-white rounded-md"
-                    :class="{ 'bg-red-600': error, 'hover:bg-red-600': error }">
+                    :class="error ? ['bg-red-600', 'hover:bg-red-600'] : ''">
                     Submit
                 </button>
             </div>
