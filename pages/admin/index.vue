@@ -1,13 +1,19 @@
 <template>
-    <div></div>
+    <div>
+        <h2 class="text-center text-gray-500">
+            Welcome back, {{ profile.login }}
+        </h2>
+    </div>
 </template>
 
 <script setup lang="ts">
-import { validate } from "~~/utility";
+import { Profile } from "~~/server/classes/github";
 
 definePageMeta({
-    middleware: ["preauth"],
+    middleware: ["auth"],
 });
 
-console.log(await validate());
+const profile = (
+    await useAsyncData<Profile>("profile", () => $fetch("/api/profile"))
+).data.value;
 </script>

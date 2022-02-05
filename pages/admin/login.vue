@@ -40,11 +40,12 @@ async function login() {
         .catch(() => (token = undefined));
 
     if (token !== undefined) {
-        const auth = useCookie("Authorization", {
+        const authCookie = useCookie("Authorization", {
             maxAge: 60 * 60 * 24 * 30,
             secure: true,
         });
-        auth.value = `Bearer ${token}`;
+        authCookie.value = `Bearer ${token}`;
+        useRouter().push("/admin");
     }
     // Todo: Handle wrong credentials
     else {
