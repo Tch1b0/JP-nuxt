@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { Repository } from "~~/server/github";
+import { Repository } from "~~/server/classes/github";
 import { colorFromLang } from "~~/utility";
 
 useMeta({
