@@ -3,8 +3,11 @@
 </template>
 
 <script setup lang="ts">
+import { validate } from "~~/utility";
+
 definePageMeta({
-    middleware: ["auth"],
+    middleware: ["preauth"],
 });
-console.log("Rendering page(?)");
+
+console.log(await validate());
 </script>
