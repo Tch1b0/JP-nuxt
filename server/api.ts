@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from "http";
 import GitHub from "./github";
-import Post from "./post";
-import PostCollection from "./postCollection";
+import Post from "./classes/post";
+import PostCollection from "./classes/postCollection";
 import { getIdFromParams, splitUrl } from "./utility";
 
 const github = new GitHub("Tch1b0");
