@@ -6,6 +6,11 @@ export function sendJson(res: ServerResponse, obj: any) {
     res.end(JSON.stringify(obj));
 }
 
+export function sendUnauthorized(res: ServerResponse) {
+    res.statusCode = 401;
+    res.end();
+}
+
 export default class Router {
     handlers: Map<
         string,
