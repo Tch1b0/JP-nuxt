@@ -1,8 +1,8 @@
 <template>
     <div>
-        <h2 class="text-center text-gray-500">
+        <h3 class="text-center text-gray-500">
             Welcome back, {{ profile.login }}
-        </h2>
+        </h3>
     </div>
 </template>
 
