@@ -15,7 +15,10 @@ My personal website
     -   [highlight.js](https://www.npmjs.com/package/highlight.js)
     -   [dracula theme](https://github.com/dracula/highlightjs)
 
-## TODO
+## Env variables
 
--   [ ] Add Banner
-        https://github-readme-stats.vercel.app/api/top-langs/?username=Tch1b0&layout=compact&theme=tokyonight
+```bash
+PORT
+JP_USERNAME
+JP_PASSWORD
+```
