@@ -1,4 +1,4 @@
-import { Repository } from "~~/server/github";
+import { Repository } from "~~/server/classes/github";
 
 export function colorFromLang(lang: string): string | undefined {
     const colors: Map<string, string> = new Map([
