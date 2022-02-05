@@ -14,7 +14,8 @@
                     placeholder="Password" />
                 <button
                     @click="login"
-                    class="border-2 btn hover:bg-green-600 border-white rounded-md">
+                    class="border-2 btn hover:bg-green-600 border-white rounded-md"
+                    :class="{ 'bg-red-600': error, 'hover:bg-red-600': error }">
                     Submit
                 </button>
             </div>
@@ -25,6 +26,7 @@
 <script setup lang="ts">
 const username = ref("");
 const password = ref("");
+const error = ref(false);
 
 async function login() {
     if (username.value.length === 0 || password.value.length === 0) return;
@@ -46,10 +48,9 @@ async function login() {
         });
         authCookie.value = `Bearer ${token}`;
         useRouter().push("/admin");
-    }
-    // Todo: Handle wrong credentials
-    else {
-        console.log("nooo you entered the wrong credentials :(");
+    } else {
+        error.value = true;
+        setTimeout(() => (error.value = false), 1000);
     }
 }
 </script>
