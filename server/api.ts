@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "http";
-import GitHub from "./github";
+import GitHub from "./classes/github";
 import Post from "./classes/post";
 import PostCollection from "./classes/postCollection";
 import { getIdFromParams, splitUrl } from "./utility";
