@@ -4,8 +4,7 @@
             v-for="topic of topics"
             class="text-gray-400"
             :class="topic.style"
-            >#{{ topic.text }}</tag-block
-        >
+            :topic="topic.text"></tag-block>
     </div>
 </template>
 

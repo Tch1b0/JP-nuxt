@@ -25,10 +25,7 @@
             <tag-block
                 v-for="topic of repo.topics"
                 :key="topic"
-                :clickable="clickableTags"
-                @click="$emit('tagClicked', topic)"
-                >#{{ topic }}</tag-block
-            >
+                :topic="topic"></tag-block>
         </div>
     </div>
 </template>
@@ -40,10 +37,6 @@ defineEmits<{
 
 defineProps({
     repo: Object,
-    clickableTags: {
-        type: Boolean,
-        default: false,
-    },
     hasPost: {
         type: Boolean,
         default: false,

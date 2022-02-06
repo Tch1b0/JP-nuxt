@@ -3,7 +3,7 @@
         <div class="flex flex-col justify-center items-center mt-5">
             <h3 class="text-2xl text-gray-400">Most viewed Projects</h3>
             <div
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-max gap-3 mb-5">
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ml-4 mr-4 gap-3 mb-5">
                 <project-card
                     v-for="repo in repos"
                     :repo="repo"
@@ -11,12 +11,15 @@
                     :has-post="postIds.includes(repo.id)"></project-card>
             </div>
         </div>
-        <div class="flex justify-center items-center">
-            <button
-                class="bg-slate-800 p-2 hover:bg-slate-700 rounded-lg transition shadow-sm"
-                @click="$router.push('/projects')">
-                All Projects
-            </button>
+        <div class="flex justify-center items-center mb-5">
+            <div class="grid grid-cols-2 gap-4">
+                <simple-button @clicked="$router.push('/projects')">
+                    All Projects
+                </simple-button>
+                <simple-button @clicked="$router.push('/projects/topics')"
+                    >All Topics</simple-button
+                >
+            </div>
         </div>
     </div>
 </template>

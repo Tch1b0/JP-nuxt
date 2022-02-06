@@ -24,6 +24,8 @@
 </template>
 
 <script setup lang="ts">
+import { getAuthCookie } from "~~/utility";
+
 const username = ref("");
 const password = ref("");
 const error = ref(false);
@@ -34,7 +36,7 @@ async function login() {
     let token: string | undefined;
     await $fetch<{ token: string }>("/api/login", {
         method: "POST",
-        body: { username, password },
+        body: { username: username.value, password: password.value },
     })
         .then((val) => {
             token = val.token;
@@ -42,10 +44,7 @@ async function login() {
         .catch(() => (token = undefined));
 
     if (token !== undefined) {
-        const authCookie = useCookie("Authorization", {
-            maxAge: 60 * 60 * 24 * 30,
-            secure: true,
-        });
+        const authCookie = getAuthCookie();
         authCookie.value = `Bearer ${token}`;
         useRouter().push("/admin");
     } else {

@@ -1,16 +1,39 @@
 <template>
     <span
         class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 hover:bg-gray-50 transition"
-        :class="{ 'hover:cursor-pointer': clickable }"
-        ><slot></slot
-    ></span>
+        :class="[
+            clickable ? 'hover:cursor-pointer' : '',
+            topicFilter.includes(topic)
+                ? 'hover:bg-red-500'
+                : 'hover:bg-green-500',
+        ]"
+        @click="clicked"
+        >#{{ topic }}</span
+    >
 </template>
 
 <script setup lang="ts">
-defineProps({
+import { addOrRemoveTopic } from "~~/composables/topicfilter";
+
+const props = defineProps({
     clickable: {
         type: Boolean,
-        default: false,
+        default: true,
+    },
+    topic: {
+        type: String,
+        required: true,
     },
 });
+
+const topicFilter = useTopicFilter();
+
+function clicked() {
+    if (!props.clickable) return;
+
+    addOrRemoveTopic(props.topic);
+    if (useRoute().path !== "/projects") {
+        useRouter().push("/projects");
+    }
+}
 </script>

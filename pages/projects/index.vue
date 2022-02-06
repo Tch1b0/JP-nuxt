@@ -1,22 +1,14 @@
 <template>
     <div class="flex gap-6 flex-col justify-center items-center mb-5 mt-5">
         <div>
-            <tag-block
-                v-for="topic of filterTopics"
-                class="hover:bg-red-500"
-                @click="removeFilter(topic)"
-                :clickable="true"
-                >#{{ topic }}</tag-block
-            >
+            <tag-block v-for="topic of filterTopics" :topic="topic"></tag-block>
         </div>
         <div
             class="grid grid-cols-1 w-11/12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:w-max gap-5">
             <project-card
                 v-for="repo in repos"
                 :repo="repo"
-                :has-post="postIds.includes(repo.id)"
-                :clickable-tags="true"
-                @tag-clicked="addFilter"></project-card>
+                :has-post="postIds.includes(repo.id)"></project-card>
         </div>
     </div>
 </template>
@@ -35,8 +27,8 @@ const postIds = (
     await useAsyncData<number[]>("post-ids", () => $fetch("/api/post-ids"))
 ).data.value;
 
-const filterTopics = reactive<string[]>([]);
-watch(filterTopics, () => filterRepos());
+const filterTopics = useTopicFilter();
+watch(filterTopics.value, filterRepos);
 
 const reposWithPosts = rawRepos.filter((repo) => postIds.includes(repo.id));
 const reposWithoutPosts = rawRepos.filter((repo) => !postIds.includes(repo.id));
@@ -47,9 +39,9 @@ let repos = ref<Repository[]>([...allRepos]);
 
 // Sort the repos that have a post in front of those that don't
 function filterRepos() {
-    if (filterTopics.length > 0) {
+    if (filterTopics.value.length > 0) {
         repos.value = allRepos.filter((repo) => {
-            for (const topic of filterTopics) {
+            for (const topic of filterTopics.value) {
                 if (!repo.topics.includes(topic)) return false;
             }
             return true;
@@ -59,13 +51,8 @@ function filterRepos() {
     }
 }
 
-function addFilter(topic: string) {
-    if (!filterTopics.includes(topic)) filterTopics.push(topic);
-}
-
-function removeFilter(topic: string) {
-    filterTopics.splice(filterTopics.indexOf(topic), 1);
-}
+// run initially
+filterRepos();
 
 // To add a topic-filter just do filterTopics.value.push(...)
 // To remove a topc-filter do filterTopics.value.remove(...)

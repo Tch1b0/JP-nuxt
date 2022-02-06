@@ -36,6 +36,10 @@ import { Remarkable } from "remarkable";
 import hljs from "highlight.js";
 import "assets/styles/dracula-theme.css";
 
+definePageMeta({
+    middleware: ["verifyproject"],
+});
+
 const projectId = useRoute().params.project;
 
 // Process api data
