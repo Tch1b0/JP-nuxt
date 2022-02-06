@@ -29,6 +29,7 @@ export function getAuthCookie() {
     return useCookie("Authorization", {
         maxAge: 60 * 60 * 24 * 30,
         secure: true,
+        path: "/",
     });
 }
 
