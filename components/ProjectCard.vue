@@ -15,6 +15,12 @@
                         class="border-2 border-green-700 pl-2 pr-2 pb-1 rounded-xl text-green-600 text-sm md:text-lg transition hover:border-green-500 hover:text-green-400">
                         read article
                     </button>
+                    <simple-button
+                        v-else-if="authed"
+                        @clicked="$router.push(`/admin/post/${repo.id}`)"
+                        class="text-sm">
+                        Create
+                    </simple-button>
                 </div>
             </div>
             <p class="text-gray-400 text-base background-color">
@@ -38,6 +44,10 @@ defineEmits<{
 defineProps({
     repo: Object,
     hasPost: {
+        type: Boolean,
+        default: false,
+    },
+    authed: {
         type: Boolean,
         default: false,
     },

@@ -8,6 +8,7 @@
                     v-for="repo in repos"
                     :repo="repo"
                     class="pt-5"
+                    :authed="authed"
                     :has-post="postIds.includes(repo.id)"></project-card>
             </div>
         </div>
@@ -25,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { getRepos } from "~~/utility";
+import { getRepos, validate } from "~~/utility";
 
 useMeta({
     title: "Johannes Pour - German Developer",
@@ -39,4 +40,6 @@ repos.splice(3);
 const postIds = (
     await useAsyncData<number[]>("post-ids", () => $fetch("/api/post-ids"))
 ).data.value;
+
+const authed = await validate();
 </script>
