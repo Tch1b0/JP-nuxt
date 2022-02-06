@@ -25,11 +25,18 @@ export async function getRepos(): Promise<Repository[]> {
     return response.data.value;
 }
 
+export function getAuthCookie() {
+    return useCookie("Authorization", {
+        maxAge: 60 * 60 * 24 * 30,
+        secure: true,
+    });
+}
+
 /*
  * Validate that the current User is logged in
  */
 export async function validate(): Promise<boolean> {
-    const auth = useCookie("Authorization");
+    const auth = getAuthCookie();
     if (auth.value === undefined) return false;
 
     const token = auth.value.replace("Bearer ", "");
