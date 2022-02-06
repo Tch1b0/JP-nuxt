@@ -112,7 +112,6 @@ app.get("/posts", (req, res) => {
 app.get("/post", (req, res) => {
     const id = idFromReq(req);
     const post = postCollection.getById(id)[0];
-    post.viewed();
     sendJson(res, post.toJSON());
 });
 app.get("/post-ids", (req, res) => {
@@ -121,7 +120,7 @@ app.get("/post-ids", (req, res) => {
         postCollection.posts.map((post) => post.id),
     );
 });
-app.get("/viewed/:id", (req, res) => {
+app.get("/viewed", (req, res) => {
     const id = idFromReq(req);
     const post = postCollection.getById(id)[0];
     post.viewed();
@@ -167,6 +166,35 @@ app.post("/post", async (req, res) => {
     sendJson(res, newPost.toJSON());
 });
 
+app.put("/post", async (req, res) => {
+    if (!(await validate(req))) {
+        sendUnauthorized(res);
+        return;
+    }
+
+    const {
+        "project-id": projectId,
+        article,
+        images,
+    } = await useBody<{
+        "project-id": number;
+        article: string;
+        images: string[];
+    }>(req);
+
+    const post = postCollection.getById(projectId)[0];
+
+    if (post === undefined) {
+        res.statusCode = 404;
+        res.end();
+    }
+
+    post.article = article;
+    post.images = images;
+
+    sendJson(res, post.toJSON());
+});
+
 app.delete("/post", async (req, res) => {
     if (!(await validate(req))) {
         sendUnauthorized(res);
@@ -180,7 +208,7 @@ app.delete("/post", async (req, res) => {
     const post = postCollection.getById(projectId)[0];
     if (post) {
         postCollection.remove(post);
-        sendJson(res, post);
+        sendJson(res, post.toJSON());
     } else {
         res.statusCode = 404;
         res.end();
