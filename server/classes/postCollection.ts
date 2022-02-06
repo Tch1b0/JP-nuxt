@@ -8,7 +8,9 @@ export default class PostCollection {
     }
 
     add(post: Post) {
-        this.posts.push(post);
+        // Only add post if there is no other with the same id
+        if (!this.posts.some((other) => other.id === post.id))
+            this.posts.push(post);
     }
 
     remove(post: Post) {
