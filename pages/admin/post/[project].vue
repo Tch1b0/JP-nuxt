@@ -3,28 +3,43 @@
         <post-title :repo="repo" class="ml-5 lg:ml-5"></post-title>
         <div
             class="flex flex-col flex-1 md:flex-row items-start ml-5 mr-5 gap-5 justify-center">
-            <div class="flex flex-col p-5 gap-5 bg-gray-800 flex-1 rounded-md">
+            <div class="grid p-5 gap-5 bg-gray-800 flex-1 rounded-md">
                 <textarea
                     v-model="article"
                     cols="30"
                     class="flex-1"
                     rows="10"
                     tabindex="1"></textarea>
-                <input type="url" name="" id="" />
+                <div class="flex flex-row bg-gray-800 gap-3">
+                    <input
+                        type="url"
+                        v-model="newImage"
+                        class="w-full rounded-md ml-3" />
+                    <simple-button
+                        class="min-h-fit"
+                        @clicked="images.push(newImage)"
+                        >+</simple-button
+                    >
+                </div>
                 <ul>
-                    <li v-for="imageUrl in images">
-                        <a :href="imageUrl">
-                            {{
-                                imageUrl.length > 40
-                                    ? imageUrl.slice(0, 40) + "..."
-                                    : imageUrl
-                            }}</a
-                        >
-                        <button
-                            class="ml-5 bg-red-600 rounded-lg pl-2 pr-2 hidden hover:block">
-                            X
-                        </button>
-                    </li>
+                    <transition-group>
+                        <li v-for="imageUrl in images" class="list-none">
+                            <simple-button
+                                @clicked="
+                                    images.splice(images.indexOf(imageUrl), 1)
+                                "
+                                class="pt-0 pb-0 bg-red-700 hover:bg-red-500 mr-2">
+                                x
+                            </simple-button>
+                            <a :href="imageUrl">
+                                {{
+                                    imageUrl.length > 40
+                                        ? imageUrl.slice(0, 40) + "..."
+                                        : imageUrl
+                                }}</a
+                            >
+                        </li>
+                    </transition-group>
                 </ul>
                 <simple-button
                     class="flex-1"
@@ -89,7 +104,7 @@ async function createPost() {
             token,
             "project-id": projectId,
             article: article.value,
-            images: [],
+            images: images.value,
         },
     })
         .then(() => (failed = false))
@@ -109,7 +124,7 @@ async function editPost() {
             token,
             "project-id": projectId,
             article: article.value,
-            images: [],
+            images: images.value,
         },
     })
         .then(() => (failed = false))
@@ -127,4 +142,22 @@ async function deletePost() {
         body: { token, "project-id": projectId },
     });
 }
+
+const newImage = ref("");
 </script>
+
+<style>
+.v-enter-active,
+.v-leave-active {
+    transition: all 0.5s ease;
+}
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
+}
+
+.v-leave-active {
+    position: absolute;
+}
+</style>
