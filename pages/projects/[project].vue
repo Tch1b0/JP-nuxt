@@ -5,6 +5,7 @@
             <simple-button
                 @clicked="$router.push(`/admin/post/${repo.id}`)"
                 class="text-base pr-4 pl-4"
+                v-if="authed"
                 >Edit</simple-button
             >
         </div>
