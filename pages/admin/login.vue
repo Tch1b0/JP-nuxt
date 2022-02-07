@@ -1,24 +1,24 @@
 <template>
-    <div>
-        <div class="grid place-items-center text-2xl">
-            <div class="grid gap-7 bg-gray-800 p-5 rounded-md">
-                <input
-                    class="bg-gray-800 border-2 border-gray-700 rounded-sm"
-                    type="text"
-                    v-model="username"
-                    placeholder="Username" />
-                <input
-                    class="bg-gray-800 border-2 border-gray-700 rounded-sm"
-                    type="text"
-                    v-model="password"
-                    placeholder="Password" />
-                <button
-                    @click="login"
-                    class="border-2 btn hover:bg-green-600 border-white rounded-md"
-                    :class="error ? ['bg-red-600', 'hover:bg-red-600'] : ''">
-                    Submit
-                </button>
-            </div>
+    <div class="grid place-items-center text-2xl mt-5">
+        <div class="grid gap-7 bg-gray-800 p-5 rounded-md">
+            <input
+                class="bg-gray-800 border-2 border-gray-700 rounded-sm"
+                type="text"
+                v-model="username"
+                @keyup.enter="login"
+                placeholder="Username" />
+            <input
+                class="bg-gray-800 border-2 border-gray-700 rounded-sm"
+                type="text"
+                v-model="password"
+                @keyup.enter="login"
+                placeholder="Password" />
+            <button
+                @click="login"
+                class="border-2 btn hover:bg-green-600 border-white rounded-md"
+                :class="error ? ['bg-red-600', 'hover:bg-red-600'] : ''">
+                Submit
+            </button>
         </div>
     </div>
 </template>
