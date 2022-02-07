@@ -5,11 +5,13 @@
         </div>
         <div
             class="grid grid-cols-1 w-11/12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:w-max gap-5">
-            <project-card
-                v-for="repo in repos"
-                :repo="repo"
-                :authed="authed"
-                :has-post="postIds.includes(repo.id)"></project-card>
+            <transition-group>
+                <project-card
+                    v-for="repo in repos"
+                    :repo="repo"
+                    :authed="authed"
+                    :has-post="postIds.includes(repo.id)"></project-card
+            ></transition-group>
         </div>
     </div>
 </template>
@@ -59,3 +61,16 @@ filterRepos();
 // To add a topic-filter just do filterTopics.value.push(...)
 // To remove a topc-filter do filterTopics.value.remove(...)
 </script>
+
+<style>
+.v-move, /* apply transition to moving elements */
+.v-enter-active,
+.v-leave-active {
+    transition: all 0.25s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+</style>
