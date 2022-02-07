@@ -1,7 +1,7 @@
 import GitHub from "./classes/github";
 import Post from "./classes/post";
 import PostCollection from "./classes/postCollection";
-import Router, { sendJson, sendUnauthorized } from "./router";
+import Router, { sendJson, sendUnauthorized, idFromReq } from "./router";
 import { IncomingMessage, ServerResponse } from "http";
 import { useBody } from "h3";
 import { User } from "./classes/user";
@@ -13,7 +13,7 @@ const admin = new User(
 );
 admin.genToken();
 
-const github = new GitHub("Tch1b0");
+const github = new GitHub(process.env["GH_USERNAME"] || "Tch1b0");
 const postCollection = new PostCollection([
     new Post(
         355929028,
@@ -84,18 +84,16 @@ type Ruleset struct {
     ),
 ]);
 
-function idFromReq(req: IncomingMessage) {
-    return Number(req.url.split("/")[2]);
-}
-
 async function validate(req: IncomingMessage): Promise<boolean> {
     return (await useBody<{ token: string }>(req)).token === admin.token;
 }
 
-app.get("/", (req, res) => {
+// GET requests
+
+app.get("/", (_, res) => {
     res.end("Ok");
 });
-app.get("/repos", async (req, res) => {
+app.get("/repos", async (_, res) => {
     sendJson(res, await github.getRepos());
 });
 app.get("/repo", async (req, res) => {
@@ -103,10 +101,10 @@ app.get("/repo", async (req, res) => {
     const repo = (await github.getRepo(id))[0];
     sendJson(res, repo);
 });
-app.get("/profile", async (req, res) => {
+app.get("/profile", async (_, res) => {
     sendJson(res, await github.getProfile());
 });
-app.get("/posts", (req, res) => {
+app.get("/posts", (_, res) => {
     sendJson(res, postCollection.posts);
 });
 app.get("/post", (req, res) => {
@@ -114,7 +112,13 @@ app.get("/post", (req, res) => {
     const post = postCollection.getById(id)[0];
     sendJson(res, post.toJSON());
 });
-app.get("/post-ids", (req, res) => {
+app.get("/repo-ids", async (_, res) => {
+    sendJson(
+        res,
+        (await github.getRepos()).map((repo) => repo.id),
+    );
+});
+app.get("/post-ids", (_, res) => {
     sendJson(
         res,
         postCollection.posts.map((post) => post.id),
@@ -126,6 +130,8 @@ app.get("/viewed", (req, res) => {
     post.viewed();
     res.end("Ok");
 });
+
+// POST requests
 
 app.post("/login", async (req, res) => {
     let body = await useBody(req);
@@ -166,6 +172,8 @@ app.post("/post", async (req, res) => {
     sendJson(res, newPost.toJSON());
 });
 
+// PUT requests
+
 app.put("/post", async (req, res) => {
     if (!(await validate(req))) {
         sendUnauthorized(res);
@@ -194,6 +202,8 @@ app.put("/post", async (req, res) => {
 
     sendJson(res, post.toJSON());
 });
+
+// DELETE requests
 
 app.delete("/post", async (req, res) => {
     if (!(await validate(req))) {

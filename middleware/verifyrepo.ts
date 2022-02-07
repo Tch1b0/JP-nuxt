@@ -1,5 +1,3 @@
-import { Repository } from "~~/server/classes/github";
-
 export default defineNuxtRouteMiddleware(async (to) => {
     let id: number;
     try {
@@ -7,9 +5,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
     } catch {
         return "/projects";
     }
-    const repos = await $fetch<Repository[]>("/api/repos");
+    const repoIds = await $fetch<number[]>("/api/repo-ids");
 
-    if (!repos.some((repo) => repo.id === id)) {
+    if (!repoIds.some((repoId) => repoId === id)) {
         return "/projects";
     }
 });
