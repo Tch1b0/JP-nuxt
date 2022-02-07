@@ -1,16 +1,26 @@
 import type { IncomingMessage, ServerResponse } from "http";
-import {} from "h3";
 
 export function sendJson(res: ServerResponse, obj: any) {
     res.setHeader("content-type", "application/json");
     res.end(JSON.stringify(obj));
 }
 
-export function sendUnauthorized(res: ServerResponse) {
+export function sendUnauthorized(res: ServerResponse): void {
     res.statusCode = 401;
     res.end();
 }
 
+/*
+ * Get the `id` pramater from the route
+ * @param req The request from which the id should be taken from
+ */
+export function idFromReq(req: IncomingMessage): number {
+    return Number(req.url.split("/")[2]);
+}
+
+/*
+ * The Router is used for passing a request to the right callback
+ */
 export default class Router {
     handlers: Map<
         string,
@@ -41,38 +51,64 @@ export default class Router {
         }
     }
 
+    private addHandler(
+        method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
+        route: string,
+        callback: (
+            req: IncomingMessage,
+            res: ServerResponse,
+        ) => Promise<void> | void,
+    ) {
+        this.handlers.get(method).set(route, callback);
+    }
+
     get(
         route: string,
-        callback: (req: IncomingMessage, res: ServerResponse) => void,
+        callback: (
+            req: IncomingMessage,
+            res: ServerResponse,
+        ) => Promise<void> | void,
     ) {
-        this.handlers.get("GET").set(route, callback);
+        this.addHandler("GET", route, callback);
     }
 
     post(
         route: string,
-        callback: (req: IncomingMessage, res: ServerResponse) => void,
+        callback: (
+            req: IncomingMessage,
+            res: ServerResponse,
+        ) => Promise<void> | void,
     ) {
-        this.handlers.get("POST").set(route, callback);
+        this.addHandler("POST", route, callback);
     }
 
     put(
         route: string,
-        callback: (req: IncomingMessage, res: ServerResponse) => void,
+        callback: (
+            req: IncomingMessage,
+            res: ServerResponse,
+        ) => Promise<void> | void,
     ) {
-        this.handlers.get("PUT").set(route, callback);
+        this.addHandler("PUT", route, callback);
     }
 
     patch(
         route: string,
-        callback: (req: IncomingMessage, res: ServerResponse) => void,
+        callback: (
+            req: IncomingMessage,
+            res: ServerResponse,
+        ) => Promise<void> | void,
     ) {
-        this.handlers.get("PATCH").set(route, callback);
+        this.addHandler("PATCH", route, callback);
     }
 
     delete(
         route: string,
-        callback: (req: IncomingMessage, res: ServerResponse) => void,
+        callback: (
+            req: IncomingMessage,
+            res: ServerResponse,
+        ) => Promise<void> | void,
     ) {
-        this.handlers.get("DELETE").set(route, callback);
+        this.addHandler("DELETE", route, callback);
     }
 }
