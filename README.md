@@ -21,4 +21,5 @@ My personal website
 PORT
 JP_USERNAME
 JP_PASSWORD
+GH_USERNAME
 ```
