@@ -4,7 +4,7 @@
             <tag-block v-for="topic of filterTopics" :topic="topic"></tag-block>
         </div>
         <div
-            class="grid grid-cols-1 w-11/12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:w-max gap-5">
+            class="grid grid-cols-1 w-11/12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:w-max gap-5">
             <transition-group>
                 <project-card
                     v-for="repo in repos"
