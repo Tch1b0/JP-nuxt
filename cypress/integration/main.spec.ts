@@ -15,14 +15,14 @@ describe("Visit Site as a User", () => {
 
     it("Visit aritcle page", () => {
         cy.visit("/projects");
-        cy.wait(800);
+        cy.wait(400);
         cy.contains("read article").click();
         cy.url().should("include", "/projects/");
     });
 
     it("Visit /projects/topics", () => {
         cy.visit("/projects/topics");
-        cy.wait(500);
+        cy.wait(200);
         cy.get("span").should("have.length.above", 5);
         cy.get("span").first().click();
 
