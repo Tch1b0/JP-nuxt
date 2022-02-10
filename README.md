@@ -41,6 +41,12 @@ cd ./JP-nuxt
 ```
 
 ```bash
+touch ./.env
+```
+
+Now add your [environmental variables](#env-variables) in the `.env` file
+
+```bash
 docker-compose build
 ```
 
