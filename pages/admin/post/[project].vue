@@ -112,7 +112,7 @@ async function createPost() {
     if (failed) {
         alert("Something went wrong!");
     } else {
-        alert("Post created!");
+        useRouter().push(`/projects/${projectId}`);
     }
 }
 
@@ -132,7 +132,7 @@ async function editPost() {
     if (failed) {
         alert("Something went wrong!");
     } else {
-        alert("Post edited!");
+        useRouter().push(`/projects/${projectId}`);
     }
 }
 
