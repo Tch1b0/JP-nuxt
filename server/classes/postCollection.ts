@@ -11,6 +11,7 @@ export default class PostCollection {
     }
 
     save() {
+        if (process.env["NODE_ENV"] !== "production") return;
         if (!fs.existsSync("./data")) fs.mkdirSync("./data");
 
         fs.writeFileSync(
