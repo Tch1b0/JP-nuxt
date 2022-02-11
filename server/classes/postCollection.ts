@@ -3,15 +3,17 @@ import fs from "fs";
 
 export default class PostCollection {
     posts: Post[];
+    isProduction: boolean;
 
     constructor(posts?: Post[]) {
         if (posts) this.posts = posts;
+        this.isProduction = process.env["NODE_ENV"] === "production";
         this.load();
         this.save();
     }
 
     save() {
-        if (process.env["NODE_ENV"] !== "production") return;
+        if (!this.isProduction) return;
         if (!fs.existsSync("./data")) fs.mkdirSync("./data");
 
         fs.writeFileSync(
