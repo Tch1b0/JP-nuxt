@@ -5,7 +5,9 @@
     "scripts": {
         "dev": "nuxi dev",
         "build": "nuxi build",
-        "start": "node .output/server/index.mjs"
+        "start": "node .output/server/index.mjs",
+        "test:e2e": "cypress run",
+        "test:unit": "echo \"Not implemented yet\""
     },
     "devDependencies": {
         "@tch1b0/prettier-config": "^1.0.0",
