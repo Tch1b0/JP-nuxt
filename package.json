@@ -12,6 +12,7 @@
     "devDependencies": {
         "@tch1b0/prettier-config": "^1.0.0",
         "@types/jest": "^27.4.0",
+        "chai": "^4.3.6",
         "cypress": "^9.4.1",
         "jest": "^27.5.1",
         "ts-jest": "^27.1.3"
