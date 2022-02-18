@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import { hashSync, compareSync } from "bcrypt";
 
 export class User {
     username: string;
@@ -7,15 +7,15 @@ export class User {
 
     constructor(username: string, password: string) {
         this.username = username;
-        this.password = bcrypt.hashSync(password, 10);
+        this.password = hashSync(password, 10);
     }
 
     public comparePassword(password: string): boolean {
-        return bcrypt.compareSync(password, this.password);
+        return compareSync(password, this.password);
     }
 
     public genToken(): string {
-        this.token = bcrypt.hashSync(Math.random().toString(16), 10);
+        this.token = hashSync(Math.random().toString(16), 10);
         return this.token;
     }
 
