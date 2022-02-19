@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import Post from "../../../server/classes/post";
-import { User } from "../../../server/classes/user";
+import Post from "@/server/classes/post";
+import { User } from "@/server/classes/user";
 
 describe("Test Backend", () => {
     it("Test User", () => {

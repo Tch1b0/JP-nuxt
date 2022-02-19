@@ -6,6 +6,7 @@
         "dev": "nuxi dev",
         "build": "nuxi build",
         "start": "node .output/server/index.mjs",
+        "test": "test:e2e && test:unit",
         "test:e2e": "cypress run",
         "test:unit": "jest"
     },
