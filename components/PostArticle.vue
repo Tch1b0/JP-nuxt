@@ -16,6 +16,52 @@ watch(props, () => render());
 
 const markdownArticle = reactive(ref(""));
 
+function urify(str: string): string {
+    let newStr = "";
+    for (const s of str) {
+        if (/ /.test(s)) {
+            newStr += "-";
+        } else {
+            newStr += s.toLowerCase();
+        }
+    }
+    return newStr;
+}
+
+function createTableOfContents(article: string): string {
+    let table = "";
+    for (const h1Raw of article.matchAll(/# ([\s\S])*?(?=([^#]# |$))/g)) {
+        const h1 = h1Raw
+            .toString()
+            .split("\n")
+            .find((val) => val.startsWith("# "))
+            .replace(/^# /, "");
+        table += `- [${h1}](#${urify(h1)})\n`;
+        for (const h2Raw of h1Raw
+            .toString()
+            .matchAll(/## ([\s\S])*?(?=([^#]## |$|[^#]# ))/g)) {
+            const h2 = h2Raw
+                .toString()
+                .split("\n")
+                .find((val) => val.startsWith("## "))
+                .replace(/^## /, "");
+            table += `\t- [${h2}](#${urify(h2)})\n`;
+            for (const h3Raw of h2Raw
+                .toString()
+                .matchAll(/### ([\s\S])*?(?=([^#]### |$|[^#]#?# ))/g)) {
+                const h3 = h3Raw
+                    .toString()
+                    .split("\n")
+                    .find((val) => val.startsWith("### "))
+                    .replace(/^### /, "");
+                table += `\t\t- [${h3}](#${urify(h3)})\n`;
+            }
+        }
+    }
+
+    return table;
+}
+
 function render() {
     // Handle data
     const markdownParser = new Remarkable({
@@ -31,7 +77,9 @@ function render() {
         html: true,
     });
 
-    markdownArticle.value = markdownParser.render(props.article);
+    markdownArticle.value = markdownParser.render(`# Content
+${createTableOfContents(props.article)}
+${props.article}`);
 
     // Add a horizontal line beneath every </h1>
     markdownArticle.value = markdownArticle.value.replace(
