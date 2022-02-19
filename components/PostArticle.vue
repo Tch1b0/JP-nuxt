@@ -21,7 +21,7 @@ function urify(str: string): string {
     for (const s of str) {
         if (/ /.test(s)) {
             newStr += "-";
-        } else {
+        } else if (/[^\.\!\?\*]/.test(s)) {
             newStr += s.toLowerCase();
         }
     }
@@ -62,6 +62,23 @@ function createTableOfContents(article: string): string {
     return table;
 }
 
+function addIdsToHeadings(article: string): string {
+    for (const heading of article.matchAll(/<h[1-3]>.*?<\/h[1-3]>/g)) {
+        const hNum = Number(
+            heading.toString().replaceAll(/<h|>.*?<\/h[1-3]>/g, ""),
+        );
+        const title = heading.toString().replaceAll(/<\/?h[1-3]>/g, "");
+        article = article.replace(
+            heading.toString(),
+            heading
+                .toString()
+                .replace(`<h${hNum}>`, `<h${hNum} id="${urify(title)}">`),
+        );
+    }
+
+    return article;
+}
+
 function render() {
     // Handle data
     const markdownParser = new Remarkable({
@@ -77,9 +94,11 @@ function render() {
         html: true,
     });
 
-    markdownArticle.value = markdownParser.render(`# Content
+    const htmlArticle = markdownParser.render(`# Content
 ${createTableOfContents(props.article)}
 ${props.article}`);
+
+    markdownArticle.value = addIdsToHeadings(htmlArticle);
 
     // Add a horizontal line beneath every </h1>
     markdownArticle.value = markdownArticle.value.replace(
@@ -118,8 +137,7 @@ li {
     @apply text-gray-200 mt-1 bg-transparent;
 }
 ul {
-    @apply ml-5;
-    list-style-type: disc;
+    @apply ml-5 odd:list-disc even:list-[circle];
 }
 code {
     @apply bg-gray-600 pl-1 pr-1 rounded-sm whitespace-pre-wrap;
