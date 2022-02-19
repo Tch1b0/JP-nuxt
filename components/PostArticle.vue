@@ -114,6 +114,11 @@ render();
 /*
  * Create markdown styles
  */
+
+html {
+    @apply scroll-smooth;
+}
+
 h1 {
     @apply text-3xl mt-5 bg-transparent font-semibold;
 }
@@ -144,7 +149,7 @@ code {
 }
 pre,
 pre > code {
-    @apply mt-3 mb-3 rounded-sm bg-slate-900;
+    @apply mt-3 mb-3 rounded-sm bg-slate-900 p-1;
 }
 hr {
     @apply border-gray-600 mb-3;
