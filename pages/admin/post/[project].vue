@@ -63,7 +63,7 @@
 import { getAuthCookie } from "~~/utility";
 
 definePageMeta({
-    middleware: [/* "auth", */ "verifyrepo"],
+    middleware: ["auth", "verifyrepo"],
 });
 
 const projectId = Number(useRoute().params.project);
