@@ -17,7 +17,7 @@ export function colorFromLang(lang: string): string | undefined {
         ["ruby", "red"],
         ["html", "orange"],
         ["javascript", "yellow"],
-        ["c[++", "pink"],
+        ["c++", "pink"],
         ["php", "blue"],
         ["java", "brown"],
     ]);
