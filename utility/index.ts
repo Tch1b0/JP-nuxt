@@ -3,6 +3,7 @@ import { Repository } from "~~/server/classes/github";
 export interface Post {
     "project-id": number;
     article: string;
+    images: string[];
     views: number;
 }
 
