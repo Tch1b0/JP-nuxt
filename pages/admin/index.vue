@@ -19,9 +19,7 @@ import type { Profile } from "~~/server/classes/github";
 import { getPosts, getRepos } from "~~/utility/index";
 
 definePageMeta({
-    middleware: [
-        /*"auth"*/
-    ],
+    middleware: ["auth"],
 });
 
 const profile = (
