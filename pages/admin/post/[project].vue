@@ -60,6 +60,7 @@
 </template>
 
 <script setup lang="ts">
+import Post from "~~/server/classes/post";
 import { getAuthCookie } from "~~/utility";
 
 definePageMeta({
@@ -83,9 +84,7 @@ const images = ref<string[]>([]);
 
 if (exists) {
     const response = (
-        await useAsyncData<{ article: string; images: string[] }>("post", () =>
-            $fetch(`/api/post/${projectId}`),
-        )
+        await useAsyncData<Post>("post", () => $fetch(`/api/post/${projectId}`))
     ).data.value;
 
     article.value = response.article;
