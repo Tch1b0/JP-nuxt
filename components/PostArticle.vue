@@ -29,31 +29,47 @@ function urify(str: string): string {
 }
 
 function createTableOfContents(article: string): string {
+    // create a new table
     let table = "";
+
+    // iterate over every level 1 heading
     for (const h1Raw of article.matchAll(/# ([\s\S])*?(?=([^#]# |$))/g)) {
+        // Get the content of the title
         const h1 = h1Raw
             .toString()
             .split("\n")
             .find((val) => val.startsWith("# "))
             .replace(/^# /, "");
+
+        // append the title to the table linked with an urified version of itself
         table += `- [${h1}](#${urify(h1)})\n`;
+
+        // iterate over every level 2 heading
         for (const h2Raw of h1Raw
             .toString()
             .matchAll(/## ([\s\S])*?(?=([^#]## |$|[^#]# ))/g)) {
+            // Get the content of the title
             const h2 = h2Raw
                 .toString()
                 .split("\n")
                 .find((val) => val.startsWith("## "))
                 .replace(/^## /, "");
+
+            // append the title to the table linked with an urified version of itself
             table += `\t- [${h2}](#${urify(h2)})\n`;
+
+            // iterate over every level 3 heading
             for (const h3Raw of h2Raw
                 .toString()
                 .matchAll(/### ([\s\S])*?(?=([^#]### |$|[^#]#?# ))/g)) {
+                // Get the content of the title
                 const h3 = h3Raw
                     .toString()
                     .split("\n")
                     .find((val) => val.startsWith("### "))
                     .replace(/^### /, "");
+
+                // append the title to the table linked with an urified version of itself
                 table += `\t\t- [${h3}](#${urify(h3)})\n`;
             }
         }
@@ -149,7 +165,7 @@ code {
 }
 pre,
 pre > code {
-    @apply mt-3 mb-3 rounded-sm bg-slate-900 p-1;
+    @apply mt-3 mb-3 rounded-sm bg-slate-900 p-1 text-xs sm:text-sm md:text-base;
 }
 hr {
     @apply border-gray-600 mb-3;
