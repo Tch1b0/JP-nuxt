@@ -105,7 +105,10 @@ app.get("/profile", async (_, res) => {
     sendJson(res, await github.getProfile());
 });
 app.get("/posts", (_, res) => {
-    sendJson(res, postCollection.posts);
+    sendJson(
+        res,
+        postCollection.posts.map((post) => post.toJSON()),
+    );
 });
 app.get("/post", (req, res) => {
     const id = idFromReq(req);
