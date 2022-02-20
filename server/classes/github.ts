@@ -13,7 +13,6 @@ export interface Repository {
 export interface Profile {
     // The Username
     login: string;
-
     // Real name
     name: string;
     id: number;
@@ -34,6 +33,12 @@ export default class GitHub {
     constructor(username: string) {
         this.username = username;
         this.api = new Octokit();
+
+        // re-fetch the GitHub data every 10 minutes
+        setInterval(async () => {
+            await this.fetchRepos();
+            await this.fetchProfile();
+        }, 10 * 60 * 1000);
     }
 
     async getRepos(): Promise<Repository[]> {
