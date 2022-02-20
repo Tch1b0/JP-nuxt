@@ -7,3 +7,4 @@ nuxt.d.ts
 data
 tests/e2e/videos
 tests/e2e/screenshots
+.vscode/
