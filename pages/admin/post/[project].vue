@@ -7,14 +7,14 @@
                 <textarea
                     v-model="article"
                     cols="30"
-                    class="flex-1"
+                    class="flex-1 bg-gray-900"
                     rows="10"
                     tabindex="1"></textarea>
                 <div class="flex flex-row bg-gray-800 gap-3">
                     <input
                         type="url"
                         v-model="newImage"
-                        class="w-full rounded-md ml-3" />
+                        class="w-full rounded-md ml-3 bg-gray-900" />
                     <simple-button
                         class="min-h-fit"
                         @clicked="images.push(newImage)"

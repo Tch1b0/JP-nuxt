@@ -1,5 +1,11 @@
 import { Repository } from "~~/server/classes/github";
 
+export interface Post {
+    "project-id": number;
+    article: string;
+    views: number;
+}
+
 export function colorFromLang(lang: string): string | undefined {
     const colors: Map<string, string> = new Map([
         ["go", "cyan"],
@@ -20,6 +26,14 @@ export function colorFromLang(lang: string): string | undefined {
 export async function getRepos(): Promise<Repository[]> {
     const response = await useAsyncData<Repository[]>("repositories", () =>
         $fetch("/api/repos"),
+    );
+
+    return response.data.value;
+}
+
+export async function getPosts(): Promise<Post[]> {
+    const response = await useAsyncData<Post[]>("posts", () =>
+        $fetch("/api/posts"),
     );
 
     return response.data.value;
