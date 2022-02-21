@@ -31,7 +31,7 @@ export default class PostCollection {
                 Post.fromJSON(json),
             );
             for (const post of filePosts) {
-                if (!this.postInCollection) this.posts.push(post);
+                if (!this.postInCollection(post)) this.posts.push(post);
             }
         }
     }
