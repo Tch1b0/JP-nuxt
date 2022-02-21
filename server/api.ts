@@ -80,7 +80,7 @@ type Ruleset struct {
             "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fgblobscdn.gitbook.com%2Fassets%252F-M76ZsDOynN6TRQo1L1E%252F-MVwmCvFAbWdo1E5OJAS%252F-MVwxA3PZGn7vxSSD52p%252FConstrictor_Game.png%3Falt%3Dmedia%26token%3Daa551116-6b0b-4b96-924f-b1d0672d5cc2&f=1&nofb=1",
             "https://blog.battlesnake.com/content/images/2021/06/MediumSocial-1.png",
         ],
-        0,
+        1,
     ),
 ]);
 
