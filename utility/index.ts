@@ -1,3 +1,5 @@
+import { Remarkable } from "remarkable";
+
 export * from "./datafetching";
 
 export function colorFromLang(lang: string): string | undefined {
@@ -39,4 +41,8 @@ export async function validate(): Promise<boolean> {
         .catch(() => (valid = false));
 
     return valid;
+}
+
+export function basicMdToHtml(markdownContent: string): string {
+    return new Remarkable().render(markdownContent);
 }
