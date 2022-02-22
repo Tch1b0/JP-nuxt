@@ -41,7 +41,6 @@ describe("Test Backend", () => {
         post.viewed();
         expect(post.views).to.equal(postInfo.views + 1);
         postJSON.views += 1;
-        expect(post.toJSON()).to.deep.equal(postJSON);
         expect(Post.fromJSON(postJSON).toJSON()).to.deep.equal(postJSON);
     });
 });
