@@ -131,6 +131,8 @@ app.get("/viewed", (req, res) => {
     const id = idFromReq(req);
     const post = postCollection.getById(id)[0];
     post.viewed();
+    postCollection.reverseSort();
+    postCollection.save();
     res.end("Ok");
 });
 
