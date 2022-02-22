@@ -10,10 +10,11 @@ My personal website
 -   [tailwindcss](https://tailwindcss.com/)
 -   [docker](https://www.docker.com/)
 -   [redis](https://redis.io/)/[redis.js](https://github.com/redis/node-redis)
--   Smaller JavaScript libraries:
+-   Smaller libraries:
     -   [remarkable](https://www.npmjs.com/package/remarkable)
     -   [highlight.js](https://www.npmjs.com/package/highlight.js)
     -   [dracula theme](https://github.com/dracula/highlightjs)
+    -   [jstoxml](https://github.com/davidcalhoun/jstoxml)
 
 ## Env variables
 

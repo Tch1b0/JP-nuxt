@@ -21,10 +21,12 @@
     "dependencies": {
         "@octokit/rest": "^18.12.0",
         "@types/bcrypt": "^5.0.0",
+        "@types/jstoxml": "^2.0.2",
         "@types/remarkable": "^2.0.3",
         "autoprefixer": "^10.4.2",
         "bcrypt": "^5.0.1",
         "highlight.js": "^11.4.0",
+        "jstoxml": "^2.2.9",
         "nuxt3": "^3.0.0-27389502.88da719",
         "postcss": "^8.4.5",
         "remarkable": "^2.0.1",
