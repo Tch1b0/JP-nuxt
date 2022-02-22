@@ -8,6 +8,10 @@ export default defineNuxtConfig({
             path: "/api/",
             handler: "~/server/api.ts",
         },
+        {
+            path: "/feed",
+            handler: "~/server/rss.ts",
+        },
     ],
     build: {
         postcss: {
