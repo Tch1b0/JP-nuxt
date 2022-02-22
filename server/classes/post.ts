@@ -3,17 +3,20 @@ export default class Post {
     article: string;
     images: string[];
     views: number;
+    pubDate: Date;
 
     constructor(
         projectId: number,
         article: string,
         images: string[],
         views: number,
+        pubDate: Date = new Date(),
     ) {
         this.projectId = projectId;
         this.article = article;
         this.images = images;
         this.views = views;
+        this.pubDate = pubDate;
     }
 
     /*
@@ -23,7 +26,7 @@ export default class Post {
         return this.projectId;
     }
 
-    viewed() {
+    async viewed() {
         this.views++;
     }
 
@@ -35,6 +38,7 @@ export default class Post {
             json["article"],
             json["images"],
             json["views"],
+            new Date(json["pub-date"]),
         );
     }
 
@@ -44,6 +48,7 @@ export default class Post {
             article: this.article,
             images: this.images,
             views: this.views,
+            "pub-date": this.pubDate,
         };
     }
 }
