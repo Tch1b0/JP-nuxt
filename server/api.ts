@@ -13,8 +13,8 @@ const admin = new User(
 );
 admin.genToken();
 
-const github = new GitHub(process.env["GH_USERNAME"] || "Tch1b0");
-const postCollection = new PostCollection([
+export const github = new GitHub(process.env["GH_USERNAME"] || "Tch1b0");
+export const postCollection = new PostCollection([
     new Post(
         355929028,
         `# What is a BattleSnake?
