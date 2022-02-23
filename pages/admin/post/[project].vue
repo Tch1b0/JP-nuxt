@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import Post from "~~/server/classes/post";
-import { getAuthCookie } from "~~/utility";
+import { getAuthCookie, getPostIds } from "~~/utility";
 
 definePageMeta({
     middleware: ["auth", "verifyrepo"],
@@ -73,9 +73,7 @@ const repo = (
     await useAsyncData("repo", () => $fetch(`/api/repo/${projectId}`))
 ).data.value;
 
-let exists = (
-    await useAsyncData<number[]>("post-ids", () => $fetch("/api/post-ids"))
-).data.value.includes(projectId);
+let exists = (await getPostIds()).includes(projectId);
 
 const token = getAuthCookie().value.replace("Bearer ", "");
 const articleRef = ref("");

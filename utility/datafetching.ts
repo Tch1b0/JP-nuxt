@@ -22,3 +22,11 @@ export async function getPosts(): Promise<Post[]> {
 
     return response.data.value;
 }
+
+export async function getPostIds(): Promise<number[]> {
+    const response = await useAsyncData<number[]>("post-ids", () =>
+        $fetch("/api/post-ids"),
+    );
+
+    return response.data.value;
+}
