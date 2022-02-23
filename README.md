@@ -9,7 +9,6 @@ My personal website
 -   [Nuxt 3](http://v3.nuxtjs.org/)
 -   [tailwindcss](https://tailwindcss.com/)
 -   [docker](https://www.docker.com/)
--   [redis](https://redis.io/)/[redis.js](https://github.com/redis/node-redis)
 -   Smaller libraries:
     -   [remarkable](https://www.npmjs.com/package/remarkable)
     -   [highlight.js](https://www.npmjs.com/package/highlight.js)
