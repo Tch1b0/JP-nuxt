@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { Repository } from "~~/server/classes/github";
-import { getRepos, validate } from "~~/utility";
+import { getPosts, getRepos, validate, getPostFromRepo } from "~~/utility";
 
 useMeta({
     title: "Johannes Pour - Projects",
@@ -27,14 +27,19 @@ useMeta({
 const rawRepos = await getRepos();
 const authed = await validate();
 
-const postIds = (
-    await useAsyncData<number[]>("post-ids", () => $fetch("/api/post-ids"))
-).data.value;
+const posts = await getPosts();
+const postIds = posts.map((post) => post["project-id"]);
 
 const filterTopics = useTopicFilter();
 watch(filterTopics.value, filterRepos);
+1;
 
-const reposWithPosts = rawRepos.filter((repo) => postIds.includes(repo.id));
+const reposWithPosts = rawRepos
+    .filter((repo) => postIds.includes(repo.id))
+    .sort(
+        (a, b) =>
+            getPostFromRepo(b, posts).views - getPostFromRepo(a, posts).views,
+    );
 const reposWithoutPosts = rawRepos.filter((repo) => !postIds.includes(repo.id));
 const allRepos = reposWithPosts.concat(reposWithoutPosts);
 
