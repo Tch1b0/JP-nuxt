@@ -1,6 +1,16 @@
 import { Remarkable } from "remarkable";
+import { Repository } from "~~/server/classes/github";
+import { Post } from "./datafetching";
 
 export * from "./datafetching";
+
+export function getPostFromRepo(repo: Repository, posts: Post[]) {
+    return posts.find((post) => post["project-id"] === repo.id);
+}
+
+export function getRepoFromPost(post: Post, repos: Repository[]) {
+    return repos.find((repo) => repo.id === post["project-id"]);
+}
 
 export function colorFromLang(lang: string): string | undefined {
     const colors: Map<string, string> = new Map([
