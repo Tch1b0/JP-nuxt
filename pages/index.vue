@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { getRepos, validate } from "~~/utility";
+import { getPostIds, getRepos, validate } from "~~/utility";
 
 useMeta({
     title: "Johannes Pour - German Developer",
@@ -37,9 +37,7 @@ const repos = await getRepos();
 // Only take the first 3 repos
 repos.splice(3);
 
-const postIds = (
-    await useAsyncData<number[]>("post-ids", () => $fetch("/api/post-ids"))
-).data.value;
+const postIds = await getPostIds();
 
 const authed = await validate();
 </script>
