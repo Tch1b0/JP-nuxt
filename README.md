@@ -10,6 +10,7 @@ My personal website
 -   [tailwindcss](https://tailwindcss.com/)
 -   [docker](https://www.docker.com/)
 -   Smaller libraries:
+    -   [vue-chart-3](https://github.com/victorgarciaesgi/vue-chart-3)
     -   [remarkable](https://www.npmjs.com/package/remarkable)
     -   [highlight.js](https://www.npmjs.com/package/highlight.js)
     -   [dracula theme](https://github.com/dracula/highlightjs)
