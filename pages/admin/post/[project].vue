@@ -67,12 +67,14 @@ definePageMeta({
 });
 
 const projectId = Number(useRoute().params.project);
-
-const repo = getRepo(projectId);
+const repo = await getRepo(projectId);
+useMeta({
+    title: `Johannes Pour - Edit ${repo.name}`,
+});
 
 let exists = (await getPostIds()).includes(projectId);
 
-const token = getAuthCookie().value.replace("Bearer ", "");
+const token = getAuthCookie().value.replace(/^Bearer /, "");
 const articleRef = ref("");
 const article = reactive(articleRef);
 const images = ref<string[]>([]);
