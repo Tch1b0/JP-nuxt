@@ -11,7 +11,6 @@ const admin = new User(
     process.env["JP_USERNAME"] || "TestUser",
     process.env["JP_PASSWORD"] || "TestPassword",
 );
-admin.genToken();
 
 export const github = new GitHub(process.env["GH_USERNAME"] || "Tch1b0");
 export const postCollection = new PostCollection([

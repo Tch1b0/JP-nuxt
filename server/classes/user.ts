@@ -15,6 +15,7 @@ export class User {
         this.username = username;
         this.password = hashSync(password, 10);
 
+        this.genToken();
         if (autoRegenerateToken) {
             // Regenerate the token every 15 days
             setDayInterval(() => this.genToken(), 15);
