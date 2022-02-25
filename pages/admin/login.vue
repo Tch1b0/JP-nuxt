@@ -32,6 +32,10 @@
 <script setup lang="ts">
 import { getAuthCookie } from "~~/utility";
 
+useMeta({
+    title: "Johannes Pour - Admin Login",
+});
+
 const username = ref("");
 const password = ref("");
 const error = ref(false);
