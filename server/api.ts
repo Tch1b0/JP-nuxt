@@ -13,7 +13,12 @@ const admin = new User(
 );
 
 export const github = new GitHub(process.env["GH_USERNAME"] || "Tch1b0");
-export const postCollection = new PostCollection();
+
+const templatePosts =
+    process.env["NODE_ENV"] === "production"
+        ? undefined
+        : [new Post(393093009, "test", [], 0)];
+export const postCollection = new PostCollection(templatePosts);
 
 async function validate(req: IncomingMessage): Promise<boolean> {
     return (await useBody<{ token: string }>(req)).token === admin.token;
