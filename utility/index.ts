@@ -1,4 +1,3 @@
-import { CookieRef } from "nuxt3";
 import { Remarkable } from "remarkable";
 import { Repository } from "~~/server/classes/github";
 import { Post } from "./datafetching";
@@ -30,7 +29,7 @@ export function colorFromLang(lang: string): string | undefined {
     return colors.get(lang);
 }
 
-export function getAuthCookie(): CookieRef<string> {
+export function getAuthCookie() {
     return useCookie("Authorization", {
         maxAge: 60 * 60 * 24 * 30,
         secure: true,
