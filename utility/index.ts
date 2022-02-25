@@ -1,14 +1,15 @@
+import { CookieRef } from "nuxt3";
 import { Remarkable } from "remarkable";
 import { Repository } from "~~/server/classes/github";
 import { Post } from "./datafetching";
 
 export * from "./datafetching";
 
-export function getPostFromRepo(repo: Repository, posts: Post[]) {
+export function getPostFromRepo(repo: Repository, posts: Post[]): Post {
     return posts.find((post) => post["project-id"] === repo.id);
 }
 
-export function getRepoFromPost(post: Post, repos: Repository[]) {
+export function getRepoFromPost(post: Post, repos: Repository[]): Repository {
     return repos.find((repo) => repo.id === post["project-id"]);
 }
 
@@ -29,7 +30,7 @@ export function colorFromLang(lang: string): string | undefined {
     return colors.get(lang);
 }
 
-export function getAuthCookie() {
+export function getAuthCookie(): CookieRef<string> {
     return useCookie("Authorization", {
         maxAge: 60 * 60 * 24 * 30,
         secure: true,
@@ -58,3 +59,23 @@ export function basicMdToHtml(markdownContent: string): string {
 }
 
 export const boolToInt = (bool: boolean) => (bool ? 1 : 0);
+
+/**
+ * Calls a callback every `days` days
+ * @param callback The callback that should be called after the days passed
+ * @param days How many days to wait
+ */
+export function setDayInterval(callback: () => void, days: number): void {
+    let daysPassed = 0;
+    const secondsOfDay = 24 * 60 * 60 * 1000;
+    const timeoutCallback = () => {
+        daysPassed++;
+        if (daysPassed === days) {
+            callback();
+            daysPassed = 0;
+        }
+        setTimeout(() => timeoutCallback(), secondsOfDay);
+    };
+
+    setTimeout(() => timeoutCallback(), secondsOfDay);
+}

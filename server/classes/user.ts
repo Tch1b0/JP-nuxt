@@ -1,5 +1,6 @@
 import { hashSync, compareSync } from "bcrypt";
 import { nanoid } from "nanoid";
+import { setDayInterval } from "~~/utility";
 
 export class User {
     username: string;
@@ -10,8 +11,8 @@ export class User {
         this.username = username;
         this.password = hashSync(password, 10);
 
-        // Generate a new token every 24 hours, to force login of admin
-        setInterval(() => this.genToken(), 24 * 60 * 60 * 1000);
+        // Regenerate the token every 15 days
+        setDayInterval(() => this.genToken(), 15);
     }
 
     public comparePassword(password: string): boolean {
