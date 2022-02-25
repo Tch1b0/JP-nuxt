@@ -18,14 +18,8 @@
 </template>
 
 <script setup lang="ts">
-import { Profile } from "~~/server/classes/github";
 import { getProfile } from "~~/utility";
 
 const authed = useAuthed();
-
-let profile: Profile;
-
-if (authed.value) {
-    profile = await getProfile();
-}
+const profile = await getProfile();
 </script>
