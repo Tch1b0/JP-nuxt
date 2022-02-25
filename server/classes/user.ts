@@ -7,12 +7,18 @@ export class User {
     password: string;
     token: string;
 
-    constructor(username: string, password: string) {
+    constructor(
+        username: string,
+        password: string,
+        autoRegenerateToken: boolean = true,
+    ) {
         this.username = username;
         this.password = hashSync(password, 10);
 
-        // Regenerate the token every 15 days
-        setDayInterval(() => this.genToken(), 15);
+        if (autoRegenerateToken) {
+            // Regenerate the token every 15 days
+            setDayInterval(() => this.genToken(), 15);
+        }
     }
 
     public comparePassword(password: string): boolean {

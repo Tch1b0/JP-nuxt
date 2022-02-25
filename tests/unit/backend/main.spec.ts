@@ -9,7 +9,11 @@ describe("Test Backend", () => {
             password: "TestPassword",
         };
 
-        const user = new User(credentials.username, credentials.password);
+        const user = new User(
+            credentials.username,
+            credentials.password,
+            false,
+        );
 
         expect(user.username).to.equal(credentials.username);
 
