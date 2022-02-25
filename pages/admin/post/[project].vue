@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import Post from "~~/server/classes/post";
-import { getAuthCookie, getPostIds } from "~~/utility";
+import { getAuthCookie, getPost, getPostIds } from "~~/utility";
 
 definePageMeta({
     middleware: ["auth", "verifyrepo"],
@@ -81,9 +81,7 @@ const article = reactive(articleRef);
 const images = ref<string[]>([]);
 
 if (exists) {
-    const response = (
-        await useAsyncData<Post>("post", () => $fetch(`/api/post/${projectId}`))
-    ).data.value;
+    const response = await getPost(projectId);
 
     article.value = response.article;
     images.value = response.images;

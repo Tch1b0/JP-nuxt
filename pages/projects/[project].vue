@@ -33,7 +33,7 @@
 import { Repository } from "~~/server/classes/github";
 import Post from "~~/server/classes/post";
 import "assets/styles/dracula-theme.css";
-import { validate } from "~~/utility";
+import { getPost, getRepo, validate } from "~~/utility";
 
 definePageMeta({
     middleware: ["verifyproject", "viewpost"],
@@ -42,20 +42,14 @@ definePageMeta({
 const projectId = useRoute().params.project;
 
 // Process api data
-const repo = (
-    await useAsyncData<Repository>("repository", () =>
-        $fetch(`/api/repo/${projectId}`),
-    )
-).data.value;
+const repo = await getRepo(projectId.toString());
 
 useMeta({
     title: `Johannes Pour - ${repo.name}`,
     meta: [{ name: "description", content: repo.description }],
 });
 
-const post = (
-    await useAsyncData<Post>("post", () => $fetch(`/api/post/${projectId}`))
-).data.value;
+const post = await getPost(projectId.toString());
 
 const authed = await validate();
 </script>

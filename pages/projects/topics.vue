@@ -10,15 +10,13 @@
 
 <script setup lang="ts">
 import { Repository } from "~~/server/classes/github";
-import { colorFromLang } from "~~/utility";
+import { colorFromLang, getRepos } from "~~/utility";
 
 useMeta({
     title: "Johannes Pour - Topics",
 });
 
-const repos = (
-    await useAsyncData<Repository[]>("repositories", () => $fetch("/api/repos"))
-).data.value;
+const repos = await getRepos();
 
 const rawTopics = [];
 const topics: Array<{ text: string; style: string[] }> = [];
