@@ -2,7 +2,7 @@ describe("Visit Site as a User", () => {
     it("Visit /", () => {
         cy.visit("/");
         cy.get("img").should("be.visible");
-        cy.get(".grid").children("div").should("have.length", 3);
+        cy.get("#example-projects").children("div").should("have.length", 3);
     });
 
     it("Visit /projects", () => {
