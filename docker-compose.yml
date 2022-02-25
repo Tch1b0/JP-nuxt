@@ -6,6 +6,6 @@ services:
     container_name: jp-nuxt
     restart: always
     ports:
-      - "3000:3000"
+      - "${SERVER_PORT}:3000"
     volumes:
       - "./data:/app/data"
