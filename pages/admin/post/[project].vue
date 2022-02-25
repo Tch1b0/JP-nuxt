@@ -51,6 +51,12 @@
                     @clicked="handlePost"
                     >{{ exists ? "Edit Post" : "Create Post" }}</simple-button
                 >
+                <simple-button
+                    v-if="exists"
+                    class="flex-1 bg-red-600 hover:bg-red-500"
+                    @clicked="deletePost"
+                    >Delete</simple-button
+                >
             </div>
             <div class="p-5 bg-gray-800 flex-1 rounded-md">
                 <post-article :article="article"></post-article>
@@ -63,7 +69,7 @@
 import { getAuthCookie, getPost, getPostIds, getRepo } from "~~/utility";
 
 definePageMeta({
-    middleware: ["auth", "verifyrepo"],
+    middleware: [/*"auth",*/ "verifyrepo"],
 });
 
 const projectId = Number(useRoute().params.project);
@@ -136,10 +142,18 @@ async function editPost() {
 }
 
 async function deletePost() {
+    let failed: boolean;
     await $fetch("/api/post", {
         method: "DELETE",
         body: { token, "project-id": projectId },
-    });
+    })
+        .then(() => (failed = false))
+        .catch(() => (failed = true));
+    if (failed) {
+        alert("Something went wrong!");
+    } else {
+        await useRouter().push(`/projects`);
+    }
 }
 
 const newImage = ref("");
