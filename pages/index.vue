@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="flex flex-col items-center justify-center mt-5">
-            <h3 class="text-2xl text-gray-400 mb-5">About me</h3>
-            <about-me class="w-[26rem] lg:w-[40rem]"></about-me>
+            <h3 class="text-2xl text-gray-400 mb-4">About me</h3>
+            <about-me class="w-[25rem] md:w-[40rem]"></about-me>
         </div>
         <div class="flex flex-col justify-center items-center mt-5">
             <h3 class="text-2xl text-gray-400">Most viewed projects</h3>
