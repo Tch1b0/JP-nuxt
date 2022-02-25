@@ -19,12 +19,19 @@ My personal website
 
 ## Env variables
 
-Declare these in the `.env` file
+Declare these variables in the `.env` file
 
 ```bash
-PORT
+# the port the server should run on
+SERVER_PORT
+
+# the admin username for the site
 JP_USERNAME
+
+# the admin password for the site
 JP_PASSWORD
+
+# your GitHub username
 GH_USERNAME
 ```
 
