@@ -22,6 +22,7 @@ export interface Profile {
     location: string;
     followers: number;
     following: number;
+    bio: string;
 }
 
 export default class GitHub {
