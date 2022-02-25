@@ -7,7 +7,7 @@ describe("Visit Site as a User", () => {
 
     it("Visit /projects", () => {
         cy.visit("/projects");
-        const gridChildren = cy.get("#example-projects").children("div");
+        const gridChildren = cy.get(".grid").children("div");
         gridChildren.should("have.length.above", 3);
         cy.get("span").first().click();
         gridChildren.should("have.length.below", 3);
