@@ -6,7 +6,7 @@ export default class PostCollection {
     isProduction: boolean;
 
     constructor(posts?: Post[]) {
-        if (posts) this.posts = posts;
+        this.posts = posts ?? [];
         this.isProduction = process.env["NODE_ENV"] === "production";
         this.load();
         this.save();
