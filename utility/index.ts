@@ -79,3 +79,11 @@ export function setDayInterval(callback: () => void, days: number): void {
 
     setTimeout(() => timeoutCallback(), secondsOfDay);
 }
+
+export function calculateAge(birthdate: Date): number {
+    const monthDifference = Date.now() - birthdate.getTime();
+    const AgeDt = new Date(monthDifference);
+    const year = AgeDt.getUTCFullYear();
+
+    return Math.abs(year - 1970);
+}
