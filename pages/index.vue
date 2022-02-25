@@ -1,11 +1,9 @@
 <template>
     <div>
         <div class="flex flex-col items-center justify-center mt-5">
-            <h3 class="text-2xl text-gray-400 mb-4">About me</h3>
-            <about-me class="w-[25rem] md:w-[40rem]"></about-me>
+            <about-me class="w-[22rem] sm:w-[25rem] md:w-[40rem]"></about-me>
         </div>
         <div class="flex flex-col justify-center items-center mt-5">
-            <h3 class="text-2xl text-gray-400">Most viewed projects</h3>
             <div
                 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ml-4 mr-4 gap-3 mb-5"
                 id="example-projects">
