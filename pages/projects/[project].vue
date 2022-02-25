@@ -30,8 +30,6 @@
 </template>
 
 <script setup lang="ts">
-import { Repository } from "~~/server/classes/github";
-import Post from "~~/server/classes/post";
 import "assets/styles/dracula-theme.css";
 import { getPost, getRepo, validate } from "~~/utility";
 

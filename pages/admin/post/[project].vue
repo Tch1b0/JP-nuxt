@@ -60,8 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import Post from "~~/server/classes/post";
-import { getAuthCookie, getPost, getPostIds } from "~~/utility";
+import { getAuthCookie, getPost, getPostIds, getRepo } from "~~/utility";
 
 definePageMeta({
     middleware: ["auth", "verifyrepo"],
@@ -69,9 +68,7 @@ definePageMeta({
 
 const projectId = Number(useRoute().params.project);
 
-const repo = (
-    await useAsyncData("repo", () => $fetch(`/api/repo/${projectId}`))
-).data.value;
+const repo = getRepo(projectId);
 
 let exists = (await getPostIds()).includes(projectId);
 
