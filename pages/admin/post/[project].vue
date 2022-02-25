@@ -70,6 +70,11 @@ const projectId = Number(useRoute().params.project);
 const repo = await getRepo(projectId);
 useMeta({
     title: `Johannes Pour - Edit ${repo.name}`,
+    meta: [
+        {
+            description: repo.description,
+        },
+    ],
 });
 
 let exists = (await getPostIds()).includes(projectId);
