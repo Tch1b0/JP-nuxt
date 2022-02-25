@@ -8,7 +8,6 @@
                     v-for="repo in repos"
                     :repo="repo"
                     class="pt-5"
-                    :authed="authed"
                     :has-post="postIds.includes(repo.id)"></project-card>
             </div>
         </div>
@@ -26,18 +25,18 @@
 </template>
 
 <script setup lang="ts">
-import { getPostIds, getRepos, validate } from "~~/utility";
+import { getPostIds, getRepos, boolToInt } from "~~/utility";
 
 useMeta({
     title: "Johannes Pour - German Developer",
     meta: [{ description: "This website is about me & my projects" }],
 });
 
-const repos = await getRepos();
+const postIds = await getPostIds();
+const repos = (await getRepos()).sort(
+    (a, b) =>
+        boolToInt(postIds.includes(b.id)) - boolToInt(postIds.includes(a.id)),
+);
 // Only take the first 3 repos
 repos.splice(3);
-
-const postIds = await getPostIds();
-
-const authed = await validate();
 </script>

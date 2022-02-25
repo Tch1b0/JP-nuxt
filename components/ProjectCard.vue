@@ -47,11 +47,10 @@ defineProps({
         type: Boolean,
         default: false,
     },
-    authed: {
-        type: Boolean,
-        default: false,
-    },
 });
+
+const authed = useAuthed();
+
 const gradients = [
     ["from-blue-500", "to-purple-500"],
     ["from-green-400", "to-emerald-500"],

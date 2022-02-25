@@ -4,3 +4,9 @@
         <NuxtPage />
     </div>
 </template>
+
+<script setup lang="ts">
+import { validate } from "./utility";
+
+useAuthed().value = await validate();
+</script>

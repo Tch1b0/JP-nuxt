@@ -9,7 +9,6 @@
                 <project-card
                     v-for="repo in repos"
                     :repo="repo"
-                    :authed="authed"
                     :has-post="postIds.includes(repo.id)"></project-card
             ></transition-group>
         </div>
@@ -25,8 +24,6 @@ useMeta({
 });
 
 const rawRepos = await getRepos();
-const authed = await validate();
-
 const posts = await getPosts();
 const postIds = posts.map((post) => post["project-id"]);
 
