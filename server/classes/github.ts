@@ -8,6 +8,7 @@ export interface Repository {
     html_url: string;
     topics: string[];
     language: string;
+    fork: boolean;
 }
 
 export interface Profile {
@@ -73,7 +74,7 @@ export default class GitHub {
                     per_page: 100,
                     sort: "updated",
                 })
-            ).data,
+            ).data.filter((repo) => !repo.fork),
         );
     }
 
