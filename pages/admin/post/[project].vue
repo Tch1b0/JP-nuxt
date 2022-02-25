@@ -107,7 +107,7 @@ async function createPost() {
     if (failed) {
         alert("Something went wrong!");
     } else {
-        useRouter().push(`/projects/${projectId}`);
+        await useRouter().push(`/projects/${projectId}`);
     }
 }
 
@@ -127,7 +127,7 @@ async function editPost() {
     if (failed) {
         alert("Something went wrong!");
     } else {
-        useRouter().push(`/projects/${projectId}`);
+        await useRouter().push(`/projects/${projectId}`);
     }
 }
 

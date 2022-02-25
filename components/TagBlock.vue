@@ -28,12 +28,12 @@ const props = defineProps({
 
 const topicFilter = useTopicFilter();
 
-function clicked() {
+async function clicked() {
     if (!props.clickable) return;
 
     addOrRemoveTopic(props.topic);
     if (useRoute().path !== "/projects") {
-        useRouter().push("/projects");
+        await useRouter().push("/projects");
     }
 }
 </script>

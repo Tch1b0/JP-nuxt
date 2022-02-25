@@ -52,7 +52,8 @@ async function login() {
     if (token !== undefined) {
         const authCookie = getAuthCookie();
         authCookie.value = `Bearer ${token}`;
-        useRouter().push("/admin");
+        useAuthed().value = true;
+        await useRouter().push("/admin");
     } else {
         error.value = true;
         setTimeout(() => (error.value = false), 1000);
