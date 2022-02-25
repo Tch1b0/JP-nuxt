@@ -44,7 +44,7 @@ export async function validate(): Promise<boolean> {
     const auth = getAuthCookie();
     if (auth.value === undefined) return false;
 
-    const token = auth.value.replace("Bearer ", "");
+    const token = auth.value.replace(/^Bearer /, "");
     let valid: boolean;
     await $fetch("/api/validate", { method: "POST", body: { token } })
         .then(() => (valid = true))
@@ -56,3 +56,5 @@ export async function validate(): Promise<boolean> {
 export function basicMdToHtml(markdownContent: string): string {
     return new Remarkable().render(markdownContent);
 }
+
+export const boolToInt = (bool: boolean) => (bool ? 1 : 0);
