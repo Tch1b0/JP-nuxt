@@ -1,4 +1,5 @@
 import { hashSync, compareSync } from "bcrypt";
+import { nanoid } from "nanoid";
 
 export class User {
     username: string;
@@ -8,6 +9,9 @@ export class User {
     constructor(username: string, password: string) {
         this.username = username;
         this.password = hashSync(password, 10);
+
+        // Generate a new token every 24 hours, to force login of admin
+        setInterval(() => this.genToken(), 24 * 60 * 60 * 1000);
     }
 
     public comparePassword(password: string): boolean {
@@ -15,7 +19,7 @@ export class User {
     }
 
     public genToken(): string {
-        this.token = hashSync(Math.random().toString(16), 10);
+        this.token = nanoid(36);
         return this.token;
     }
 
