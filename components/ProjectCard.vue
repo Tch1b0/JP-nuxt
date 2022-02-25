@@ -19,7 +19,7 @@
                         v-else-if="authed"
                         @clicked="$router.push(`/admin/post/${repo.id}`)"
                         class="text-sm">
-                        Create
+                        create
                     </simple-button>
                 </div>
             </div>
