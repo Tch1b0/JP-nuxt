@@ -3,12 +3,11 @@ import { github, postCollection } from "./api";
 import jstoxml from "jstoxml";
 const { toXML } = jstoxml;
 import { basicMdToHtml } from "~~/utility";
+import { Profile } from "./classes/github";
 
 const url = "johannespour.de";
-const username = "Tch1b0";
-const description = "Some snek dev";
 
-async function createRssPosts(): Promise<object> {
+async function createRssPosts(profile: Profile): Promise<object> {
     const rssPosts = [];
     const repos = await github.getRepos();
     for (const post of postCollection.posts) {
@@ -20,7 +19,7 @@ async function createRssPosts(): Promise<object> {
                 description: repo.description,
                 "content:encoded": basicMdToHtml(post.article),
                 pubDate: post.pubDate,
-                author: username,
+                author: profile.login,
             },
         });
     }
@@ -30,6 +29,7 @@ async function createRssPosts(): Promise<object> {
 
 export default async (_: IncomingMessage, res: ServerResponse) => {
     res.setHeader("Content-Type", "text/xml");
+    const profile = await github.getProfile();
     const xml = toXML(
         {
             _name: "rss",
@@ -41,9 +41,9 @@ export default async (_: IncomingMessage, res: ServerResponse) => {
                 channel: [
                     { title: url },
                     { link: `https://${url}` },
-                    { description },
-                    { managingEditor: `(${username})` },
-                    await createRssPosts(),
+                    { description: profile.bio || "German Developer" },
+                    { managingEditor: `(${profile.login})` },
+                    await createRssPosts(profile),
                 ],
             },
         },
