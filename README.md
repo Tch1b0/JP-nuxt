@@ -9,12 +9,13 @@ My personal website
 -   [Nuxt 3](http://v3.nuxtjs.org/)
 -   [tailwindcss](https://tailwindcss.com/)
 -   [docker](https://www.docker.com/)
--   Smaller libraries:
+-   Libraries:
     -   [vue-chart-3](https://github.com/victorgarciaesgi/vue-chart-3)
     -   [remarkable](https://www.npmjs.com/package/remarkable)
     -   [highlight.js](https://www.npmjs.com/package/highlight.js)
     -   [dracula theme](https://github.com/dracula/highlightjs)
     -   [jstoxml](https://github.com/davidcalhoun/jstoxml)
+    -   [nanoid](https://github.com/ai/nanoid)
 
 ## Env variables
 
