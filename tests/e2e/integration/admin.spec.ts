@@ -29,10 +29,10 @@ describe("Visit Site as an Admin", () => {
         cy.login();
         cy.wait(300);
         cy.visit("/");
-        cy.wait(100);
+        cy.wait(300);
         cy.get("button").first().click();
         cy.wait(500);
-        cy.get("input").type("Test");
+        cy.get("textarea").type("Test");
         cy.find('button[value="Create Post"]').click();
         cy.wait(100);
         cy.url().should("not.include", "/admin/post");
