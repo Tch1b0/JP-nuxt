@@ -9,7 +9,8 @@
                 <project-card
                     v-for="repo in repos"
                     :repo="repo"
-                    :has-post="postIds.includes(repo.id)"></project-card
+                    :has-post="postIds.includes(repo.id)"
+                    :key="repo.id"></project-card
             ></transition-group>
         </div>
     </div>
