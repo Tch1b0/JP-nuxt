@@ -13,6 +13,16 @@ export default defineNuxtConfig({
             handler: "~/server/rss.ts",
         },
     ],
+    meta: {
+        link: [
+            {
+                rel: "alternate",
+                type: "application/rss+xml",
+                title: "johannespour.de",
+                href: "/feed",
+            },
+        ],
+    },
     build: {
         postcss: {
             postcssOptions: require("./postcss.config.js"),
