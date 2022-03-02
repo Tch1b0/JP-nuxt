@@ -30,7 +30,7 @@ describe("Visit Site as an Admin", () => {
         cy.wait(300);
         cy.visit("/");
         cy.wait(100);
-        cy.get("button").click();
+        cy.get("button").first().click();
         cy.wait(500);
         cy.get("input").type("Test");
         cy.find('button[value="Create Post"]').click();
