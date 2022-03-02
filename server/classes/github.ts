@@ -95,7 +95,7 @@ export default class GitHub {
      * @returns The matching repository
      */
     async getRepo(id: number) {
-        return (await this.getRepos()).filter((repo) => repo.id === id);
+        return (await this.getRepos()).find((repo) => repo.id === id);
     }
 
     /**

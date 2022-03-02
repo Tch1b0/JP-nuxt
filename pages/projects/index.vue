@@ -18,14 +18,18 @@
 
 <script setup lang="ts">
 import { Repository } from "~~/server/classes/github";
-import { getPosts, getRepos, getPostFromRepo } from "~~/utility";
+import {
+    getRepos,
+    getPostsMetadata,
+    getPostMetadataFromRepo,
+} from "~~/utility";
 
 useMeta({
     title: "Johannes Pour - Projects",
 });
 
 const rawRepos = await getRepos();
-const posts = await getPosts();
+const posts = await getPostsMetadata();
 const postIds = posts.map((post) => post["project-id"]);
 
 const filterTopics = useTopicFilter();
@@ -35,7 +39,8 @@ const reposWithPosts = rawRepos
     .filter((repo) => postIds.includes(repo.id))
     .sort(
         (a, b) =>
-            getPostFromRepo(b, posts).views - getPostFromRepo(a, posts).views,
+            getPostMetadataFromRepo(b, posts).views -
+            getPostMetadataFromRepo(a, posts).views,
     );
 const reposWithoutPosts = rawRepos.filter((repo) => !postIds.includes(repo.id));
 const allRepos = reposWithPosts.concat(reposWithoutPosts);

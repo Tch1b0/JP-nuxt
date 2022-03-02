@@ -7,6 +7,14 @@ export interface Post {
     views: number;
 }
 
+export interface PostMetadata {
+    "project-id": number;
+    title: string;
+    description: string;
+    "pub-date": Date;
+    views: number;
+}
+
 export async function getRepo(id: number | string) {
     return await getFromApi<Repository>("repository", `repo/${id}`);
 }
@@ -25,6 +33,10 @@ export async function getProfile(): Promise<Profile> {
 
 export async function getPosts(): Promise<Post[]> {
     return await getFromApi<Post[]>("posts", "posts");
+}
+
+export async function getPostsMetadata(): Promise<PostMetadata[]> {
+    return await getFromApi<PostMetadata[]>("posts-metadata", "posts-metadata");
 }
 
 export async function getPostIds(): Promise<number[]> {

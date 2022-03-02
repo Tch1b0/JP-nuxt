@@ -1,6 +1,6 @@
 import { Remarkable } from "remarkable";
 import { Repository } from "~~/server/classes/github";
-import { Post } from "./datafetching";
+import { Post, PostMetadata } from "./datafetching";
 
 export * from "./datafetching";
 
@@ -8,7 +8,17 @@ export function getPostFromRepo(repo: Repository, posts: Post[]): Post {
     return posts.find((post) => post["project-id"] === repo.id);
 }
 
-export function getRepoFromPost(post: Post, repos: Repository[]): Repository {
+export function getPostMetadataFromRepo(
+    repo: Repository,
+    postsMetadata: PostMetadata[],
+): PostMetadata {
+    return postsMetadata.find((post) => post["project-id"] === repo.id);
+}
+
+export function getRepoFromPost(
+    post: Post | PostMetadata,
+    repos: Repository[],
+): Repository {
     return repos.find((repo) => repo.id === post["project-id"]);
 }
 

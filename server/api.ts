@@ -34,7 +34,7 @@ app.get("/repos", async (_, res) => {
 });
 app.get("/repo", async (req, res) => {
     const id = idFromReq(req);
-    const repo = (await github.getRepo(id))[0];
+    const repo = await github.getRepo(id);
     sendJson(res, repo);
 });
 app.get("/profile", async (_, res) => {
@@ -62,6 +62,20 @@ app.get("/post-ids", (_, res) => {
         res,
         postCollection.posts.map((post) => post.id),
     );
+});
+app.get("/posts-metadata", async (_, res) => {
+    const repos = await github.getRepos();
+    const postsMetadata = postCollection.posts.map((post) => {
+        const jsonPost = post.toJSON();
+        const repo = repos.find((repo) => repo.id === post.id);
+        delete jsonPost["article"];
+        delete jsonPost["images"];
+        jsonPost["title"] = repo.name;
+        jsonPost["description"] = repo.description;
+        return jsonPost;
+    });
+
+    sendJson(res, postsMetadata);
 });
 app.get("/viewed", (req, res) => {
     const id = idFromReq(req);
