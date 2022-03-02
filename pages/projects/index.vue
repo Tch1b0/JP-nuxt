@@ -4,7 +4,7 @@
             <tag-block v-for="topic of filterTopics" :topic="topic"></tag-block>
         </div>
         <div
-            class="grid grid-cols-1 w-11/12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:w-max gap-5">
+            class="grid grid-cols-1 w-11/12 md:grid-cols-2 xl:grid-cols-3 xxl:grid-cols-4 sm:w-max gap-5">
             <transition-group>
                 <project-card
                     v-for="repo in repos"
@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { Repository } from "~~/server/classes/github";
-import { getPosts, getRepos, validate, getPostFromRepo } from "~~/utility";
+import { getPosts, getRepos, getPostFromRepo } from "~~/utility";
 
 useMeta({
     title: "Johannes Pour - Projects",
@@ -63,7 +63,7 @@ filterRepos();
 // To remove a topc-filter do filterTopics.value.remove(...)
 </script>
 
-<style>
+<style scoped>
 .v-move, /* apply transition to moving elements */
 .v-enter-active,
 .v-leave-active {
