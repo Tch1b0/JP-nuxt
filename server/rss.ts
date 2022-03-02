@@ -15,7 +15,7 @@ async function createRssPosts(profile: Profile): Promise<object> {
         rssPosts.push({
             item: {
                 title: repo.name,
-                link: `https://${url}/project/${repo.id}`,
+                link: `https://${url}/projects/${repo.id}`,
                 description: repo.description,
                 "content:encoded": basicMdToHtml(post.article),
                 pubDate: post.pubDate,
