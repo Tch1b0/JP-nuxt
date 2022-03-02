@@ -29,7 +29,6 @@ const postIds = posts.map((post) => post["project-id"]);
 
 const filterTopics = useTopicFilter();
 watch(filterTopics.value, filterRepos);
-1;
 
 const reposWithPosts = rawRepos
     .filter((repo) => postIds.includes(repo.id))
