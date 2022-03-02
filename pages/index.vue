@@ -32,7 +32,12 @@ import { getPostIds, getRepos, boolToInt } from "~~/utility";
 
 useMeta({
     title: "Johannes Pour - German Developer",
-    meta: [{ description: "This website is about me & my projects" }],
+    meta: [
+        {
+            name: "description",
+            content: "This website is about me & my projects",
+        },
+    ],
 });
 
 const postIds = await getPostIds();
