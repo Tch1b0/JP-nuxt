@@ -1,5 +1,10 @@
 import type { IncomingMessage, ServerResponse } from "http";
 
+type RequestCallback = (
+    req: IncomingMessage,
+    res: ServerResponse,
+) => Promise<void> | void;
+
 export function sendJson(res: ServerResponse, obj: any) {
     res.setHeader("content-type", "application/json");
     res.end(JSON.stringify(obj));
@@ -22,23 +27,13 @@ export function idFromReq(req: IncomingMessage): number {
  * The Router is used for passing a request to the right callback
  */
 export default class Router {
-    handlers: Map<
-        string,
-        Map<
-            string,
-            (req: IncomingMessage, res: ServerResponse) => Promise<void> | void
-        >
-    >;
-
-    constructor() {
-        this.handlers = new Map([
-            ["GET", new Map([])],
-            ["POST", new Map([])],
-            ["PUT", new Map([])],
-            ["PATCH", new Map([])],
-            ["DELETE", new Map([])],
-        ]);
-    }
+    handlers: Map<string, Map<string, RequestCallback>> = new Map([
+        ["GET", new Map([])],
+        ["POST", new Map([])],
+        ["PUT", new Map([])],
+        ["PATCH", new Map([])],
+        ["DELETE", new Map([])],
+    ]);
 
     async handle(req: IncomingMessage, res: ServerResponse) {
         const url = "/" + req.url.split("/")[1];
@@ -54,61 +49,28 @@ export default class Router {
     private addHandler(
         method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
         route: string,
-        callback: (
-            req: IncomingMessage,
-            res: ServerResponse,
-        ) => Promise<void> | void,
+        callback: RequestCallback,
     ) {
         this.handlers.get(method).set(route, callback);
     }
 
-    get(
-        route: string,
-        callback: (
-            req: IncomingMessage,
-            res: ServerResponse,
-        ) => Promise<void> | void,
-    ) {
+    get(route: string, callback: RequestCallback) {
         this.addHandler("GET", route, callback);
     }
 
-    post(
-        route: string,
-        callback: (
-            req: IncomingMessage,
-            res: ServerResponse,
-        ) => Promise<void> | void,
-    ) {
+    post(route: string, callback: RequestCallback) {
         this.addHandler("POST", route, callback);
     }
 
-    put(
-        route: string,
-        callback: (
-            req: IncomingMessage,
-            res: ServerResponse,
-        ) => Promise<void> | void,
-    ) {
+    put(route: string, callback: RequestCallback) {
         this.addHandler("PUT", route, callback);
     }
 
-    patch(
-        route: string,
-        callback: (
-            req: IncomingMessage,
-            res: ServerResponse,
-        ) => Promise<void> | void,
-    ) {
+    patch(route: string, callback: RequestCallback) {
         this.addHandler("PATCH", route, callback);
     }
 
-    delete(
-        route: string,
-        callback: (
-            req: IncomingMessage,
-            res: ServerResponse,
-        ) => Promise<void> | void,
-    ) {
+    delete(route: string, callback: RequestCallback) {
         this.addHandler("DELETE", route, callback);
     }
 }
