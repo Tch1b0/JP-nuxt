@@ -6,8 +6,7 @@
         <div class="text-center grid gap-2 mt-16 w-[400px]">
             <h2 class="text-2xl">Post Views</h2>
             <h4 class="text-base text-gray-500">
-                Total views:
-                {{ posts.map((post) => post.views).reduce((a, b) => a + b) }}
+                Total views: {{ totalViews }}
             </h4>
             <post-chart :posts="posts" :repos="repos"></post-chart>
         </div>
@@ -28,4 +27,9 @@ definePageMeta({
 const profile = await getProfile();
 const posts = await getPosts();
 const repos = await getRepos();
+
+const totalViews =
+    posts.length != 0
+        ? posts.map((post) => post.views).reduce((a, b) => a + b)
+        : 0;
 </script>
