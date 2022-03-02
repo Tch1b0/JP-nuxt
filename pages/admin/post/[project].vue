@@ -7,17 +7,17 @@
                 <textarea
                     v-model="article"
                     cols="30"
-                    class="flex-1 bg-gray-900"
+                    class="flex-1 bg-gray-900 pl-1"
                     rows="10"
-                    tabindex="1"></textarea>
+                    tabindex="1"
+                    placeholder="Article Content"></textarea>
                 <div class="flex flex-row bg-gray-800 gap-3">
                     <input
                         type="url"
                         v-model="newImage"
-                        class="w-full rounded-md ml-3 bg-gray-900" />
-                    <simple-button
-                        class="min-h-fit"
-                        @clicked="images.push(newImage)"
+                        class="w-full rounded-sm pl-1 bg-gray-900"
+                        placeholder="https://example.com/image.jpg" />
+                    <simple-button class="min-h-fit" @clicked="addImage"
                         >+</simple-button
                     >
                 </div>
@@ -154,6 +154,11 @@ async function deletePost() {
     } else {
         await useRouter().push(`/projects`);
     }
+}
+
+function addImage() {
+    images.value.push(newImage.value);
+    newImage.value = "";
 }
 
 const newImage = ref("");
