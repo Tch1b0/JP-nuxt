@@ -48,7 +48,7 @@ app.get("/posts", (_, res) => {
 });
 app.get("/post", (req, res) => {
     const id = idFromReq(req);
-    const post = postCollection.getById(id)[0];
+    const post = postCollection.getById(id);
     sendJson(res, post.toJSON());
 });
 app.get("/repo-ids", async (_, res) => {
@@ -79,7 +79,7 @@ app.get("/posts-metadata", async (_, res) => {
 });
 app.get("/viewed", (req, res) => {
     const id = idFromReq(req);
-    const post = postCollection.getById(id)[0];
+    const post = postCollection.getById(id);
     post.viewed();
     postCollection.reverseSort();
     postCollection.save();
@@ -145,7 +145,7 @@ app.put("/post", async (req, res) => {
         images: string[];
     }>(req);
 
-    const post = postCollection.getById(projectId)[0];
+    const post = postCollection.getById(projectId);
 
     if (post === undefined) {
         res.statusCode = 404;
@@ -170,7 +170,7 @@ app.delete("/post", async (req, res) => {
         "project-id": number;
     }>(req);
 
-    const post = postCollection.getById(projectId)[0];
+    const post = postCollection.getById(projectId);
     if (post) {
         postCollection.remove(post);
         sendJson(res, post.toJSON());

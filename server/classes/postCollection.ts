@@ -66,6 +66,6 @@ export default class PostCollection {
     }
 
     getById(id: number) {
-        return this.posts.filter((post) => post.id === id);
+        return this.posts.find((post) => post.id === id);
     }
 }
