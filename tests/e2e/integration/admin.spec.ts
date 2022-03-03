@@ -36,6 +36,13 @@ describe("Visit Site as an Admin", () => {
         cy.get("button").last().click();
         cy.wait(100);
         cy.url().should("not.include", "/admin/post");
+        cy.wait(200);
+        cy.visit("/");
+        cy.wait(300);
+        cy.contains("create").click();
+        cy.wait(300);
+        cy.get("button").last().click();
+        cy.wait(200);
     });
 
     it("Edit Post", () => {
@@ -53,7 +60,7 @@ describe("Visit Site as an Admin", () => {
         cy.get(".post-article > p").should("contain", "test2");
     });
 
-    it("Edit Post", () => {
+    it("Delete Post", () => {
         // @ts-ignore
         cy.login();
         cy.wait(300);
