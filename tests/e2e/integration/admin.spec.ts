@@ -24,7 +24,6 @@ describe("Visit Site as an Admin", () => {
         cy.get("canvas").should("be.visible");
     });
 
-    // TODO: Finish test
     xit("Create Post", () => {
         // @ts-ignore
         cy.login();
@@ -34,8 +33,36 @@ describe("Visit Site as an Admin", () => {
         cy.get("button").first().click();
         cy.wait(500);
         cy.get("textarea").type("Test");
-        cy.find('button[value="Create Post"]').click();
+        cy.get("button").last().click();
         cy.wait(100);
+        cy.url().should("not.include", "/admin/post");
+    });
+
+    it("Edit Post", () => {
+        // @ts-ignore
+        cy.login();
+        cy.wait(300);
+        cy.visit("/");
+        cy.wait(500);
+        cy.get("button").first().click();
+        cy.get("button").should("contain", "Edit").click();
+        cy.get("textarea").type("2");
+        cy.get(".grid > button").first().click();
+        cy.wait(200);
+        cy.url().should("not.include", "/admin/post");
+        cy.get(".post-article > p").should("contain", "test2");
+    });
+
+    it("Edit Post", () => {
+        // @ts-ignore
+        cy.login();
+        cy.wait(300);
+        cy.visit("/");
+        cy.wait(500);
+        cy.get("button").first().click();
+        cy.get("button").should("contain", "Edit").click();
+        cy.get(".grid > button").last().click();
+        cy.wait(200);
         cy.url().should("not.include", "/admin/post");
     });
 });
