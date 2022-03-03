@@ -24,7 +24,7 @@ describe("Visit Site as an Admin", () => {
         cy.get("canvas").should("be.visible");
     });
 
-    xit("Create Post", () => {
+    it("Create Post", () => {
         // @ts-ignore
         cy.login();
         cy.wait(300);
