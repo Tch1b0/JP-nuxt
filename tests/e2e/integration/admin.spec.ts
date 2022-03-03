@@ -24,7 +24,7 @@ describe("Visit Site as an Admin", () => {
         cy.get("canvas").should("be.visible");
     });
 
-    it("Create Post", () => {
+    xit("Create Post", () => {
         // @ts-ignore
         cy.login();
         cy.wait(300);
@@ -45,7 +45,7 @@ describe("Visit Site as an Admin", () => {
         cy.wait(200);
     });
 
-    it("Edit Post", () => {
+    xit("Edit Post", () => {
         // @ts-ignore
         cy.login();
         cy.wait(300);
@@ -60,7 +60,7 @@ describe("Visit Site as an Admin", () => {
         cy.get(".post-article > p").should("contain", "test2");
     });
 
-    it("Delete Post", () => {
+    xit("Delete Post", () => {
         // @ts-ignore
         cy.login();
         cy.wait(300);
