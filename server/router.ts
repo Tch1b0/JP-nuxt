@@ -15,16 +15,16 @@ export function sendUnauthorized(res: ServerResponse): void {
     res.end();
 }
 
-/*
- * Get the `id` pramater from the route
- * @param req The request from which the id should be taken from
+/**
+ * get the `id` pramater from the route
+ * @param req the request from which the id should be taken from
  */
 export function idFromReq(req: IncomingMessage): number {
     return Number(req.url.split("/")[2]);
 }
 
-/*
- * The Router is used for passing a request to the right callback
+/**
+ * the router is used for passing a request to the right callback
  */
 export default class Router {
     handlers: Map<string, Map<string, RequestCallback>> = new Map([

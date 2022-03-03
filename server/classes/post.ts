@@ -1,3 +1,6 @@
+/**
+ * the backend-representation of a post
+ */
 export default class Post {
     projectId: number;
     article: string;
@@ -19,14 +22,14 @@ export default class Post {
         this.pubDate = pubDate;
     }
 
-    /*
+    /**
      * A unique id for the post
      */
     get id() {
         return this.projectId;
     }
 
-    async viewed() {
+    viewed() {
         this.views++;
     }
 

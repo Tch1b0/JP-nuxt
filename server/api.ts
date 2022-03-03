@@ -20,7 +20,13 @@ const templatePosts =
         : [new Post(393093009, "test", [], 0)];
 export const postCollection = new PostCollection(templatePosts);
 
+/**
+ * validate that the user is authenticated
+ * @param req the request object of the request
+ * @returns whether the user is authenticated
+ */
 async function validate(req: IncomingMessage): Promise<boolean> {
+    // get token from body and compare it with the admin-token
     return (await useBody<{ token: string }>(req)).token === admin.token;
 }
 

@@ -1,5 +1,8 @@
 import { Octokit } from "@octokit/rest";
 
+/**
+ * the global representation of a github-repository
+ */
 export interface Repository {
     name: string;
     id: number;
@@ -11,6 +14,9 @@ export interface Repository {
     fork: boolean;
 }
 
+/**
+ * the global representation of a github-profile
+ */
 export interface Profile {
     // The Username
     login: string;
@@ -44,6 +50,8 @@ export default class GitHub {
     }
 
     async getRepos(): Promise<Repository[]> {
+        // check whether the repos were already fetched and
+        // fetch them otherwise
         if (this._repos === undefined) {
             await this.fetchRepos();
         }
@@ -55,6 +63,8 @@ export default class GitHub {
     }
 
     async getProfile(): Promise<Profile> {
+        // check whether the profile was already fetched and
+        // fetch it otherwise
         if (this._profile === undefined) {
             await this.fetchProfile();
         }
