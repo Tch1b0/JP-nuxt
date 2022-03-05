@@ -48,4 +48,6 @@ const repos = (await getRepos()).sort(
 );
 // Only take the first 3 repos
 repos.splice(3);
+
+console.log("ci works!");
 </script>
