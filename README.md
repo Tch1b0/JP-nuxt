@@ -4,6 +4,8 @@
 
 My personal website
 
+You can read more about it [here](https://johannespour.de/projects/451393301)
+
 ## Built with
 
 -   [TypeScript](https://www.typescriptlang.org/)
