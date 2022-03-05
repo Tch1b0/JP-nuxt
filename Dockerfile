@@ -11,6 +11,6 @@ ENV NUXT_PORT=3000
 RUN npm ci
 RUN npm run build
 
-EXPOSE 3000
+EXPOSE ${NUXT_PORT}
 
 CMD ["npm", "run", "start"]
