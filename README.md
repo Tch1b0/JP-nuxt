@@ -45,6 +45,34 @@ GH_USERNAME
 
 ## Setting up
 
+### From [docker-hub](https://hub.docker.com/)
+
+Create the file `docker-compose.yml`
+
+```yaml
+version: "3.8"
+
+services:
+    server:
+        image: tch1b0/jp-nuxt:latest
+        environment:
+            - JP_USERNAME=<YOUR USERNAME>
+            - JP_PASSWORD=<YOUR PASSWORD>
+            - GH_USERNAME=<YOUR GITHUB USERNAME>
+        ports:
+            - "<YOUR PORT>:3000"
+
+        # optionally:
+        volumes:
+            - "./data:/app/data"
+```
+
+```bash
+$ docker-compose up -d
+```
+
+### From source
+
 ```bash
 git clone https://github.com/Tch1b0/JP-nuxt
 ```
