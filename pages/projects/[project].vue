@@ -17,7 +17,7 @@
             <div class="flex-1 m-5 gap-3">
                 <div
                     class="grid lg:grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-3 items-end">
-                    <a v-for="image of post.images" :href="image">
+                    <a v-for="image of post.images" :href="image" :key="image">
                         <img
                             :src="image"
                             alt="preview image"

@@ -1,7 +1,10 @@
 <template>
     <div class="flex gap-6 flex-col justify-center items-center mb-5 mt-5">
         <div>
-            <tag-block v-for="topic of filterTopics" :topic="topic"></tag-block>
+            <tag-block
+                v-for="topic of filterTopics"
+                :topic="topic"
+                :key="topic"></tag-block>
         </div>
         <div
             class="grid grid-cols-1 w-11/12 md:grid-cols-2 xl:grid-cols-3 xxl:grid-cols-4 sm:w-max gap-5">

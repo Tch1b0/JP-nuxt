@@ -95,7 +95,7 @@ app.get("/viewed", (req, res) => {
 // POST requests
 
 app.post("/login", async (req, res) => {
-    let body = await useBody(req);
+    const body = await useBody(req);
 
     const username = body.username;
     const password = body.password;

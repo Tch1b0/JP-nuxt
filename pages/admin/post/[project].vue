@@ -23,7 +23,10 @@
                 </div>
                 <ul>
                     <transition-group>
-                        <li v-for="imageUrl in images" class="list-none">
+                        <li
+                            v-for="imageUrl in images"
+                            class="list-none"
+                            :key="imageUrl">
                             <simple-button
                                 @clicked="
                                     images.splice(images.indexOf(imageUrl), 1)

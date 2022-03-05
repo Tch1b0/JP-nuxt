@@ -1,4 +1,5 @@
-const preventFromPurging = [
+// prevent from purging
+[
     "bg-cyan-500",
     "bg-blue-500",
     "bg-lime-500",

@@ -40,7 +40,7 @@ export default class PostCollection {
 
         const data = fs.readFileSync("./data/posts.json").toString();
         if (data.length > 3) {
-            const filePosts: Post[] = JSON.parse(data).map((json: Object) =>
+            const filePosts: Post[] = JSON.parse(data).map((json: object) =>
                 Post.fromJSON(json),
             );
             for (const post of filePosts) {

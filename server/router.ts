@@ -5,7 +5,7 @@ type RequestCallback = (
     res: ServerResponse,
 ) => Promise<void> | void;
 
-export function sendJson(res: ServerResponse, obj: any) {
+export function sendJson(res: ServerResponse, obj: object) {
     res.setHeader("content-type", "application/json");
     res.end(JSON.stringify(obj));
 }

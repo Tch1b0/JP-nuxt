@@ -32,8 +32,8 @@ if (props.posts === undefined || props.repos === undefined) {
     posts = await getPosts();
     repos = await getRepos();
 } else {
-    posts = props.posts;
-    repos = props.repos;
+    posts = reactive(props.posts);
+    repos = reactive(props.repos);
 }
 
 const data = {

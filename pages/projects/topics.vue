@@ -4,12 +4,12 @@
             v-for="topic of topics"
             class="text-gray-400"
             :class="topic.style"
-            :topic="topic.text"></tag-block>
+            :topic="topic.text"
+            :key="topic.text"></tag-block>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Repository } from "~~/server/classes/github";
 import { colorFromLang, getRepos } from "~~/utility";
 
 useMeta({

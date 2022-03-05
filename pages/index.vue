@@ -10,6 +10,7 @@
                 <project-card
                     v-for="repo in repos"
                     :repo="repo"
+                    :key="repo.id"
                     class="pt-5"
                     :has-post="postIds.includes(repo.id)"></project-card>
             </div>

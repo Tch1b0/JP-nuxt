@@ -58,8 +58,8 @@ export default class GitHub {
         return this._repos;
     }
 
-    setRepos(value: any[]) {
-        this._repos = value;
+    setRepos(value: object[]) {
+        this._repos = value as Repository[];
     }
 
     async getProfile(): Promise<Profile> {
@@ -71,8 +71,8 @@ export default class GitHub {
         return this._profile;
     }
 
-    async setProfile(value: any) {
-        this._profile = value;
+    async setProfile(value: object) {
+        this._profile = value as Profile;
     }
 
     async fetchRepos() {

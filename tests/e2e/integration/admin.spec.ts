@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 describe("Visit Site as an Admin", () => {
     it("Visit /admin unauthorized", () => {
         cy.visit("/admin");
@@ -73,3 +75,4 @@ describe("Visit Site as an Admin", () => {
         cy.url().should("not.include", "/admin/post");
     });
 });
+/* eslint-enable */

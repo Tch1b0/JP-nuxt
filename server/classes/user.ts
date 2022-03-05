@@ -20,8 +20,8 @@ export class User {
     constructor(
         username: string,
         password: string,
-        autoRegenerateToken: boolean = true,
-        regenerationIntervalDays: number = 15,
+        autoRegenerateToken = true,
+        regenerationIntervalDays = 15,
     ) {
         this.username = username;
         this.password = hashSync(password, 10);

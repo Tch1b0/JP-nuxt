@@ -28,12 +28,6 @@ describe("Test Backend", () => {
             images: [],
             views: 0,
         };
-        const postJSON = {
-            "project-id": postInfo.projectId,
-            article: postInfo.article,
-            images: postInfo.images,
-            views: postInfo.views,
-        };
         const post = new Post(
             postInfo.projectId,
             postInfo.article,
