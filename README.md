@@ -1,6 +1,6 @@
 # JP-nuxt
 
-![](https://img.shields.io/github/license/Tch1b0/JP-nuxt) ![](https://img.shields.io/github/workflow/status/Tch1b0/JP-nuxt/Run%20Unit%20Tests?label=unit%20tests) ![](https://img.shields.io/github/workflow/status/Tch1b0/JP-nuxt/Run%20e2e%20Tests?label=e2e%20tests)
+![](https://img.shields.io/github/license/Tch1b0/JP-nuxt) ![](https://img.shields.io/github/workflow/status/Tch1b0/JP-nuxt/Run Tests?label=tests)
 
 My personal website
 
