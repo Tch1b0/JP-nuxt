@@ -4,15 +4,11 @@ import { Post, PostMetadata } from "./datafetching";
 
 export * from "./datafetching";
 
-export function getPostFromRepo(repo: Repository, posts: Post[]): Post {
-    return posts.find((post) => post["project-id"] === repo.id);
-}
-
-export function getPostMetadataFromRepo(
+export function getPostFromRepo<T = Post | PostMetadata>(
     repo: Repository,
-    postsMetadata: PostMetadata[],
-): PostMetadata {
-    return postsMetadata.find((post) => post["project-id"] === repo.id);
+    posts: T[],
+): T {
+    return posts.find((post) => post["project-id"] === repo.id);
 }
 
 export function getRepoFromPost(
@@ -47,7 +43,7 @@ export function getAuthCookie() {
     });
 }
 
-/*
+/**
  * Validate that the current User is logged in
  */
 export async function validate(): Promise<boolean> {
@@ -95,4 +91,36 @@ export function calculateAge(birthdate: Date): number {
     const year = AgeDt.getUTCFullYear();
 
     return Math.abs(year - 1970);
+}
+
+/**
+ * get the views of a post to a repository or -1
+ * @param repo the repo to evaluate the views from
+ * @returns the views or -1
+ */
+export function viewsOrNot<T = Post | PostMetadata>(
+    repo: Repository,
+    posts: T[],
+): number {
+    const postIds = posts.map((post: T) => post["project-id"]);
+    return postIds.includes(repo.id)
+        ? getPostFromRepo(repo, posts)["views"]
+        : -1;
+}
+
+/**
+ * sorts a repository array from: *has no post* -> *has post* -> *has most views*
+ * @param a the first repostiory
+ * @param b the second repository
+ * @returns the difference between `a` and `b`
+ */
+export function projectSort<T = Post | PostMetadata>(
+    a: Repository,
+    b: Repository,
+    posts: T[],
+): number {
+    const aValue = viewsOrNot(a, posts);
+    const bValue = viewsOrNot(b, posts);
+
+    return aValue - bValue;
 }

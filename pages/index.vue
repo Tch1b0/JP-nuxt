@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { getPostIds, getRepos, boolToInt } from "~~/utility";
+import { getRepos, getPostsMetadata, projectSort } from "~~/utility";
 
 useMeta({
     title: "Johannes Pour - German Developer",
@@ -40,12 +40,12 @@ useMeta({
         },
     ],
 });
+const postMetas = await getPostsMetadata();
+const postIds = postMetas.map((post) => post["project-id"]);
+const repos = (await getRepos())
+    .sort((a, b) => projectSort(a, b, postMetas))
+    .reverse();
 
-const postIds = await getPostIds();
-const repos = (await getRepos()).sort(
-    (a, b) =>
-        boolToInt(postIds.includes(b.id)) - boolToInt(postIds.includes(a.id)),
-);
 // Only take the first 3 repos
 repos.splice(3);
 </script>

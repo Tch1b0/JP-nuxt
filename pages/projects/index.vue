@@ -21,37 +21,22 @@
 
 <script setup lang="ts">
 import { Repository } from "~~/server/classes/github";
-import {
-    getRepos,
-    getPostsMetadata,
-    getPostMetadataFromRepo,
-} from "~~/utility";
+import { getRepos, getPostsMetadata, projectSort } from "~~/utility";
 
 useMeta({
     title: "Johannes Pour - Projects",
 });
 
-const rawRepos = await getRepos();
+const allRepos = await getRepos();
 const posts = await getPostsMetadata();
 const postIds = posts.map((post) => post["project-id"]);
 
 const filterTopics = useTopicFilter();
 watch(filterTopics.value, filterRepos);
 
-const reposWithPosts = rawRepos
-    .filter((repo) => postIds.includes(repo.id))
-    .sort(
-        (a, b) =>
-            getPostMetadataFromRepo(b, posts).views -
-            getPostMetadataFromRepo(a, posts).views,
-    );
-const reposWithoutPosts = rawRepos.filter((repo) => !postIds.includes(repo.id));
-const allRepos = reposWithPosts.concat(reposWithoutPosts);
-
 // The repositories that are actually shown to the user
 let repos = ref<Repository[]>([...allRepos]);
 
-// Sort the repos that have a post in front of those that don't
 function filterRepos() {
     if (filterTopics.value.length > 0) {
         repos.value = allRepos.filter((repo) => {
@@ -63,6 +48,7 @@ function filterRepos() {
     } else {
         repos.value = allRepos;
     }
+    repos.value.sort((a, b) => projectSort(a, b, posts)).reverse();
 }
 
 // run initially
