@@ -28,6 +28,9 @@ em,
 li {
     @apply text-gray-200 mt-1 bg-transparent;
 }
+strong {
+    @apply text-orange-300;
+}
 ul {
     @apply ml-5 odd:list-disc even:list-[circle];
 }
