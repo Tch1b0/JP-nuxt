@@ -6,24 +6,26 @@ import fs from "fs";
  */
 export default class PostCollection {
     posts: Post[];
-    isProduction: boolean;
+    saveable: boolean;
+    loadable: boolean;
 
     /**
      * create a new post-collection
      * @param posts the initial posts to load
      */
-    constructor(posts?: Post[]) {
+    constructor(posts?: Post[], saveable?: boolean, loadable?: boolean) {
         this.posts = posts ?? [];
-        this.isProduction = process.env["NODE_ENV"] === "production";
-        this.load();
-        this.save();
+        this.saveable = saveable ?? process.env["NODE_ENV"] === "production";
+        this.loadable = loadable ?? true;
+        if (this.loadable) this.load();
+        if (this.saveable) this.save();
     }
 
     /**
      * save the post-collection to a JSON file
      */
     save() {
-        if (!this.isProduction) return;
+        if (!this.saveable) return;
         if (!fs.existsSync("./data")) fs.mkdirSync("./data");
 
         fs.writeFileSync(
