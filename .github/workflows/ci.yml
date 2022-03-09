@@ -1,9 +1,6 @@
 name: ci
 
-on:
-  push:
-    branches:
-      - "master"
+on: [push]
 
 jobs:
   unit-tests:
@@ -55,6 +52,7 @@ jobs:
 
   build-image:
     name: Build and push docker image
+    if: github.ref_name == 'master'
     needs: [unit-tests, e2e-tests]
     runs-on: ubuntu-latest
     steps:
