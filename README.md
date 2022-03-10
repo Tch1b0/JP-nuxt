@@ -1,10 +1,12 @@
-# JP-nuxt
-
-![](https://img.shields.io/github/license/Tch1b0/JP-nuxt) ![](https://img.shields.io/github/workflow/status/Tch1b0/JP-nuxt/ci?label=ci)
-
-My personal website
-
-You can read more about it [here](https://johannespour.de/projects/451393301)
+<div align="center">
+    <a href="https://johannespour.de"><img src="./public/logo.png" width="100px" /></a>
+    <br>
+    <p>My nuxt personal website</p>
+    <img src="https://img.shields.io/github/license/Tch1b0/JP-nuxt" width="75px" />
+    <img src="https://img.shields.io/github/workflow/status/Tch1b0/JP-nuxt/ci?label=ci" width="70px" />
+    <br>
+    <a href="https://johannespour.de/projects/451393301">Read More</a>
+</div>
 
 ## Built with
 
