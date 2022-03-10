@@ -48,7 +48,7 @@ export async function getPostIds(): Promise<number[]> {
  * @param key The key of the request
  * @param route the route starting from `/api/`
  *
- * ### Example:
+ * @example
  * ```ts
  * getFromApi<number>("count", "count/value");
  * ```
