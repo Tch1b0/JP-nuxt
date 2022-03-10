@@ -3,7 +3,7 @@
     <br>
     <h3>My nuxt personal website</h3>
     <img src="https://img.shields.io/github/license/Tch1b0/JP-nuxt" width="75px" />
-    <img src="https://img.shields.io/github/workflow/status/Tch1b0/JP-nuxt/ci?label=ci" width="70px" />
+    <img src="https://img.shields.io/github/workflow/status/Tch1b0/JP-nuxt/ci?label=ci" width="75px" />
     <br>
     <a href="https://johannespour.de/projects/451393301">Read More</a>
 </div>
