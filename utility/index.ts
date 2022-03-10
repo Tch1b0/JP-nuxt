@@ -63,8 +63,6 @@ export function basicMdToHtml(markdownContent: string): string {
     return new Remarkable().render(markdownContent);
 }
 
-export const boolToInt = (bool: boolean) => (bool ? 1 : 0);
-
 /**
  * Calls a callback every `days` days
  * @param callback The callback that should be called after the days passed
