@@ -43,9 +43,6 @@ export function getAuthCookie() {
     });
 }
 
-// @ts-ignore
-var b;
-
 /**
  * Validate that the current User is logged in
  */
