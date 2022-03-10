@@ -26,28 +26,14 @@ describe("Visit Site as an Admin", () => {
         cy.get("canvas").should("be.visible");
     });
 
-    xit("Create Post", () => {
+    it("Create Post", () => {
         // @ts-ignore
-        cy.login();
-        cy.wait(300);
-        cy.visit("/");
-        cy.wait(300);
-        cy.get("button").first().click();
-        cy.wait(500);
-        cy.get("textarea").type("Test");
-        cy.get("button").last().click();
-        cy.wait(100);
-        cy.url().should("not.include", "/admin/post");
-        cy.wait(200);
-        cy.visit("/");
-        cy.wait(300);
-        cy.contains("create").click();
-        cy.wait(300);
-        cy.get("button").last().click();
-        cy.wait(200);
+        cy.createPost();
+        // @ts-ignore
+        cy.createPost();
     });
 
-    xit("Edit Post", () => {
+    it("Edit Post", () => {
         // @ts-ignore
         cy.login();
         cy.wait(300);
@@ -59,10 +45,10 @@ describe("Visit Site as an Admin", () => {
         cy.get(".grid > button").first().click();
         cy.wait(200);
         cy.url().should("not.include", "/admin/post");
-        cy.get(".post-article > p").should("contain", "test2");
+        cy.contains("Test2");
     });
 
-    xit("Delete Post", () => {
+    it("Delete Post", () => {
         // @ts-ignore
         cy.login();
         cy.wait(300);
