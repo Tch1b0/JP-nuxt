@@ -1,7 +1,7 @@
 <div align="center">
-    <a href="https://johannespour.de"><img src="./public/logo.png" width="100px" /></a>
+    <a href="https://johannespour.de"><img src="./public/logo.png" width="200px" /></a>
     <br>
-    <p>My nuxt personal website</p>
+    <h3>My nuxt personal website</h3>
     <img src="https://img.shields.io/github/license/Tch1b0/JP-nuxt" width="75px" />
     <img src="https://img.shields.io/github/workflow/status/Tch1b0/JP-nuxt/ci?label=ci" width="70px" />
     <br>
