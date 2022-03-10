@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+/* eslint-disable */
 // @ts-ignore
 Cypress.Commands.add("login", () => {
     cy.visit("/admin/login");
@@ -9,4 +9,20 @@ Cypress.Commands.add("login", () => {
     });
     cy.get("button").click();
     cy.wait(500);
+});
+
+// @ts-ignore
+Cypress.Commands.add("createPost", () => {
+    // @ts-ignore
+    cy.login();
+    cy.wait(300);
+    cy.visit("/");
+    cy.wait(300);
+    cy.contains("create").first().click();
+    cy.wait(500);
+    cy.get("textarea").type("Test");
+    cy.get("button").last().click();
+    cy.wait(100);
+    cy.url().should("not.include", "/admin/post");
+    cy.wait(200);
 });

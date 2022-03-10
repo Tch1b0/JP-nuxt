@@ -7,6 +7,11 @@ import { Profile } from "./classes/github";
 
 const url = "johannespour.de";
 
+/**
+ * create xml-parsable posts
+ * @param profile the profile of the author
+ * @returns the posts in xml-parsable objects
+ */
 async function createRssPosts(profile: Profile): Promise<object> {
     const rssPosts = [];
     const repos = await github.getRepos();

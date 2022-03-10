@@ -95,10 +95,10 @@ app.get("/viewed", (req, res) => {
 // POST requests
 
 app.post("/login", async (req, res) => {
-    const body = await useBody(req);
-
-    const username = body.username;
-    const password = body.password;
+    const { username, password } = await useBody<{
+        username: string;
+        password: string;
+    }>(req);
 
     if (username === admin.username && admin.comparePassword(password)) {
         sendJson(res, { token: admin.token });
@@ -156,6 +156,7 @@ app.put("/post", async (req, res) => {
     if (post === undefined) {
         res.statusCode = 404;
         res.end();
+        return;
     }
 
     post.article = article;

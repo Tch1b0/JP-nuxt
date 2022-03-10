@@ -13,7 +13,7 @@ describe("Visit Site as a User", () => {
         gridChildren.should("have.length.below", 3);
     });
 
-    xit("Visit article page", () => {
+    it("Visit article page", () => {
         cy.visit("/projects");
         cy.wait(400);
         cy.contains("read article").click();
