@@ -18,17 +18,11 @@ Cypress.Commands.add("createPost", () => {
     cy.wait(300);
     cy.visit("/");
     cy.wait(300);
-    cy.get("button").first().click();
+    cy.contains("create").first().click();
     cy.wait(500);
     cy.get("textarea").type("Test");
     cy.get("button").last().click();
     cy.wait(100);
     cy.url().should("not.include", "/admin/post");
-    cy.wait(200);
-    cy.visit("/");
-    cy.wait(300);
-    cy.contains("create").click();
-    cy.wait(300);
-    cy.get("button").last().click();
     cy.wait(200);
 });
