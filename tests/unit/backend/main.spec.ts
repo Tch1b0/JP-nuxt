@@ -60,6 +60,7 @@ describe("Test Backend", () => {
         const newPost = new Post(1234, "test", [], 0);
         pc.add(newPost);
         expect(pc.posts.length).to.equal(1);
+        expect(pc.posts[0]).to.be.instanceOf(Post);
         pc.remove(newPost);
         expect(pc.posts.length).to.equal(0);
     });
