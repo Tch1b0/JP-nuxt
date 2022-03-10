@@ -42,7 +42,7 @@ export function getAuthCookie() {
         path: "/",
     });
 }
-
+const b = 0;
 /**
  * Validate that the current User is logged in
  */
