@@ -44,15 +44,15 @@ export async function getPostIds(): Promise<number[]> {
 }
 
 /**
- * Request a ressource from the local API
- * @param key The key of the request
+ * request a ressource from the local API
+ * @param key the key of the request
  * @param route the route starting from `/api/`
  *
  * @example
  * ```ts
  * getFromApi<number>("count", "count/value");
  * ```
- * => Requests `<localhost>/api/count/value` and returns a number
+ * => requests `<localhost>/api/count/value` and returns a number
  */
 async function getFromApi<Response>(key: string, route: string) {
     const response = await useAsyncData<Response>(key, () =>

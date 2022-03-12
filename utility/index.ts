@@ -44,7 +44,7 @@ export function getAuthCookie() {
 }
 
 /**
- * Validate that the current User is logged in
+ * validate that the current User is logged in
  */
 export async function validate(): Promise<boolean> {
     const auth = getAuthCookie();
