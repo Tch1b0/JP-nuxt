@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import "assets/styles/dracula-theme.css";
-import { getPost, getRepo, validate } from "~~/utility";
+import { getPost, getRepo } from "~~/utility";
 
 definePageMeta({
     middleware: ["verifyproject", "viewpost"],
@@ -49,5 +49,5 @@ useMeta({
 
 const post = await getPost(projectId.toString());
 
-const authed = await validate();
+const authed = useAuthed();
 </script>
