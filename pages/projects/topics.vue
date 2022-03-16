@@ -26,8 +26,7 @@ for (const repo of repos) {
         if (rawTopics.includes(topic)) continue;
         rawTopics.push(topic);
         const color =
-            colorFromLang((repo.language ?? "python").toLowerCase()) ||
-            "python";
+            colorFromLang((repo.language ?? "python").toLowerCase()) ?? "white";
         topics.push({
             text: topic,
             style: [`bg-${color}-500`],
