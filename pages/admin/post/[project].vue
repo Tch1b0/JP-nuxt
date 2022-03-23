@@ -7,7 +7,9 @@
         >
         <div class="flex gap-4 items-center">
             <post-title :repo="repo" class="ml-5 lg:ml-5"></post-title>
-            <simple-button @clicked="$router.push(`/projects/${projectId}`)"
+            <simple-button
+                @clicked="$router.push(`/projects/${projectId}`)"
+                v-if="exists"
                 >&#10145;</simple-button
             >
         </div>
