@@ -22,7 +22,5 @@ Cypress.Commands.add("createPost", () => {
     cy.wait(500);
     cy.get("textarea").type("Test");
     cy.get("button").last().click();
-    cy.wait(100);
-    cy.url().should("not.include", "/admin/post");
     cy.wait(200);
 });

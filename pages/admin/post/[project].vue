@@ -1,6 +1,18 @@
 <template>
     <div class="flex flex-col gap-5 mt-5 mb-5">
-        <post-title :repo="repo" class="ml-5 lg:ml-5"></post-title>
+        <action-overlay
+            v-if="action.visible ?? false"
+            :success="action.success ?? false"
+            >{{ action.message ?? "Something went wrong..." }}</action-overlay
+        >
+        <div class="flex gap-4 items-center">
+            <post-title :repo="repo" class="ml-5 lg:ml-5"></post-title>
+            <simple-button
+                @clicked="$router.push(`/projects/${projectId}`)"
+                v-if="exists"
+                >&#10145;</simple-button
+            >
+        </div>
         <div
             class="flex flex-col flex-1 md:flex-row items-start ml-5 mr-5 gap-5 justify-center">
             <div class="grid p-5 gap-5 bg-gray-800 flex-1 rounded-md">
@@ -86,14 +98,24 @@ useMeta({
     ],
 });
 
-let exists = (await getPostIds()).includes(projectId);
+let exists = ref((await getPostIds()).includes(projectId));
 
+// the token to create/edit/delete a post
 const token = getAuthCookie().value.replace(/^Bearer /, "");
+
+// make article object reactive
 const articleRef = ref("");
 const article = reactive(articleRef);
-const images = ref<string[]>([]);
 
-if (exists) {
+const newImage = ref("");
+const images = ref<string[]>([]);
+const action = ref<{
+    success?: boolean;
+    message?: string;
+    visible?: boolean;
+}>({});
+
+if (exists.value) {
     const response = await getPost(projectId);
 
     article.value = response.article;
@@ -101,7 +123,17 @@ if (exists) {
 }
 
 function handlePost() {
-    exists ? editPost() : createPost();
+    exists.value ? editPost() : createPost();
+}
+
+function displayAction(success: boolean, message: string) {
+    action.value.success = success;
+    action.value.message = message;
+    action.value.visible = true;
+    const displaySeconds = 4;
+    setTimeout(() => {
+        action.value.visible = false;
+    }, displaySeconds * 1000);
 }
 
 async function createPost() {
@@ -118,9 +150,11 @@ async function createPost() {
         .then(() => (failed = false))
         .catch(() => (failed = true));
     if (failed) {
-        alert("Something went wrong!");
+        displayAction(false, "Could not create post");
     } else {
-        await useRouter().push(`/projects/${projectId}`);
+        displayAction(true, "Post created!");
+        exists.value = true;
+        // await useRouter().push(`/projects/${projectId}`);
     }
 }
 
@@ -138,9 +172,10 @@ async function editPost() {
         .then(() => (failed = false))
         .catch(() => (failed = true));
     if (failed) {
-        alert("Something went wrong!");
+        displayAction(false, "Could not edit post");
     } else {
-        await useRouter().push(`/projects/${projectId}`);
+        displayAction(true, "Post edited!");
+        // await useRouter().push(`/projects/${projectId}`);
     }
 }
 
@@ -153,7 +188,7 @@ async function deletePost() {
         .then(() => (failed = false))
         .catch(() => (failed = true));
     if (failed) {
-        alert("Something went wrong!");
+        displayAction(false, "Could not delete post");
     } else {
         await useRouter().push(`/projects`);
     }
@@ -163,8 +198,6 @@ function addImage() {
     images.value.push(newImage.value);
     newImage.value = "";
 }
-
-const newImage = ref("");
 </script>
 
 <style>

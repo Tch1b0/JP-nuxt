@@ -187,5 +187,5 @@ app.delete("/post", async (req, res) => {
     }
 });
 
-export default (req: IncomingMessage, res: ServerResponse) =>
-    app.handle(req, res);
+export default async (req: IncomingMessage, res: ServerResponse) =>
+    await app.handle(req, res);
