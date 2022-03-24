@@ -1,4 +1,4 @@
-import Remarkable from "remarkable";
+import { Remarkable } from "remarkable";
 import { Repository } from "~~/server/classes/github";
 import { Post, PostMetadata } from "./datafetching";
 

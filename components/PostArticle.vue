@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import Remarkable from "remarkable";
+import { Remarkable } from "remarkable";
 import "assets/styles/post-article.css";
 import hljs from "highlight.js";
 

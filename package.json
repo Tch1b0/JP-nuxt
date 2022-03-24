@@ -28,7 +28,7 @@
         "@octokit/rest": "^18.12.0",
         "@types/bcrypt": "^5.0.0",
         "@types/jstoxml": "^2.0.2",
-        "@types/remarkable": "^1.7.5",
+        "@types/remarkable": "^2.0.3",
         "autoprefixer": "^10.4.2",
         "bcrypt": "^5.0.1",
         "highlight.js": "^11.5.0",
