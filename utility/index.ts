@@ -83,6 +83,11 @@ export function setDayInterval(callback: () => void, days: number): void {
     setTimeout(() => timeoutCallback(), secondsOfDay);
 }
 
+/**
+ * calculates the age of someone based on their birthday
+ * @param birthdate the birthday of the person
+ * @returns the age of the person
+ */
 export function calculateAge(birthdate: Date): number {
     const monthDifference = Date.now() - birthdate.getTime();
     const AgeDt = new Date(monthDifference);
