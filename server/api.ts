@@ -1,10 +1,17 @@
-import GitHub from "./classes/github";
+import GitHub, { Repository } from "./classes/github";
 import Post from "./classes/post";
 import PostCollection from "./classes/postCollection";
-import Router, { sendJson, sendUnauthorized, idFromReq } from "./router";
+import Router, {
+    sendJson,
+    sendUnauthorized,
+    idFromReq,
+    sendError,
+} from "./router";
 import { IncomingMessage, ServerResponse } from "http";
 import { useBody } from "h3";
 import { User } from "./classes/user";
+import { ProjectCollection } from "./classes/projectCollection";
+import { Article } from "./classes/project";
 
 const app = new Router();
 const admin = new User(
@@ -19,6 +26,7 @@ const templatePosts =
         ? undefined
         : [new Post(393093009, "test", [], 0)];
 export const postCollection = new PostCollection(templatePosts);
+export const projectCollection = new ProjectCollection();
 
 /**
  * validate that the user is authenticated
@@ -29,6 +37,47 @@ async function validate(req: IncomingMessage): Promise<boolean> {
     // get token from body and compare it with the admin-token
     return (await useBody<{ token: string }>(req)).token === admin.token;
 }
+
+github.on("reposFetch", (repos: Repository[]) => {
+    projectCollection.updateRepositories(repos); // update the post collection with the new repositories
+    projectCollection.save(); // speichere die Projekte in der Datei ab (nur wenn es sich um einen produktiven Server handelt)
+});
+
+// <NEW>
+
+app.get("project", (req, res) => {
+    const id = idFromReq(req);
+    const project = projectCollection.getProjectById(id);
+    if (!project) {
+        sendError(res, "Project not found", 404);
+        return;
+    }
+    sendJson(res, project.toJSON());
+});
+
+app.get("project-meta", (req, res) => {
+    const id = idFromReq(req);
+    const project = projectCollection.getProjectById(id);
+    if (!project) {
+        sendError(res, "Project not found", 404);
+        return;
+    }
+    sendJson(res, project.getMeta());
+});
+
+app.post("article", async (req, res) => {
+    if (!(await validate(req))) {
+        sendUnauthorized(res);
+        return;
+    }
+    const projectId = idFromReq(req);
+    const article = await useBody<Article>(req);
+    const project = projectCollection.getProjectById(projectId);
+    project.addArticle(article);
+    project.viewed();
+});
+
+// </NEW>
 
 // GET requests
 
@@ -86,10 +135,12 @@ app.get("/posts-metadata", async (_, res) => {
 app.get("/viewed", (req, res) => {
     const id = idFromReq(req);
     const post = postCollection.getById(id);
+    if (!post) {
+        sendError(res, "Post not found", 404);
+        return;
+    }
     post.viewed();
-    postCollection.reverseSort();
-    postCollection.save();
-    res.end("Ok");
+    res.end();
 });
 
 // POST requests

@@ -5,6 +5,8 @@ type RequestCallback = (
     res: ServerResponse,
 ) => Promise<void> | void;
 
+export type ErrorCode = 500 | 404;
+
 export function sendJson(res: ServerResponse, obj: object) {
     res.setHeader("content-type", "application/json");
     res.end(JSON.stringify(obj));
@@ -13,6 +15,15 @@ export function sendJson(res: ServerResponse, obj: object) {
 export function sendUnauthorized(res: ServerResponse): void {
     res.statusCode = 401;
     res.end();
+}
+
+export function sendError(
+    res: ServerResponse,
+    message = "an error occured",
+    errorCode: ErrorCode,
+): void {
+    res.statusCode = errorCode;
+    res.end(message);
 }
 
 /**

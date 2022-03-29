@@ -1,4 +1,5 @@
 import { Octokit } from "@octokit/rest";
+import { EventEmitter } from "node:events";
 
 /**
  * the global representation of a github-repository
@@ -37,6 +38,7 @@ export default class GitHub {
     _repos: Repository[];
     _profile: Profile;
     api: Octokit;
+    events = new EventEmitter();
 
     constructor(username: string) {
         this.username = username;
@@ -47,6 +49,13 @@ export default class GitHub {
             await this.fetchRepos();
             await this.fetchProfile();
         }, 10 * 60 * 1000);
+    }
+
+    on(
+        event: "profileFetch" | "reposFetch",
+        listener: (...args: any[]) => any,
+    ) {
+        this.events.on(event, listener);
     }
 
     async getRepos(): Promise<Repository[]> {
@@ -86,6 +95,7 @@ export default class GitHub {
                 })
             ).data.filter((repo) => !repo.fork),
         );
+        this.events.emit("reposFetch", this._repos);
     }
 
     async fetchProfile() {
@@ -97,6 +107,7 @@ export default class GitHub {
                 })
             ).data,
         );
+        this.events.emit("profileFetch", this._profile);
     }
 
     /**
