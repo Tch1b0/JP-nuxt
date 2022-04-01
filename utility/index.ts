@@ -1,22 +1,7 @@
 import { Remarkable } from "remarkable";
-import { Repository } from "~~/server/classes/github";
-import { Post, PostMetadata } from "./datafetching";
+import { Project } from "./datafetching";
 
 export * from "./datafetching";
-
-export function getPostFromRepo<T = Post | PostMetadata>(
-    repo: Repository,
-    posts: T[],
-): T {
-    return posts.find((post) => post["project-id"] === repo.id);
-}
-
-export function getRepoFromPost(
-    post: Post | PostMetadata,
-    repos: Repository[],
-): Repository {
-    return repos.find((repo) => repo.id === post["project-id"]);
-}
 
 export function colorFromLang(lang: string): string | undefined {
     const colors: Map<string, string> = new Map([
@@ -101,14 +86,8 @@ export function calculateAge(birthdate: Date): number {
  * @param repo the repo to evaluate the views from
  * @returns the views or -1
  */
-export function viewsOrNot<T = Post | PostMetadata>(
-    repo: Repository,
-    posts: T[],
-): number {
-    const postIds = posts.map((post: T) => post["project-id"]);
-    return postIds.includes(repo.id)
-        ? getPostFromRepo(repo, posts)["views"]
-        : -1;
+export function viewsOrNot(project: Project): number {
+    return project.article?.viewCount ?? -1;
 }
 
 /**
@@ -117,13 +96,6 @@ export function viewsOrNot<T = Post | PostMetadata>(
  * @param b the second repository
  * @returns the difference between `a` and `b`
  */
-export function projectSort<T = Post | PostMetadata>(
-    a: Repository,
-    b: Repository,
-    posts: T[],
-): number {
-    const aValue = viewsOrNot(a, posts);
-    const bValue = viewsOrNot(b, posts);
-
-    return aValue - bValue;
+export function projectSort(a: Project, b: Project): number {
+    return viewsOrNot(a) - viewsOrNot(b);
 }

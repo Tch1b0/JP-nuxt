@@ -1,46 +1,41 @@
-import { Profile, Repository } from "~~/server/classes/github";
+import { Profile } from "~~/server/classes/github";
+import { Article } from "~~/server/classes/project";
 
-export interface Post {
-    "project-id": number;
-    article: string;
-    images: string[];
-    views: number;
-}
-
-export interface PostMetadata {
-    "project-id": number;
-    title: string;
+export interface Project {
+    id: number;
+    name: string;
     description: string;
-    "pub-date": Date;
-    views: number;
+    url: string;
+    topics: string[];
+    article?: Article;
 }
 
-export async function getRepo(id: number | string) {
-    return await getFromApi<Repository>("repository", `repo/${id}`);
+export async function getProject(id: number | string) {
+    return await getFromApi<Project>(`project-${id}`, `project/${id}`);
 }
 
-export async function getPost(id: number | string) {
-    return await getFromApi<Post>("post", `post/${id}`);
+export async function getArticle(id: number | string) {
+    return await getFromApi<Article>(`article-${id}`, `article/${id}`);
 }
 
-export async function getRepos(): Promise<Repository[]> {
-    return await getFromApi<Repository[]>("repositories", "repos");
+export async function getProjects(): Promise<Project[]> {
+    return await getFromApi<Project[]>("projects", "projects");
 }
 
 export async function getProfile(): Promise<Profile> {
     return await getFromApi<Profile>("profile", "profile");
 }
 
-export async function getPosts(): Promise<Post[]> {
-    return await getFromApi<Post[]>("posts", "posts");
+export async function getArticles(): Promise<Article[]> {
+    return await getFromApi<Article[]>("article", "article");
 }
 
-export async function getPostsMetadata(): Promise<PostMetadata[]> {
-    return await getFromApi<PostMetadata[]>("posts-metadata", "posts-metadata");
+export async function getProjectMeta(): Promise<Project[]> {
+    return await getFromApi<Project[]>("project-meta", "projects-meta");
 }
 
-export async function getPostIds(): Promise<number[]> {
-    return await getFromApi<number[]>("post-ids", "post-ids");
+export async function getProjectIds(): Promise<number[]> {
+    return await getFromApi<number[]>("project-ids", "project-ids");
 }
 
 /**

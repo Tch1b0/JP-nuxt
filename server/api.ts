@@ -43,8 +43,6 @@ github.on("reposFetch", (repos: Repository[]) => {
     projectCollection.save(); // speichere die Projekte in der Datei ab (nur wenn es sich um einen produktiven Server handelt)
 });
 
-// <NEW>
-
 app.get("project", (req, res) => {
     const id = idFromReq(req);
     const project = projectCollection.getProjectById(id);
@@ -53,6 +51,17 @@ app.get("project", (req, res) => {
         return;
     }
     sendJson(res, project.toJSON());
+});
+
+app.get("projects", (req, res) => {
+    sendJson(res, projectCollection.toJSON());
+});
+
+app.get("project-ids", (req, res) => {
+    sendJson(
+        res,
+        projectCollection.toJSON().map((project) => project.id),
+    );
 });
 
 app.get("project-meta", (req, res) => {
@@ -65,6 +74,20 @@ app.get("project-meta", (req, res) => {
     sendJson(res, project.getMeta());
 });
 
+app.get("project-metas", (req, res) => {
+    sendJson(
+        res,
+        projectCollection.projects.map((project) => project.getMeta()),
+    );
+});
+
+app.get("projects", (req, res) => {
+    sendJson(
+        res,
+        projectCollection.projects.map((project) => project.toJSON()),
+    );
+});
+
 app.post("article", async (req, res) => {
     if (!(await validate(req))) {
         sendUnauthorized(res);
@@ -74,76 +97,26 @@ app.post("article", async (req, res) => {
     const article = await useBody<Article>(req);
     const project = projectCollection.getProjectById(projectId);
     project.addArticle(article);
-    project.viewed();
 });
 
-// </NEW>
-
-// GET requests
+app.put("article", async (req, res) => {
+    if (!(await validate(req))) {
+        sendUnauthorized(res);
+        return;
+    }
+    const projectId = idFromReq(req);
+    const article = await useBody<Article>(req);
+    const project = projectCollection.getProjectById(projectId);
+    project.addArticle(article);
+});
 
 app.get("/", (_, res) => {
     res.end("Ok");
 });
-app.get("/repos", async (_, res) => {
-    sendJson(res, await github.getRepos());
-});
-app.get("/repo", async (req, res) => {
-    const id = idFromReq(req);
-    const repo = await github.getRepo(id);
-    sendJson(res, repo);
-});
+
 app.get("/profile", async (_, res) => {
     sendJson(res, await github.getProfile());
 });
-app.get("/posts", (_, res) => {
-    sendJson(
-        res,
-        postCollection.posts.map((post) => post.toJSON()),
-    );
-});
-app.get("/post", (req, res) => {
-    const id = idFromReq(req);
-    const post = postCollection.getById(id);
-    sendJson(res, post.toJSON());
-});
-app.get("/repo-ids", async (_, res) => {
-    sendJson(
-        res,
-        (await github.getRepos()).map((repo) => repo.id),
-    );
-});
-app.get("/post-ids", (_, res) => {
-    sendJson(
-        res,
-        postCollection.posts.map((post) => post.id),
-    );
-});
-app.get("/posts-metadata", async (_, res) => {
-    const repos = await github.getRepos();
-    const postsMetadata = postCollection.posts.map((post) => {
-        const jsonPost = post.toJSON();
-        const repo = repos.find((repo) => repo.id === post.id);
-        delete jsonPost["article"];
-        delete jsonPost["images"];
-        jsonPost["title"] = repo.name;
-        jsonPost["description"] = repo.description;
-        return jsonPost;
-    });
-
-    sendJson(res, postsMetadata);
-});
-app.get("/viewed", (req, res) => {
-    const id = idFromReq(req);
-    const post = postCollection.getById(id);
-    if (!post) {
-        sendError(res, "Post not found", 404);
-        return;
-    }
-    post.viewed();
-    res.end();
-});
-
-// POST requests
 
 app.post("/login", async (req, res) => {
     const { username, password } = await useBody<{
@@ -158,84 +131,30 @@ app.post("/login", async (req, res) => {
     }
 });
 
+app.post("/viewed", (req, res) => {
+    const id = idFromReq(req);
+    const project = projectCollection.getProjectById(id);
+    if (!project) {
+        sendError(res, "Project not found", 404);
+        return;
+    }
+    project.viewed();
+    res.end();
+});
+
 app.post("/validate", async (req, res) => {
     res.statusCode = (await validate(req)) ? 200 : 401;
     res.end();
 });
 
-app.post("/post", async (req, res) => {
+app.delete("article", async (req, res) => {
     if (!(await validate(req))) {
         sendUnauthorized(res);
         return;
     }
-
-    const {
-        "project-id": projectId,
-        article,
-        images,
-    } = await useBody<{
-        "project-id": number;
-        article: string;
-        images: string[];
-    }>(req);
-
-    const newPost = new Post(projectId, article, images, 0);
-    postCollection.add(newPost);
-    sendJson(res, newPost.toJSON());
-});
-
-// PUT requests
-
-app.put("/post", async (req, res) => {
-    if (!(await validate(req))) {
-        sendUnauthorized(res);
-        return;
-    }
-
-    const {
-        "project-id": projectId,
-        article,
-        images,
-    } = await useBody<{
-        "project-id": number;
-        article: string;
-        images: string[];
-    }>(req);
-
-    const post = postCollection.getById(projectId);
-
-    if (post === undefined) {
-        res.statusCode = 404;
-        res.end();
-        return;
-    }
-
-    post.article = article;
-    post.images = images;
-
-    sendJson(res, post.toJSON());
-});
-
-// DELETE requests
-
-app.delete("/post", async (req, res) => {
-    if (!(await validate(req))) {
-        sendUnauthorized(res);
-        return;
-    }
-
-    const { "project-id": projectId } = await useBody<{
-        "project-id": number;
-    }>(req);
-
-    const post = postCollection.getById(projectId);
-    if (post) {
-        postCollection.remove(post);
-        sendJson(res, post.toJSON());
-    } else {
-        res.statusCode = 404;
-        res.end();
-    }
+    const projectId = idFromReq(req);
+    const project = projectCollection.getProjectById(projectId);
+    project.deleteArticle();
 });
 
 export default async (req: IncomingMessage, res: ServerResponse) =>
