@@ -85,12 +85,17 @@ app.post("/article", async (req, res) => {
         sendUnauthorized(res);
         return;
     }
-    const projectId = idFromReq(req);
-    const article = await useBody<Article>(req);
-    console.log("Project id: ", projectId);
+    const {
+        content,
+        images,
+        "project-id": projectId,
+    } = await useBody<{
+        content: string;
+        images: string[];
+        "project-id": number;
+    }>(req);
     const project = projectCollection.getProjectById(projectId);
-    console.log("Project: ", project);
-    project.addArticle(article);
+    project.addArticle(content, images);
 });
 
 app.put("/article", async (req, res) => {
@@ -98,10 +103,14 @@ app.put("/article", async (req, res) => {
         sendUnauthorized(res);
         return;
     }
-    const projectId = idFromReq(req);
-    const { content, images } = await useBody<{
+    const {
+        content,
+        images,
+        "project-id": projectId,
+    } = await useBody<{
         content: string;
         images: string[];
+        "project-id": number;
     }>(req);
     const project = projectCollection.getProjectById(projectId);
     project.updateArticle(content, images);
@@ -145,7 +154,9 @@ app.delete("/article", async (req, res) => {
         sendUnauthorized(res);
         return;
     }
-    const projectId = idFromReq(req);
+    const { "project-id": projectId } = await useBody<{ "project-id": number }>(
+        req,
+    );
     const project = projectCollection.getProjectById(projectId);
     project.deleteArticle();
 });

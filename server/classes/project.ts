@@ -67,10 +67,16 @@ export class Project {
 
     /**
      * creates a new article
-     * @param article the article content to create
+     * @param content the article content to create
+     * @param images the article images to create
      */
-    addArticle(article: Article) {
-        this.article = article;
+    addArticle(content: string, images: string[]) {
+        this.article = {
+            content: content,
+            images: images,
+            publishDate: new Date(),
+            viewCount: 0,
+        };
     }
 
     /**
