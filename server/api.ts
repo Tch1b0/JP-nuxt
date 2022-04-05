@@ -9,7 +9,6 @@ import { IncomingMessage, ServerResponse } from "http";
 import { useBody } from "h3";
 import { User } from "./classes/user";
 import ProjectCollection from "./classes/projectCollection";
-import { Article } from "./classes/project";
 
 const app = new Router();
 const admin = new User(
