@@ -1,6 +1,4 @@
 import GitHub, { Repository } from "./classes/github";
-import Post from "./classes/post";
-import PostCollection from "./classes/postCollection";
 import Router, {
     sendJson,
     sendUnauthorized,
@@ -21,11 +19,6 @@ const admin = new User(
 
 export const github = new GitHub(process.env["GH_USERNAME"] || "Tch1b0");
 
-const templatePosts =
-    process.env["NODE_ENV"] === "production"
-        ? undefined
-        : [new Post(393093009, "test", [], 0)];
-export const postCollection = new PostCollection(templatePosts);
 export const projectCollection = new ProjectCollection();
 
 /**
@@ -39,8 +32,14 @@ async function validate(req: IncomingMessage): Promise<boolean> {
 }
 
 github.on("reposFetch", (repos: Repository[]) => {
-    projectCollection.updateRepositories(repos); // update the post collection with the new repositories
-    projectCollection.save(); // speichere die Projekte in der Datei ab (nur wenn es sich um einen produktiven Server handelt)
+    projectCollection.updateRepositories(repos);
+    projectCollection.save();
+});
+
+github.fetchRepos();
+
+app.get("/", (_, res) => {
+    res.end("Ok");
 });
 
 app.get("project", (req, res) => {
@@ -51,10 +50,6 @@ app.get("project", (req, res) => {
         return;
     }
     sendJson(res, project.toJSON());
-});
-
-app.get("projects", (req, res) => {
-    sendJson(res, projectCollection.toJSON());
 });
 
 app.get("project-ids", (req, res) => {
@@ -82,10 +77,8 @@ app.get("project-metas", (req, res) => {
 });
 
 app.get("projects", (req, res) => {
-    sendJson(
-        res,
-        projectCollection.projects.map((project) => project.toJSON()),
-    );
+    console.log("HEREREREREr");
+    sendJson(res, projectCollection.toJSON());
 });
 
 app.post("article", async (req, res) => {
@@ -105,13 +98,12 @@ app.put("article", async (req, res) => {
         return;
     }
     const projectId = idFromReq(req);
-    const article = await useBody<Article>(req);
+    const { content, images } = await useBody<{
+        content: string;
+        images: string[];
+    }>(req);
     const project = projectCollection.getProjectById(projectId);
-    project.addArticle(article);
-});
-
-app.get("/", (_, res) => {
-    res.end("Ok");
+    project.updateArticle(content, images);
 });
 
 app.get("/profile", async (_, res) => {

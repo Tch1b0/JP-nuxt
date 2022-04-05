@@ -1,8 +1,8 @@
 import { Repository } from "./github";
 
 export interface Article {
-    content: string;
-    images: string[];
+    content?: string;
+    images?: string[];
     publishDate: Date;
     viewCount: number;
 }
@@ -15,6 +15,7 @@ export class Project {
     name: string;
     description: string;
     url: string;
+    language: string;
     topics: string[];
     article?: Article;
 
@@ -23,6 +24,7 @@ export class Project {
         name: string,
         description: string,
         url: string,
+        language: string,
         topics: string[],
         article?: Article,
     ) {
@@ -30,6 +32,7 @@ export class Project {
         this.name = name;
         this.description = description;
         this.url = url;
+        this.language = language;
         this.topics = topics;
         this.article = article;
     }
@@ -45,6 +48,7 @@ export class Project {
             repo.name,
             repo.description,
             repo.url,
+            repo.language,
             repo.topics,
         );
     }
@@ -56,7 +60,8 @@ export class Project {
     updateFromRepository(repo: Repository) {
         this.name = repo.name;
         this.description = repo.description;
-        this.url = repo.url;
+        this.url = repo.html_url;
+        this.language = repo.language;
         this.topics = repo.topics;
     }
 
@@ -66,6 +71,16 @@ export class Project {
      */
     addArticle(article: Article) {
         this.article = article;
+    }
+
+    /**
+     * updates the article content and images
+     * @param content the new content
+     * @param images the new images
+     */
+    updateArticle(content: string, images: string[]) {
+        this.article.content = content;
+        this.article.images = images;
     }
 
     /**
@@ -83,15 +98,18 @@ export class Project {
     }
 
     getMeta() {
+        const articleMeta = {
+            publishDate: this.article.publishDate,
+            viewCount: this.article.viewCount,
+        };
         return {
             id: this.id,
             name: this.name,
             description: this.description,
             url: this.url,
             topics: this.topics,
-            publishDate: this.article.publishDate,
-            hasArticle: this.article !== undefined,
-            viewCount: this.article.viewCount,
+            language: this.language,
+            article: articleMeta,
         };
     }
 
@@ -106,6 +124,7 @@ export class Project {
             json.name,
             json.description,
             json.url,
+            json.language,
             json.topics,
             {
                 content: json.article.content,
@@ -126,6 +145,7 @@ export class Project {
             name: this.name,
             description: this.description,
             url: this.url,
+            language: this.language,
             topics: this.topics,
             article: this.article,
         };

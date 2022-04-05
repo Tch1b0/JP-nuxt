@@ -1,21 +1,21 @@
 <template>
-    <div class="bg-transparent m-5 post-article" v-html="markdownArticle"></div>
+    <div class="bg-transparent m-5 post-article" v-html="markdownContent"></div>
 </template>
 
 <script setup lang="ts">
 import { Remarkable } from "remarkable";
-import "assets/styles/post-article.css";
+import "assets/styles/article-content.css";
 import hljs from "highlight.js";
 
 const props = defineProps({
-    article: {
+    content: {
         type: String,
         required: true,
     },
 });
 watch(props, () => render());
 
-const markdownArticle = reactive(ref(""));
+const markdownContent = reactive(ref(""));
 
 function urify(str: string): string {
     let newStr = "";
@@ -29,12 +29,12 @@ function urify(str: string): string {
     return newStr;
 }
 
-function createTableOfContents(article: string): string {
+function createTableOfContents(content: string): string {
     // create a new table
     let table = "";
 
     // iterate over every level 1 heading
-    for (const h1Raw of article.matchAll(/# ([\s\S])*?(?=([^#]# |$))/g)) {
+    for (const h1Raw of content.matchAll(/# ([\s\S])*?(?=([^#]# |$))/g)) {
         // Get the content of the title
         const h1 = h1Raw
             .toString()
@@ -79,13 +79,13 @@ function createTableOfContents(article: string): string {
     return table;
 }
 
-function addIdsToHeadings(article: string): string {
-    for (const heading of article.matchAll(/<h[1-3]>.*?<\/h[1-3]>/g)) {
+function addIdsToHeadings(content: string): string {
+    for (const heading of content.matchAll(/<h[1-3]>.*?<\/h[1-3]>/g)) {
         const hNum = Number(
             heading.toString().replaceAll(/<h|>.*?<\/h[1-3]>/g, ""),
         );
         const title = heading.toString().replaceAll(/<\/?h[1-3]>/g, "");
-        article = article.replace(
+        content = content.replace(
             heading.toString(),
             heading
                 .toString()
@@ -93,7 +93,7 @@ function addIdsToHeadings(article: string): string {
         );
     }
 
-    return article;
+    return content;
 }
 
 function render() {
@@ -112,13 +112,13 @@ function render() {
     });
 
     const htmlArticle = markdownParser.render(`# Content
-${createTableOfContents(props.article)}
-${props.article}`);
+${createTableOfContents(props.content)}
+${props.content}`);
 
-    markdownArticle.value = addIdsToHeadings(htmlArticle);
+    markdownContent.value = addIdsToHeadings(htmlArticle);
 
     // Add a horizontal line beneath every </h1>
-    markdownArticle.value = markdownArticle.value.replace(
+    markdownContent.value = markdownContent.value.replace(
         /<\/h1>/g,
         "</h1>\n<hr>",
     );

@@ -8,8 +8,7 @@
 <script setup lang="ts">
 import { PieChart } from "vue-chart-3";
 import { Chart, registerables } from "chart.js";
-import { getRepos, getPosts, Post } from "~~/utility";
-import { Repository } from "~~/server/classes/github";
+import { Project } from "~~/utility";
 
 function generateHexCode() {
     return `#${Math.random().toString(16).slice(2, 8)}`;
@@ -18,32 +17,20 @@ function generateHexCode() {
 const props = defineProps<{
     width?: number;
     height?: number;
-    posts: Post[];
-    repos: Repository[];
+    projects: Project[];
 }>();
 
 Chart.register(...registerables);
 Chart.defaults.color = "#fff";
 
-let posts: Post[];
-let repos: Repository[];
-
-if (props.posts === undefined || props.repos === undefined) {
-    posts = await getPosts();
-    repos = await getRepos();
-} else {
-    posts = reactive(props.posts);
-    repos = reactive(props.repos);
-}
+let projects = reactive(props.projects);
 
 const data = {
-    labels: posts.map(
-        (post) => repos.find((repo) => post["project-id"] === repo.id).name,
-    ),
+    labels: projects.map((project) => project.name),
     datasets: [
         {
-            data: posts.map((post) => post.views),
-            backgroundColor: posts.map(() => generateHexCode()),
+            data: projects.map((project) => project.article.viewCount ?? 0),
+            backgroundColor: projects.map(() => generateHexCode()),
         },
     ],
 };

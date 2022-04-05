@@ -17,9 +17,6 @@
 
 <script setup type="ts">
 defineProps({
-    success: {
-        type: Boolean,
-        required: true,
-    }
-})
+    success: Boolean
+});
 </script>

@@ -10,45 +10,41 @@
             class="grid grid-cols-1 w-11/12 md:grid-cols-2 xl:grid-cols-3 xxl:grid-cols-4 sm:w-max gap-5">
             <transition-group>
                 <project-card
-                    v-for="repo in repos"
-                    :repo="repo"
-                    :has-post="postIds.includes(repo.id)"
-                    :key="repo.id"></project-card
-            ></transition-group>
+                    v-for="project in projects"
+                    :project="project"
+                    :key="project.id"></project-card>
+            </transition-group>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { Repository } from "~~/server/classes/github";
-import { getRepos, getPostsMetadata, projectSort } from "~~/utility";
+import { getProjectMetas, Project, projectSort } from "~~/utility";
 
 useMeta({
     title: "Johannes Pour - Projects",
 });
 
-const allRepos = await getRepos();
-const posts = await getPostsMetadata();
-const postIds = posts.map((post) => post["project-id"]);
+const allProjects = await getProjectMetas();
 
 const filterTopics = useTopicFilter();
 watch(filterTopics.value, filterRepos);
 
 // The repositories that are actually shown to the user
-let repos = ref<Repository[]>([...allRepos]);
+let projects = ref<Project[]>([...allProjects]);
 
 function filterRepos() {
-    if (filterTopics.value.length > 0) {
-        repos.value = allRepos.filter((repo) => {
+    if (filterTopics.value.length === 0) {
+        projects.value = allProjects;
+    } else {
+        projects.value = allProjects.filter((repo) => {
             for (const topic of filterTopics.value) {
                 if (!repo.topics.includes(topic)) return false;
             }
             return true;
         });
-    } else {
-        repos.value = allRepos;
     }
-    repos.value.sort((a, b) => projectSort(a, b, posts)).reverse();
+    projects.value.sort((a, b) => projectSort(a, b)).reverse();
 }
 
 // run initially

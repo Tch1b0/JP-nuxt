@@ -5,9 +5,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
     } catch {
         return "/projects";
     }
-    const postIds = await $fetch<number[]>("/api/post-ids");
+    const projectIds = await $fetch<number[]>("/api/project-ids");
 
-    if (!postIds.includes(id)) {
+    if (!projectIds.includes(id)) {
         return "/projects";
     }
 });

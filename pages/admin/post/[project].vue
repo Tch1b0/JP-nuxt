@@ -6,7 +6,9 @@
             >{{ action.message ?? "Something went wrong..." }}</action-overlay
         >
         <div class="flex gap-4 items-center">
-            <post-title :repo="repo" class="ml-5 lg:ml-5"></post-title>
+            <project-title
+                :project="project"
+                class="ml-5 lg:ml-5"></project-title>
             <simple-button
                 @clicked="$router.push(`/projects/${projectId}`)"
                 v-if="exists"
@@ -17,7 +19,7 @@
             class="flex flex-col flex-1 md:flex-row items-start ml-5 mr-5 gap-5 justify-center">
             <div class="grid p-5 gap-5 bg-gray-800 flex-1 rounded-md">
                 <textarea
-                    v-model="article"
+                    v-model="content"
                     cols="30"
                     class="flex-1 bg-gray-900 pl-1"
                     rows="10"
@@ -74,38 +76,36 @@
                 >
             </div>
             <div class="p-5 bg-gray-800 flex-1 rounded-md">
-                <post-article :article="article"></post-article>
+                <project-article :content="content"></project-article>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { getAuthCookie, getPost, getPostIds, getRepo } from "~~/utility";
+import { getAuthCookie, getProject } from "~~/utility";
 
 definePageMeta({
-    middleware: ["auth", "verifyrepo"],
+    middleware: ["auth", "verifyproject"],
 });
 
 const projectId = Number(useRoute().params.project);
-const repo = await getRepo(projectId);
+const project = await getProject(projectId);
 useMeta({
-    title: `Johannes Pour - Edit ${repo.name}`,
+    title: `Johannes Pour - Edit ${project.name}`,
     meta: [
         {
-            description: repo.description,
+            description: project.description,
         },
     ],
 });
-
-let exists = ref((await getPostIds()).includes(projectId));
 
 // the token to create/edit/delete a post
 const token = getAuthCookie().value.replace(/^Bearer /, "");
 
 // make article object reactive
-const articleRef = ref("");
-const article = reactive(articleRef);
+const contentRef = ref("");
+const content = reactive(contentRef);
 
 const newImage = ref("");
 const images = ref<string[]>([]);
@@ -114,12 +114,12 @@ const action = ref<{
     message?: string;
     visible?: boolean;
 }>({});
+let exists = reactive(ref(false));
 
-if (exists.value) {
-    const response = await getPost(projectId);
-
-    article.value = response.article;
-    images.value = response.images;
+if (project.article !== undefined) {
+    content.value = project.article.content;
+    images.value = project.article.images;
+    exists.value = true;
 }
 
 function handlePost() {
@@ -138,12 +138,12 @@ function displayAction(success: boolean, message: string) {
 
 async function createPost() {
     let failed: boolean;
-    await $fetch("/api/post", {
+    await $fetch("/api/article", {
         method: "POST",
         body: {
             token,
             "project-id": projectId,
-            article: article.value,
+            content: content.value,
             images: images.value,
         },
     })
@@ -154,18 +154,17 @@ async function createPost() {
     } else {
         displayAction(true, "Post created!");
         exists.value = true;
-        // await useRouter().push(`/projects/${projectId}`);
     }
 }
 
 async function editPost() {
     let failed: boolean;
-    await $fetch("/api/post", {
+    await $fetch("/api/article", {
         method: "PUT",
         body: {
             token,
             "project-id": projectId,
-            article: article.value,
+            content: content.value,
             images: images.value,
         },
     })
@@ -175,13 +174,12 @@ async function editPost() {
         displayAction(false, "Could not edit post");
     } else {
         displayAction(true, "Post edited!");
-        // await useRouter().push(`/projects/${projectId}`);
     }
 }
 
 async function deletePost() {
     let failed: boolean;
-    await $fetch("/api/post", {
+    await $fetch("/api/article", {
         method: "DELETE",
         body: { token, "project-id": projectId },
     })

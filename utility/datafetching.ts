@@ -6,6 +6,7 @@ export interface Project {
     name: string;
     description: string;
     url: string;
+    language: string;
     topics: string[];
     article?: Article;
 }
@@ -30,8 +31,12 @@ export async function getArticles(): Promise<Article[]> {
     return await getFromApi<Article[]>("article", "article");
 }
 
-export async function getProjectMeta(): Promise<Project[]> {
-    return await getFromApi<Project[]>("project-meta", "projects-meta");
+export async function getProjectMeta(): Promise<Project> {
+    return await getFromApi<Project>("project-meta", "projects-meta");
+}
+
+export async function getProjectMetas(): Promise<Project[]> {
+    return await getFromApi<Project[]>("project-metas", "project-metas");
 }
 
 export async function getProjectIds(): Promise<number[]> {
