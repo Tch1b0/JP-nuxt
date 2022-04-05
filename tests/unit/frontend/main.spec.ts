@@ -1,74 +1,56 @@
 import { expect } from "chai";
-import { Post, projectSort } from "~~/utility";
-import { Repository } from "~~/server/classes/github";
+import { Project, projectSort } from "~~/utility";
 
 describe("Test Frontend", () => {
     it("Test project sorting", () => {
-        const repos = [
+        const projects = [
             {
                 name: "repo",
                 id: 1,
                 description: "description",
                 url: "https://example.com/repo.git",
-                html_url: "https://example.com/repo",
                 topics: ["topic0", "topic1"],
-                language: "english",
-                fork: false,
-            } as Repository,
+                language: "TypeScript",
+                article: {
+                    publishDate: new Date(),
+                    viewCount: 3,
+                },
+            } as Project,
             {
                 name: "repo",
                 id: 2,
                 description: "description",
                 url: "https://example.com/repo.git",
-                html_url: "https://example.com/repo",
                 topics: ["topic0", "topic1"],
-                language: "english",
-                fork: false,
-            } as Repository,
+                language: "TypeScript",
+                article: {
+                    publishDate: new Date(),
+                    viewCount: 50,
+                },
+            } as Project,
             {
                 name: "repo",
                 id: 3,
                 description: "description",
                 url: "https://example.com/repo.git",
-                html_url: "https://example.com/repo",
                 topics: ["topic0", "topic1"],
-                language: "english",
-                fork: false,
-            } as Repository,
+                language: "TypeScript",
+                article: {
+                    publishDate: new Date(),
+                    viewCount: 75,
+                },
+            } as Project,
             {
                 name: "repo",
                 id: 4,
                 description: "description",
                 url: "https://example.com/repo.git",
-                html_url: "https://example.com/repo",
                 topics: ["topic0", "topic1"],
-                language: "english",
-                fork: false,
-            } as Repository,
+                language: "TypeScript",
+            } as Project,
         ];
 
-        const posts = [
-            {
-                "project-id": 1,
-                article: "article",
-                images: [],
-                views: 3,
-            } as Post,
-            {
-                "project-id": 2,
-                article: "article",
-                images: [],
-                views: 50,
-            } as Post,
-            {
-                "project-id": 3,
-                article: "article",
-                images: [],
-                views: 75,
-            } as Post,
-        ];
-
-        const sorted = repos.sort((a, b) => projectSort(a, b, posts)).reverse();
+        const sorted = projects.sort((a, b) => projectSort(a, b)).reverse();
         expect(sorted[0].id).to.equal(3);
         expect(sorted[1].id).to.equal(2);
         expect(sorted[2].id).to.equal(1);
