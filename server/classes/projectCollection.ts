@@ -5,14 +5,23 @@ import fs from "node:fs";
 /**
  * the project-collection class that holds all the information about the projects
  */
-export class ProjectCollection {
+export default class ProjectCollection {
     projects: Project[];
-    isProduction = process.env.NODE_ENV === "production";
+    loadable: boolean;
+    saveable: boolean;
 
-    constructor(projects?: Project[]) {
+    constructor(
+        projects?: Project[],
+        loadable: boolean = undefined,
+        saveable: boolean = undefined,
+    ) {
         this.projects = projects ?? [];
-        this.load();
-        this.save();
+        const isProduction = process.env.NODE_ENV === "production";
+        this.loadable = loadable ?? isProduction;
+        this.saveable = saveable ?? isProduction;
+
+        if (this.loadable) this.load();
+        if (this.saveable) this.save();
     }
 
     /**
@@ -34,7 +43,7 @@ export class ProjectCollection {
      * saves the project collection to the file system
      */
     save() {
-        if (!this.isProduction) return;
+        if (!this.saveable) return;
         if (!fs.existsSync("./data")) fs.mkdirSync("./data");
 
         fs.writeFileSync(
@@ -47,7 +56,7 @@ export class ProjectCollection {
      * loads the project collection from the file system
      */
     load() {
-        if (!this.isProduction) return;
+        if (!this.loadable) return;
         if (!fs.existsSync("./data")) return;
 
         const data = fs.readFileSync("./data/projects.json", "utf8");
