@@ -11,32 +11,49 @@ export interface Project {
     article?: Article;
 }
 
-export async function getProject(id: number | string) {
-    return await getFromApi<Project>(`project-${id}`, `project/${id}`);
+function articleResponseToArticle(article: any): Article | undefined {
+    if (article === undefined) return undefined;
+    return {
+        content: article.content,
+        images: article.images,
+        publishDate: new Date(article["publish-date"]),
+        viewCount: article["view-count"],
+    };
 }
 
-export async function getArticle(id: number | string) {
-    return await getFromApi<Article>(`article-${id}`, `article/${id}`);
+export async function getProject(id: number | string) {
+    const project = await getFromApi<Project>(`project-${id}`, `project/${id}`);
+    project.article = articleResponseToArticle(project.article);
+    return project;
 }
 
 export async function getProjects(): Promise<Project[]> {
-    return await getFromApi<Project[]>("projects", "projects");
+    const projects = await getFromApi<Project[]>("projects", "projects");
+    projects.forEach((project) => {
+        project.article = articleResponseToArticle(project.article);
+    });
+    return projects;
 }
 
 export async function getProfile(): Promise<Profile> {
     return await getFromApi<Profile>("profile", "profile");
 }
 
-export async function getArticles(): Promise<Article[]> {
-    return await getFromApi<Article[]>("article", "article");
-}
-
 export async function getProjectMeta(): Promise<Project> {
-    return await getFromApi<Project>("project-meta", "projects-meta");
+    const project = await getFromApi<Project>("project-meta", "projects-meta");
+    project.article = articleResponseToArticle(project.article);
+    return project;
 }
 
 export async function getProjectMetas(): Promise<Project[]> {
-    return await getFromApi<Project[]>("project-metas", "project-metas");
+    const projects = await getFromApi<Project[]>(
+        "project-metas",
+        "project-metas",
+    );
+    projects.forEach((project) => {
+        project.article = articleResponseToArticle(project.article);
+    });
+    return projects;
 }
 
 export async function getProjectIds(): Promise<number[]> {

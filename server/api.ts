@@ -42,7 +42,7 @@ app.get("/", (_, res) => {
     res.end("Ok");
 });
 
-app.get("project", (req, res) => {
+app.get("/project", (req, res) => {
     const id = idFromReq(req);
     const project = projectCollection.getProjectById(id);
     if (!project) {
@@ -52,14 +52,14 @@ app.get("project", (req, res) => {
     sendJson(res, project.toJSON());
 });
 
-app.get("project-ids", (req, res) => {
+app.get("/project-ids", (req, res) => {
     sendJson(
         res,
         projectCollection.toJSON().map((project) => project.id),
     );
 });
 
-app.get("project-meta", (req, res) => {
+app.get("/project-meta", (req, res) => {
     const id = idFromReq(req);
     const project = projectCollection.getProjectById(id);
     if (!project) {
@@ -69,30 +69,31 @@ app.get("project-meta", (req, res) => {
     sendJson(res, project.getMeta());
 });
 
-app.get("project-metas", (req, res) => {
+app.get("/project-metas", (req, res) => {
     sendJson(
         res,
         projectCollection.projects.map((project) => project.getMeta()),
     );
 });
 
-app.get("projects", (req, res) => {
-    console.log("HEREREREREr");
+app.get("/projects", (req, res) => {
     sendJson(res, projectCollection.toJSON());
 });
 
-app.post("article", async (req, res) => {
+app.post("/article", async (req, res) => {
     if (!(await validate(req))) {
         sendUnauthorized(res);
         return;
     }
     const projectId = idFromReq(req);
     const article = await useBody<Article>(req);
+    console.log("Project id: ", projectId);
     const project = projectCollection.getProjectById(projectId);
+    console.log("Project: ", project);
     project.addArticle(article);
 });
 
-app.put("article", async (req, res) => {
+app.put("/article", async (req, res) => {
     if (!(await validate(req))) {
         sendUnauthorized(res);
         return;
@@ -139,7 +140,7 @@ app.post("/validate", async (req, res) => {
     res.end();
 });
 
-app.delete("article", async (req, res) => {
+app.delete("/article", async (req, res) => {
     if (!(await validate(req))) {
         sendUnauthorized(res);
         return;

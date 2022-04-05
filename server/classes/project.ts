@@ -98,10 +98,13 @@ export class Project {
     }
 
     getMeta() {
-        const articleMeta = {
-            publishDate: this.article.publishDate,
-            viewCount: this.article.viewCount,
-        };
+        const articleMeta =
+            this.article === undefined
+                ? undefined
+                : {
+                      "publish-date": this.article.publishDate,
+                      "view-count": this.article.viewCount,
+                  };
         return {
             id: this.id,
             name: this.name,
@@ -147,7 +150,15 @@ export class Project {
             url: this.url,
             language: this.language,
             topics: this.topics,
-            article: this.article,
+            article:
+                this.article === undefined
+                    ? undefined
+                    : {
+                          content: this.article.content,
+                          images: this.article.images,
+                          "publish-date": this.article.publishDate,
+                          "view-count": this.article.viewCount,
+                      },
         };
     }
 }

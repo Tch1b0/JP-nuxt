@@ -7,6 +7,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
     const projectIds = await $fetch<number[]>("/api/project-ids");
 
+    console.log("Checking ids ", projectIds);
     if (!projectIds.includes(id)) {
         return "/projects";
     }
