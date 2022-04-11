@@ -47,7 +47,7 @@ export class Project {
             repo.id,
             repo.name,
             repo.description,
-            repo.url,
+            repo.html_url,
             repo.language,
             repo.topics,
         );
