@@ -93,8 +93,10 @@ app.post("/article", async (req, res) => {
         images: string[];
         "project-id": number;
     }>(req);
+    console.log(`Server: Received article for project ${projectId}`);
     const project = projectCollection.getProjectById(projectId);
     project.addArticle(content, images);
+    res.end("Ok");
 });
 
 app.put("/article", async (req, res) => {
@@ -113,6 +115,7 @@ app.put("/article", async (req, res) => {
     }>(req);
     const project = projectCollection.getProjectById(projectId);
     project.updateArticle(content, images);
+    res.end("Ok");
 });
 
 app.get("/profile", async (_, res) => {
@@ -158,6 +161,7 @@ app.delete("/article", async (req, res) => {
     );
     const project = projectCollection.getProjectById(projectId);
     project.deleteArticle();
+    res.end("Ok");
 });
 
 export default async (req: IncomingMessage, res: ServerResponse) =>
