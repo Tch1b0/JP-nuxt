@@ -23,14 +23,18 @@ const props = defineProps<{
 Chart.register(...registerables);
 Chart.defaults.color = "#fff";
 
-let projects = reactive(props.projects);
+let { projects } = reactive(props);
+
+projects = projects.filter(
+    (project) => project?.article?.viewCount !== undefined,
+);
 
 const data = {
     labels: projects.map((project) => project.name),
     datasets: [
         {
-            data: projects.map((project) => project.article.viewCount ?? 0),
-            backgroundColor: projects.map(() => generateHexCode()),
+            data: projects.map((project) => project?.article?.viewCount ?? 0),
+            backgroundColor: projects.map(generateHexCode),
         },
     ],
 };

@@ -30,7 +30,7 @@ const projects = await getProjectMetas();
 const totalViews =
     projects.length != 0
         ? projects
-              .map((project) => project?.article.viewCount ?? 0)
+              .map((project) => project?.article?.viewCount ?? 0)
               .reduce((a, b) => a + b)
         : 0;
 </script>

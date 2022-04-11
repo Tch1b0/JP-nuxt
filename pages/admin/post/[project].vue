@@ -104,8 +104,7 @@ useMeta({
 const token = getAuthCookie().value.replace(/^Bearer /, "");
 
 // make article object reactive
-const contentRef = ref("");
-const content = reactive(contentRef);
+const content = reactive(ref(""));
 
 const newImage = ref("");
 const images = ref<string[]>([]);
@@ -116,11 +115,9 @@ const action = ref<{
 }>({});
 let exists = reactive(ref(false));
 
-if (project.article !== undefined) {
-    content.value = project.article.content;
-    images.value = project.article.images;
-    exists.value = true;
-}
+content.value = project?.article?.content ?? "";
+images.value = project?.article?.images ?? [];
+exists.value = project?.article !== undefined;
 
 function handlePost() {
     exists.value ? editPost() : createPost();
