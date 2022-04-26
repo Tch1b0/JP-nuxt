@@ -31,7 +31,6 @@ export function sendError(
  * @param req the request from which the id should be taken from
  */
 export function idFromReq(req: IncomingMessage): number {
-    console.log(req.url.split("/"));
     return Number(req.url.split("/")[2]);
 }
 

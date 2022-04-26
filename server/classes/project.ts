@@ -128,7 +128,6 @@ export class Project {
      * @returns a project
      */
     static fromJSON(json: any): Project {
-        console.log(json.article);
         return new Project(
             json.id,
             json.name,

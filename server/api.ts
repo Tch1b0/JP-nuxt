@@ -93,7 +93,6 @@ app.post("/article", async (req, res) => {
         images: string[];
         "project-id": number;
     }>(req);
-    console.log(`Server: Received article for project ${projectId}`);
     const project = projectCollection.getProjectById(projectId);
     project.addArticle(content, images);
     res.end("Ok");
