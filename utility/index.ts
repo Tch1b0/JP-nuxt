@@ -49,7 +49,7 @@ export function basicMdToHtml(markdownContent: string): string {
 }
 
 /**
- * Calls a callback every `days` days
+ * calls a callback every `days` days
  * @param callback The callback that should be called after the days passed
  * @param days How many days to wait
  */

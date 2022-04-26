@@ -111,7 +111,7 @@ export default class GitHub {
     }
 
     /**
-     * Get a certain repository by its id
+     * get a certain repository by its id
      * @param id The id that is supposed to match the repos one
      * @returns The matching repository
      */
@@ -120,7 +120,7 @@ export default class GitHub {
     }
 
     /**
-     * Get the request rate of the github API
+     * get the request rate of the github API
      * @returns The request rate object
      */
     async getRate() {
