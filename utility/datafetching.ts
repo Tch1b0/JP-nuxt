@@ -70,6 +70,8 @@ export async function getProjectIds(): Promise<number[]> {
  * getFromApi<number>("count", "count/value");
  * ```
  * => requests `<localhost>/api/count/value` and returns a number
+ *
+ * @returns the response of the request as the type `Response`
  */
 async function getFromApi<Response>(key: string, route: string) {
     const response = await useAsyncData<Response>(key, () =>

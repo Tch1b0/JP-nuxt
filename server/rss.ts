@@ -31,6 +31,7 @@ async function createRssPosts(profile: Profile): Promise<object> {
     return rssPosts;
 }
 
+// respond with the rss feed
 export default async (_: IncomingMessage, res: ServerResponse) => {
     res.setHeader("Content-Type", "text/xml");
     const profile = await github.getProfile();
