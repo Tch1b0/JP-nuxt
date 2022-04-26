@@ -2,13 +2,24 @@ import { Repository } from "./github";
 import { Project } from "./project";
 import fs from "node:fs";
 
+type OldPost = {
+    "project-id": number;
+    article: string;
+    images: string[];
+    views: number;
+    "pub-date": string;
+};
+
 /**
  * the project-collection class that holds all the information about the projects
  */
 export default class ProjectCollection {
+    saveDir = "./data";
+    saveFile = `${this.saveDir}/projects.json`;
     projects: Project[];
     loadable: boolean;
     saveable: boolean;
+    migrationRanOnce = false;
 
     constructor(
         projects?: Project[],
@@ -21,6 +32,7 @@ export default class ProjectCollection {
         this.saveable = saveable ?? isProduction;
 
         if (this.loadable) this.load();
+        if (this.projects.length > 0) this.migratePosts();
         if (this.saveable) this.save();
     }
 
@@ -37,6 +49,8 @@ export default class ProjectCollection {
                 this.projects.push(Project.createFromRepository(repo));
             }
         }
+        if (!this.migrationRanOnce) this.migratePosts();
+        this.save();
     }
 
     /**
@@ -44,10 +58,10 @@ export default class ProjectCollection {
      */
     save() {
         if (!this.saveable) return;
-        if (!fs.existsSync("./data")) fs.mkdirSync("./data");
+        if (!fs.existsSync(this.saveDir)) fs.mkdirSync(this.saveDir);
 
         fs.writeFileSync(
-            "./data/projects.json",
+            this.saveFile,
             JSON.stringify(this.projects.map((project) => project.toJSON())),
         );
     }
@@ -57,9 +71,9 @@ export default class ProjectCollection {
      */
     load() {
         if (!this.loadable) return;
-        if (!fs.existsSync("./data")) return;
+        if (!fs.existsSync(this.saveFile)) return;
 
-        const data = fs.readFileSync("./data/projects.json", "utf8");
+        const data = fs.readFileSync(this.saveFile, "utf8");
         if (!data) return;
 
         this.projects = JSON.parse(data).map((project: object) =>
@@ -74,6 +88,28 @@ export default class ProjectCollection {
      */
     getProjectById(id: number): Project | undefined {
         return this.projects.find((project) => project.id === id);
+    }
+
+    /**
+     * checks if there are outdated posts to migrate, and migrates them
+     */
+    migratePosts() {
+        this.migrationRanOnce = true;
+        const postFile = `${this.saveDir}/posts.json`;
+        if (!fs.existsSync(postFile)) return;
+
+        const content = fs.readFileSync(postFile, "utf8");
+        JSON.parse(content).forEach((post: OldPost) => {
+            const project = this.getProjectById(post["project-id"]);
+            if (!project || project.article !== undefined) return;
+
+            project.article = {
+                content: post.article,
+                images: post.images,
+                viewCount: post.views,
+                publishDate: new Date(post["pub-date"]),
+            };
+        });
     }
 
     /**

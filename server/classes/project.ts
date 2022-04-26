@@ -128,6 +128,7 @@ export class Project {
      * @returns a project
      */
     static fromJSON(json: any): Project {
+        console.log(json.article);
         return new Project(
             json.id,
             json.name,
@@ -135,12 +136,14 @@ export class Project {
             json.url,
             json.language,
             json.topics,
-            {
-                content: json.article.content,
-                images: json.article.images,
-                publishDate: new Date(json.article["publish-date"]),
-                viewCount: json.article["view-count"],
-            },
+            !json.article
+                ? undefined
+                : {
+                      content: json.article.content,
+                      images: json.article.images,
+                      publishDate: new Date(json.article["publish-date"]),
+                      viewCount: json.article["view-count"],
+                  },
         );
     }
 
@@ -158,7 +161,7 @@ export class Project {
             topics: this.topics,
             article:
                 this.article === undefined
-                    ? undefined
+                    ? null
                     : {
                           content: this.article.content,
                           images: this.article.images,
