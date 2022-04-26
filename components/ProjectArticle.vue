@@ -14,7 +14,7 @@ const props = defineProps({
     },
 });
 watch(props, () => render());
-
+console.log(props.content);
 const markdownContent = reactive(ref(""));
 
 function urify(str: string): string {
