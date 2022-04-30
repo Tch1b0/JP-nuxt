@@ -12,7 +12,7 @@ export interface Project {
 }
 
 function articleResponseToArticle(article: any): Article | undefined {
-    if (article === undefined) return undefined;
+    if (article === undefined || article === null) return undefined;
     return {
         content: article.content,
         images: article.images,

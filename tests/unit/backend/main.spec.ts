@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Project, Article } from "~~/server/classes/project";
+import { Project } from "~~/server/classes/project";
 import { User } from "~~/server/classes/user";
 import Router from "~~/server/router";
 import ProjectCollection from "~~/server/classes/projectCollection";

@@ -82,8 +82,8 @@ export function calculateAge(birthdate: Date): number {
 }
 
 /**
- * get the views of a post to a repository or -1
- * @param repo the repo to evaluate the views from
+ * get the views of a project or -1
+ * @param project the project to evaluate the views from
  * @returns the views or -1
  */
 export function viewsOrNot(project: Project): number {
@@ -91,9 +91,9 @@ export function viewsOrNot(project: Project): number {
 }
 
 /**
- * sorts a repository array from: *has no post* -> *has post* -> *has most views*
- * @param a the first repostiory
- * @param b the second repository
+ * sorts a project array from: *has no article* -> *has article* -> *has most views*
+ * @param a the first project
+ * @param b the second project
  * @returns the difference between `a` and `b`
  */
 export function projectSort(a: Project, b: Project): number {

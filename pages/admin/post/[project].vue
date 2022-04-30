@@ -1,9 +1,9 @@
 <template>
     <div class="flex flex-col gap-5 mt-5 mb-5">
         <action-overlay
-            v-if="action.visible ?? false"
-            :success="action.success ?? false"
-            >{{ action.message ?? "Something went wrong..." }}</action-overlay
+            v-if="action?.visible ?? false"
+            :success="action?.success ?? false"
+            >{{ action?.message ?? "Something went wrong..." }}</action-overlay
         >
         <div class="flex gap-4 items-center">
             <project-title
