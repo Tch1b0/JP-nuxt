@@ -46,7 +46,7 @@ const projectId = useRoute().params.project;
 // Process api data
 const project = await getProject(projectId.toString());
 
-useMeta({
+useHead({
     title: `Johannes Pour - ${project.name}`,
     meta: [{ name: "description", content: project.description }],
 });

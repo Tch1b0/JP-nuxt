@@ -91,7 +91,7 @@ definePageMeta({
 
 const projectId = Number(useRoute().params.project);
 const project = await getProject(projectId);
-useMeta({
+useHead({
     title: `Johannes Pour - Edit ${project.name}`,
     meta: [
         {
@@ -195,7 +195,7 @@ function addImage() {
 }
 </script>
 
-<style>
+<style scoped>
 .v-enter-active,
 .v-leave-active {
     transition: all 0.5s ease;

@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { getProjectMetas, getProfile } from "~~/utility/index";
 
-useMeta({
+useHead({
     title: "Johannes Pour - Admin",
 });
 

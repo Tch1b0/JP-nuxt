@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { colorFromLang, getProjectMetas } from "~~/utility";
 
-useMeta({
+useHead({
     title: "Johannes Pour - Topics",
 });
 

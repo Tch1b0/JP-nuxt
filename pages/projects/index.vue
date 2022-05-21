@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import { getProjectMetas, Project, projectSort } from "~~/utility";
 
-useMeta({
+useHead({
     title: "Johannes Pour - Projects",
 });
 

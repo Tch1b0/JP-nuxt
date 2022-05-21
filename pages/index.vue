@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { getProjectMetas, projectSort } from "~~/utility";
 
-useMeta({
+useHead({
     title: "Johannes Pour - German Developer",
     meta: [
         {
@@ -39,9 +39,7 @@ useMeta({
         },
     ],
 });
-const projects = (await getProjectMetas())
-    .sort((a, b) => projectSort(a, b))
-    .reverse();
+const projects = (await getProjectMetas()).sort(projectSort).reverse();
 
 // Only take the first 3 projects
 projects.splice(3);

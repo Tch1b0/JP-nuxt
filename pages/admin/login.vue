@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { getAuthCookie } from "~~/utility";
 
-useMeta({
+useHead({
     title: "Johannes Pour - Admin Login",
 });
 
