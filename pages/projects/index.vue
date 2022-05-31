@@ -31,7 +31,7 @@ const filterTopics = useTopicFilter();
 watch(filterTopics.value, filterRepos);
 
 // The repositories that are actually shown to the user
-let projects = ref<Project[]>([...allProjects]);
+const projects = ref<Project[]>([...allProjects]);
 
 function filterRepos() {
     if (filterTopics.value.length === 0) {

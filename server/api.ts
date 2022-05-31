@@ -2,13 +2,13 @@ import GitHub, { Repository } from "./classes/github";
 import Router, {
     sendJson,
     sendUnauthorized,
-    idFromReq,
     sendError,
+    idFromReq,
 } from "./router";
-import { IncomingMessage, ServerResponse } from "http";
-import { useBody } from "h3";
+import { useBody, CompatibilityEvent, H3Event } from "h3";
 import { User } from "./classes/user";
 import ProjectCollection from "./classes/projectCollection";
+import type { IncomingMessage, ServerResponse } from "http";
 
 const app = new Router();
 const admin = new User(
@@ -25,7 +25,7 @@ export const projectCollection = new ProjectCollection();
  * @param req the request object of the request
  * @returns whether the user is authenticated
  */
-async function validate(req: IncomingMessage): Promise<boolean> {
+async function validate(req: CompatibilityEvent): Promise<boolean> {
     // get token from body and compare it with the admin-token
     return (await useBody<{ token: string }>(req)).token === admin.token;
 }
@@ -41,7 +41,7 @@ app.get("/", (_, res) => {
     res.end("Ok");
 });
 
-app.get("/project", (req, res) => {
+app.get("/project/", (req, res) => {
     const id = idFromReq(req);
     const project = projectCollection.getProjectById(id);
     if (!project) {
@@ -69,6 +69,8 @@ app.get("/project-meta", (req, res) => {
 });
 
 app.get("/project-metas", (req, res) => {
+    console.log(projectCollection.projects.map((project) => project.getMeta()));
+
     sendJson(
         res,
         projectCollection.projects.map((project) => project.getMeta()),
@@ -80,7 +82,7 @@ app.get("/projects", (req, res) => {
 });
 
 app.post("/article", async (req, res) => {
-    if (!(await validate(req))) {
+    if (!(await validate(req as CompatibilityEvent))) {
         sendUnauthorized(res);
         return;
     }
@@ -92,14 +94,14 @@ app.post("/article", async (req, res) => {
         content: string;
         images: string[];
         "project-id": number;
-    }>(req);
+    }>(req as CompatibilityEvent);
     const project = projectCollection.getProjectById(projectId);
     project.addArticle(content, images);
     res.end("Ok");
 });
 
 app.put("/article", async (req, res) => {
-    if (!(await validate(req))) {
+    if (!(await validate(req as CompatibilityEvent))) {
         sendUnauthorized(res);
         return;
     }
@@ -111,7 +113,7 @@ app.put("/article", async (req, res) => {
         content: string;
         images: string[];
         "project-id": number;
-    }>(req);
+    }>(req as CompatibilityEvent);
     const project = projectCollection.getProjectById(projectId);
     project.updateArticle(content, images);
     res.end("Ok");
@@ -125,7 +127,7 @@ app.post("/login", async (req, res) => {
     const { username, password } = await useBody<{
         username: string;
         password: string;
-    }>(req);
+    }>(req as CompatibilityEvent);
 
     if (username === admin.username && admin.comparePassword(password)) {
         sendJson(res, { token: admin.token });
@@ -146,22 +148,22 @@ app.post("/viewed", (req, res) => {
 });
 
 app.post("/validate", async (req, res) => {
-    res.statusCode = (await validate(req)) ? 200 : 401;
+    res.statusCode = (await validate(req as CompatibilityEvent)) ? 200 : 401;
     res.end();
 });
 
 app.delete("/article", async (req, res) => {
-    if (!(await validate(req))) {
+    if (!(await validate(req as CompatibilityEvent))) {
         sendUnauthorized(res);
         return;
     }
     const { "project-id": projectId } = await useBody<{ "project-id": number }>(
-        req,
+        req as CompatibilityEvent,
     );
     const project = projectCollection.getProjectById(projectId);
     project.deleteArticle();
     res.end("Ok");
 });
 
-export default async (req: IncomingMessage, res: ServerResponse) =>
-    await app.handle(req, res);
+export default (req: IncomingMessage, res: ServerResponse) =>
+    app.handle(req, res);

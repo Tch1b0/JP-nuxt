@@ -11,7 +11,7 @@ export interface Project {
     article?: Article;
 }
 
-function articleResponseToArticle(article: any): Article | undefined {
+function articleResponseToArticle(article: Article): Article | undefined {
     if (article === undefined || article === null) return undefined;
     return {
         content: article.content,
@@ -21,7 +21,7 @@ function articleResponseToArticle(article: any): Article | undefined {
     };
 }
 
-export async function getProject(id: number | string) {
+export async function getProject(id: number | string): Promise<Project> {
     const project = await getFromApi<Project>(`project-${id}`, `project/${id}`);
     project.article = articleResponseToArticle(project.article);
     return project;
@@ -32,7 +32,7 @@ export async function getProjects(): Promise<Project[]> {
     projects.forEach((project) => {
         project.article = articleResponseToArticle(project.article);
     });
-    return projects;
+    return [...projects];
 }
 
 export async function getProfile(): Promise<Profile> {
@@ -53,7 +53,8 @@ export async function getProjectMetas(): Promise<Project[]> {
     projects.forEach((project) => {
         project.article = articleResponseToArticle(project.article);
     });
-    return projects;
+
+    return [...projects];
 }
 
 export async function getProjectIds(): Promise<number[]> {
