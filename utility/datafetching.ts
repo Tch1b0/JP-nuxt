@@ -23,15 +23,13 @@ function articleResponseToArticle(article: Article): Article | undefined {
 
 export async function getProject(id: number | string): Promise<Project> {
     const project = await getFromApi<Project>(`project-${id}`, `project/${id}`);
-    project.article = articleResponseToArticle(project.article);
+
     return project;
 }
 
 export async function getProjects(): Promise<Project[]> {
     const projects = await getFromApi<Project[]>("projects", "projects");
-    projects.forEach((project) => {
-        project.article = articleResponseToArticle(project.article);
-    });
+
     return [...projects];
 }
 
@@ -41,7 +39,6 @@ export async function getProfile(): Promise<Profile> {
 
 export async function getProjectMeta(): Promise<Project> {
     const project = await getFromApi<Project>("project-meta", "projects-meta");
-    project.article = articleResponseToArticle(project.article);
     return project;
 }
 
@@ -50,9 +47,6 @@ export async function getProjectMetas(): Promise<Project[]> {
         "project-metas",
         "project-metas",
     );
-    projects.forEach((project) => {
-        project.article = articleResponseToArticle(project.article);
-    });
 
     return [...projects];
 }
@@ -75,8 +69,25 @@ export async function getProjectIds(): Promise<number[]> {
  * @returns the response of the request as the type `Response`
  */
 async function getFromApi<Response>(key: string, route: string) {
-    const response = await useAsyncData<Response>(key, () =>
-        $fetch(`/api/${route}`),
+    const response = await useAsyncData<Response>(
+        key,
+        () => $fetch(`/api/${route}`),
+        {
+            transform(data) {
+                if (data instanceof Array) {
+                    for (const val of data) {
+                        if ("article" in val) {
+                            val["article"] = articleResponseToArticle(
+                                val["article"],
+                            );
+                        }
+                    }
+                } else if ("article" in data) {
+                    data["article"] = articleResponseToArticle(data["article"]);
+                }
+                return data;
+            },
+        },
     );
 
     return response.data.value;

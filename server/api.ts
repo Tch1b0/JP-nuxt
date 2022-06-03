@@ -41,7 +41,7 @@ app.get("/", (_, res) => {
     res.end("Ok");
 });
 
-app.get("/project/", (req, res) => {
+app.get("/project", (req, res) => {
     const id = idFromReq(req);
     const project = projectCollection.getProjectById(id);
     if (!project) {
@@ -69,8 +69,6 @@ app.get("/project-meta", (req, res) => {
 });
 
 app.get("/project-metas", (req, res) => {
-    console.log(projectCollection.projects.map((project) => project.getMeta()));
-
     sendJson(
         res,
         projectCollection.projects.map((project) => project.getMeta()),
