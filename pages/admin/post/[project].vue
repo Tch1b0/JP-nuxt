@@ -65,13 +65,15 @@
                             ? ['bg-blue-600', 'hover:bg-blue-500']
                             : ['bg-green-600', 'hover:bg-green-500']
                     "
-                    @clicked="handlePost"
-                    >{{ exists ? "Edit Post" : "Create Post" }}</simple-button
+                    @clicked="handleArticle"
+                    >{{
+                        exists ? "Edit Article" : "Create Article"
+                    }}</simple-button
                 >
                 <simple-button
                     v-if="exists"
                     class="flex-1 bg-red-600 hover:bg-red-500"
-                    @clicked="deletePost"
+                    @clicked="deleteArticle"
                     >Delete</simple-button
                 >
             </div>
@@ -119,8 +121,8 @@ content.value = project?.article?.content ?? "";
 images.value = project?.article?.images ?? [];
 exists.value = project?.article !== undefined;
 
-function handlePost() {
-    exists.value ? editPost() : createPost();
+function handleArticle() {
+    exists.value ? editArticle() : createArticle();
 }
 
 function displayAction(success: boolean, message: string) {
@@ -133,61 +135,75 @@ function displayAction(success: boolean, message: string) {
     }, displaySeconds * 1000);
 }
 
-async function createPost() {
+/**
+ * interact with the article object on the api
+ * @param options the fetch options
+ * @param success callback on success
+ * @param fail callback on fail
+ * @returns whether the request was successful or not
+ */
+async function articleAction(
+    options: {
+        method: string;
+        body: object;
+    },
+    success: () => any,
+    fail: () => any,
+): Promise<boolean> {
     let failed: boolean;
-    await $fetch("/api/article", {
-        method: "POST",
-        body: {
-            token,
-            "project-id": projectId,
-            content: content.value,
-            images: images.value,
-        },
-    })
+    await $fetch("/api/article", options)
         .then(() => (failed = false))
         .catch(() => (failed = true));
-    if (failed) {
-        displayAction(false, "Could not create post");
-    } else {
-        displayAction(true, "Post created!");
-        exists.value = true;
-    }
+    if (failed) fail();
+    else success();
+
+    await refreshNuxtData();
+
+    return !failed;
 }
 
-async function editPost() {
-    let failed: boolean;
-    await $fetch("/api/article", {
-        method: "PUT",
-        body: {
-            token,
-            "project-id": projectId,
-            content: content.value,
-            images: images.value,
+const createArticle = async () =>
+    await articleAction(
+        {
+            method: "POST",
+            body: {
+                token,
+                "project-id": projectId,
+                content: content.value,
+                images: images.value,
+            },
         },
-    })
-        .then(() => (failed = false))
-        .catch(() => (failed = true));
-    if (failed) {
-        displayAction(false, "Could not edit post");
-    } else {
-        displayAction(true, "Post edited!");
-    }
-}
+        () => {
+            displayAction(true, "Article created!");
+            exists.value = true;
+        },
+        () => displayAction(false, "Could not create Article"),
+    );
 
-async function deletePost() {
-    let failed: boolean;
-    await $fetch("/api/article", {
-        method: "DELETE",
-        body: { token, "project-id": projectId },
-    })
-        .then(() => (failed = false))
-        .catch(() => (failed = true));
-    if (failed) {
-        displayAction(false, "Could not delete post");
-    } else {
-        await useRouter().push(`/projects`);
-    }
-}
+const editArticle = async () =>
+    await articleAction(
+        {
+            method: "PUT",
+            body: {
+                token,
+                "project-id": projectId,
+                content: content.value,
+                images: images.value,
+            },
+        },
+        () => displayAction(true, "Article edited!"),
+        () => displayAction(false, "Could not edit Article"),
+    );
+
+const deleteArticle = async () =>
+    await articleAction(
+        {
+            method: "DELETE",
+            body: { token, "project-id": projectId },
+        },
+        async () => await useRouter().push(`/projects`),
+        () => displayAction(false, "Could not delete Article"),
+    );
 
 function addImage() {
     images.value.push(newImage.value);

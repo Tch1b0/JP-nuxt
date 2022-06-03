@@ -5,7 +5,7 @@ import Router, {
     sendError,
     idFromReq,
 } from "./router";
-import { useBody, CompatibilityEvent, H3Event } from "h3";
+import { useBody, CompatibilityEvent } from "h3";
 import { User } from "./classes/user";
 import ProjectCollection from "./classes/projectCollection";
 import type { IncomingMessage, ServerResponse } from "http";
