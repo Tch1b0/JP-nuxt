@@ -36,11 +36,11 @@ jobs:
         uses: actions/checkout@v3.0.0
 
       - name: Cypress run
-        uses: cypress-io/github-action@v2.9.7
+        uses: cypress-io/github-action@v4
         with:
+          config-file: ./cypress.config.ts
           build: npm run build
           start: npm run start
-          spec: tests/e2e/integration/*
 
   lint:
     runs-on: ubuntu-latest
