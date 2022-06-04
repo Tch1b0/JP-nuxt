@@ -95,6 +95,7 @@ app.post("/article", async (req, res) => {
     }>(req as CompatibilityEvent);
     const project = projectCollection.getProjectById(projectId);
     project.addArticle(content, images);
+    projectCollection.save();
     res.end("Ok");
 });
 
@@ -114,6 +115,7 @@ app.put("/article", async (req, res) => {
     }>(req as CompatibilityEvent);
     const project = projectCollection.getProjectById(projectId);
     project.updateArticle(content, images);
+    projectCollection.save();
     res.end("Ok");
 });
 
@@ -160,6 +162,7 @@ app.delete("/article", async (req, res) => {
     );
     const project = projectCollection.getProjectById(projectId);
     project.deleteArticle();
+    projectCollection.save();
     res.end("Ok");
 });
 
