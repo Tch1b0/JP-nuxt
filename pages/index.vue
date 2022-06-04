@@ -8,11 +8,10 @@
                 class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ml-4 mr-4 gap-3 mb-5"
                 id="example-projects">
                 <project-card
-                    v-for="repo in repos"
-                    :repo="repo"
-                    :key="repo.id"
-                    class="pt-5"
-                    :has-post="postIds.includes(repo.id)"></project-card>
+                    v-for="project in projects"
+                    :project="project"
+                    :key="project.id"
+                    class="pt-5"></project-card>
             </div>
         </div>
         <div class="flex justify-center items-center mb-5">
@@ -29,9 +28,9 @@
 </template>
 
 <script setup lang="ts">
-import { getRepos, getPostsMetadata, projectSort } from "~~/utility";
+import { getProjectMetas, projectSort } from "~~/utility";
 
-useMeta({
+useHead({
     title: "Johannes Pour - German Developer",
     meta: [
         {
@@ -40,12 +39,8 @@ useMeta({
         },
     ],
 });
-const postMetas = await getPostsMetadata();
-const postIds = postMetas.map((post) => post["project-id"]);
-const repos = (await getRepos())
-    .sort((a, b) => projectSort(a, b, postMetas))
-    .reverse();
+const projects = (await getProjectMetas()).sort(projectSort).reverse();
 
-// Only take the first 3 repos
-repos.splice(3);
+// Only take the first 3 projects
+projects.splice(3);
 </script>

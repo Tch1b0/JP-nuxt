@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { github, postCollection } from "./api";
+import { github, projectCollection } from "./api";
 import jstoxml from "jstoxml";
 const { toXML } = jstoxml;
 import { basicMdToHtml } from "~~/utility";
@@ -14,16 +14,15 @@ const url = "johannespour.de";
  */
 async function createRssPosts(profile: Profile): Promise<object> {
     const rssPosts = [];
-    const repos = await github.getRepos();
-    for (const post of postCollection.posts) {
-        const repo = repos.find((r) => r.id === post.id);
+    for (const project of projectCollection.projects) {
+        if (project.article === undefined) continue;
         rssPosts.push({
             item: {
-                title: repo.name,
-                link: `https://${url}/projects/${repo.id}`,
-                description: repo.description,
-                "content:encoded": basicMdToHtml(post.article),
-                pubDate: post.pubDate,
+                title: project.name,
+                link: `https://${url}/projects/${project.id}`,
+                description: project.description,
+                "content:encoded": basicMdToHtml(project.article.content),
+                pubDate: project.article.publishDate,
                 author: profile.login,
             },
         });
@@ -32,6 +31,7 @@ async function createRssPosts(profile: Profile): Promise<object> {
     return rssPosts;
 }
 
+// respond with the rss feed
 export default async (_: IncomingMessage, res: ServerResponse) => {
     res.setHeader("Content-Type", "text/xml");
     const profile = await github.getProfile();

@@ -76,23 +76,23 @@ $ docker-compose up -d
 ### From source
 
 ```bash
-git clone https://github.com/Tch1b0/JP-nuxt
+$ git clone https://github.com/Tch1b0/JP-nuxt
 ```
 
 ```bash
-cd ./JP-nuxt
+$ cd ./JP-nuxt
 ```
 
 ```bash
-touch ./.env
+$ touch ./.env
 ```
 
 Now add your [environmental variables](#env-variables) in the `.env` file
 
 ```bash
-docker-compose build
+$ docker-compose build
 ```
 
 ```bash
-docker-compose up -d
+$ docker-compose up -d
 ```

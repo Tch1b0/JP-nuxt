@@ -1,10 +1,14 @@
-import GitHub from "./classes/github";
-import Post from "./classes/post";
-import PostCollection from "./classes/postCollection";
-import Router, { sendJson, sendUnauthorized, idFromReq } from "./router";
-import { IncomingMessage, ServerResponse } from "http";
-import { useBody } from "h3";
+import GitHub, { Repository } from "./classes/github";
+import Router, {
+    sendJson,
+    sendUnauthorized,
+    sendError,
+    idFromReq,
+} from "./router";
+import { useBody, CompatibilityEvent } from "h3";
 import { User } from "./classes/user";
+import ProjectCollection from "./classes/projectCollection";
+import type { IncomingMessage, ServerResponse } from "http";
 
 const app = new Router();
 const admin = new User(
@@ -14,91 +18,116 @@ const admin = new User(
 
 export const github = new GitHub(process.env["GH_USERNAME"] || "Tch1b0");
 
-const templatePosts =
-    process.env["NODE_ENV"] === "production"
-        ? undefined
-        : [new Post(393093009, "test", [], 0)];
-export const postCollection = new PostCollection(templatePosts);
+export const projectCollection = new ProjectCollection();
 
 /**
  * validate that the user is authenticated
  * @param req the request object of the request
  * @returns whether the user is authenticated
  */
-async function validate(req: IncomingMessage): Promise<boolean> {
+async function validate(req: CompatibilityEvent): Promise<boolean> {
     // get token from body and compare it with the admin-token
     return (await useBody<{ token: string }>(req)).token === admin.token;
 }
 
-// GET requests
+github.on("reposFetch", (repos: Repository[]) => {
+    projectCollection.updateRepositories(repos);
+    projectCollection.save();
+});
+
+github.fetchRepos();
 
 app.get("/", (_, res) => {
     res.end("Ok");
 });
-app.get("/repos", async (_, res) => {
-    sendJson(res, await github.getRepos());
-});
-app.get("/repo", async (req, res) => {
-    const id = idFromReq(req);
-    const repo = await github.getRepo(id);
-    sendJson(res, repo);
-});
-app.get("/profile", async (_, res) => {
-    sendJson(res, await github.getProfile());
-});
-app.get("/posts", (_, res) => {
-    sendJson(
-        res,
-        postCollection.posts.map((post) => post.toJSON()),
-    );
-});
-app.get("/post", (req, res) => {
-    const id = idFromReq(req);
-    const post = postCollection.getById(id);
-    sendJson(res, post.toJSON());
-});
-app.get("/repo-ids", async (_, res) => {
-    sendJson(
-        res,
-        (await github.getRepos()).map((repo) => repo.id),
-    );
-});
-app.get("/post-ids", (_, res) => {
-    sendJson(
-        res,
-        postCollection.posts.map((post) => post.id),
-    );
-});
-app.get("/posts-metadata", async (_, res) => {
-    const repos = await github.getRepos();
-    const postsMetadata = postCollection.posts.map((post) => {
-        const jsonPost = post.toJSON();
-        const repo = repos.find((repo) => repo.id === post.id);
-        delete jsonPost["article"];
-        delete jsonPost["images"];
-        jsonPost["title"] = repo.name;
-        jsonPost["description"] = repo.description;
-        return jsonPost;
-    });
 
-    sendJson(res, postsMetadata);
-});
-app.get("/viewed", (req, res) => {
+app.get("/project", (req, res) => {
     const id = idFromReq(req);
-    const post = postCollection.getById(id);
-    post.viewed();
-    postCollection.reverseSort();
-    postCollection.save();
+    const project = projectCollection.getProjectById(id);
+    if (!project) {
+        sendError(res, "Project not found", 404);
+        return;
+    }
+    sendJson(res, project.toJSON());
+});
+
+app.get("/project-ids", (req, res) => {
+    sendJson(
+        res,
+        projectCollection.toJSON().map((project) => project.id),
+    );
+});
+
+app.get("/project-meta", (req, res) => {
+    const id = idFromReq(req);
+    const project = projectCollection.getProjectById(id);
+    if (!project) {
+        sendError(res, "Project not found", 404);
+        return;
+    }
+    sendJson(res, project.getMeta());
+});
+
+app.get("/project-metas", (req, res) => {
+    sendJson(
+        res,
+        projectCollection.projects.map((project) => project.getMeta()),
+    );
+});
+
+app.get("/projects", (req, res) => {
+    sendJson(res, projectCollection.toJSON());
+});
+
+app.post("/article", async (req, res) => {
+    if (!(await validate(req as CompatibilityEvent))) {
+        sendUnauthorized(res);
+        return;
+    }
+    const {
+        content,
+        images,
+        "project-id": projectId,
+    } = await useBody<{
+        content: string;
+        images: string[];
+        "project-id": number;
+    }>(req as CompatibilityEvent);
+    const project = projectCollection.getProjectById(projectId);
+    project.addArticle(content, images);
+    projectCollection.save();
     res.end("Ok");
 });
 
-// POST requests
+app.put("/article", async (req, res) => {
+    if (!(await validate(req as CompatibilityEvent))) {
+        sendUnauthorized(res);
+        return;
+    }
+    const {
+        content,
+        images,
+        "project-id": projectId,
+    } = await useBody<{
+        content: string;
+        images: string[];
+        "project-id": number;
+    }>(req as CompatibilityEvent);
+    const project = projectCollection.getProjectById(projectId);
+    project.updateArticle(content, images);
+    projectCollection.save();
+    res.end("Ok");
+});
+
+app.get("/profile", async (_, res) => {
+    sendJson(res, await github.getProfile());
+});
 
 app.post("/login", async (req, res) => {
     const { username, password } = await useBody<{
         username: string;
         password: string;
-    }>(req);
+    }>(req as CompatibilityEvent);
 
     if (username === admin.username && admin.comparePassword(password)) {
         sendJson(res, { token: admin.token });
@@ -107,85 +136,35 @@ app.post("/login", async (req, res) => {
     }
 });
 
-app.post("/validate", async (req, res) => {
-    res.statusCode = (await validate(req)) ? 200 : 401;
+app.post("/viewed", (req, res) => {
+    const id = idFromReq(req);
+    const project = projectCollection.getProjectById(id);
+    if (!project) {
+        sendError(res, "Project not found", 404);
+        return;
+    }
+    project.viewed();
     res.end();
 });
 
-app.post("/post", async (req, res) => {
-    if (!(await validate(req))) {
+app.post("/validate", async (req, res) => {
+    res.statusCode = (await validate(req as CompatibilityEvent)) ? 200 : 401;
+    res.end();
+});
+
+app.delete("/article", async (req, res) => {
+    if (!(await validate(req as CompatibilityEvent))) {
         sendUnauthorized(res);
         return;
     }
-
-    const {
-        "project-id": projectId,
-        article,
-        images,
-    } = await useBody<{
-        "project-id": number;
-        article: string;
-        images: string[];
-    }>(req);
-
-    const newPost = new Post(projectId, article, images, 0);
-    postCollection.add(newPost);
-    sendJson(res, newPost.toJSON());
+    const { "project-id": projectId } = await useBody<{ "project-id": number }>(
+        req as CompatibilityEvent,
+    );
+    const project = projectCollection.getProjectById(projectId);
+    project.deleteArticle();
+    projectCollection.save();
+    res.end("Ok");
 });
 
-// PUT requests
-
-app.put("/post", async (req, res) => {
-    if (!(await validate(req))) {
-        sendUnauthorized(res);
-        return;
-    }
-
-    const {
-        "project-id": projectId,
-        article,
-        images,
-    } = await useBody<{
-        "project-id": number;
-        article: string;
-        images: string[];
-    }>(req);
-
-    const post = postCollection.getById(projectId);
-
-    if (post === undefined) {
-        res.statusCode = 404;
-        res.end();
-        return;
-    }
-
-    post.article = article;
-    post.images = images;
-
-    sendJson(res, post.toJSON());
-});
-
-// DELETE requests
-
-app.delete("/post", async (req, res) => {
-    if (!(await validate(req))) {
-        sendUnauthorized(res);
-        return;
-    }
-
-    const { "project-id": projectId } = await useBody<{
-        "project-id": number;
-    }>(req);
-
-    const post = postCollection.getById(projectId);
-    if (post) {
-        postCollection.remove(post);
-        sendJson(res, post.toJSON());
-    } else {
-        res.statusCode = 404;
-        res.end();
-    }
-});
-
-export default async (req: IncomingMessage, res: ServerResponse) =>
-    await app.handle(req, res);
+export default (req: IncomingMessage, res: ServerResponse) =>
+    app.handle(req, res);

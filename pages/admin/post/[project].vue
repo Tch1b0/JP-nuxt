@@ -1,12 +1,14 @@
 <template>
     <div class="flex flex-col gap-5 mt-5 mb-5">
         <action-overlay
-            v-if="action.visible ?? false"
-            :success="action.success ?? false"
-            >{{ action.message ?? "Something went wrong..." }}</action-overlay
+            v-if="action?.visible ?? false"
+            :success="action?.success ?? false"
+            >{{ action?.message ?? "Something went wrong..." }}</action-overlay
         >
         <div class="flex gap-4 items-center">
-            <post-title :repo="repo" class="ml-5 lg:ml-5"></post-title>
+            <project-title
+                :project="project"
+                class="ml-5 lg:ml-5"></project-title>
             <simple-button
                 @clicked="$router.push(`/projects/${projectId}`)"
                 v-if="exists"
@@ -17,7 +19,7 @@
             class="flex flex-col flex-1 md:flex-row items-start ml-5 mr-5 gap-5 justify-center">
             <div class="grid p-5 gap-5 bg-gray-800 flex-1 rounded-md">
                 <textarea
-                    v-model="article"
+                    v-model="content"
                     cols="30"
                     class="flex-1 bg-gray-900 pl-1"
                     rows="10"
@@ -63,49 +65,48 @@
                             ? ['bg-blue-600', 'hover:bg-blue-500']
                             : ['bg-green-600', 'hover:bg-green-500']
                     "
-                    @clicked="handlePost"
-                    >{{ exists ? "Edit Post" : "Create Post" }}</simple-button
+                    @clicked="handleArticle"
+                    >{{
+                        exists ? "Edit Article" : "Create Article"
+                    }}</simple-button
                 >
                 <simple-button
                     v-if="exists"
                     class="flex-1 bg-red-600 hover:bg-red-500"
-                    @clicked="deletePost"
+                    @clicked="deleteArticle"
                     >Delete</simple-button
                 >
             </div>
             <div class="p-5 bg-gray-800 flex-1 rounded-md">
-                <post-article :article="article"></post-article>
+                <project-article :content="content"></project-article>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { getAuthCookie, getPost, getPostIds, getRepo } from "~~/utility";
+import { getAuthCookie, getProject } from "~~/utility";
 
 definePageMeta({
-    middleware: ["auth", "verifyrepo"],
+    middleware: ["auth", "verifyproject"],
 });
 
 const projectId = Number(useRoute().params.project);
-const repo = await getRepo(projectId);
-useMeta({
-    title: `Johannes Pour - Edit ${repo.name}`,
+const project = await getProject(projectId);
+useHead({
+    title: `Johannes Pour - Edit ${project.name}`,
     meta: [
         {
-            description: repo.description,
+            description: project.description,
         },
     ],
 });
-
-let exists = ref((await getPostIds()).includes(projectId));
 
 // the token to create/edit/delete a post
 const token = getAuthCookie().value.replace(/^Bearer /, "");
 
 // make article object reactive
-const articleRef = ref("");
-const article = reactive(articleRef);
+const content = reactive(ref(""));
 
 const newImage = ref("");
 const images = ref<string[]>([]);
@@ -114,16 +115,14 @@ const action = ref<{
     message?: string;
     visible?: boolean;
 }>({});
+let exists = reactive(ref(false));
 
-if (exists.value) {
-    const response = await getPost(projectId);
+content.value = project?.article?.content ?? "";
+images.value = project?.article?.images ?? [];
+exists.value = project?.article !== undefined;
 
-    article.value = response.article;
-    images.value = response.images;
-}
-
-function handlePost() {
-    exists.value ? editPost() : createPost();
+function handleArticle() {
+    exists.value ? editArticle() : createArticle();
 }
 
 function displayAction(success: boolean, message: string) {
@@ -136,63 +135,75 @@ function displayAction(success: boolean, message: string) {
     }, displaySeconds * 1000);
 }
 
-async function createPost() {
+/**
+ * interact with the article object on the api
+ * @param options the fetch options
+ * @param success callback on success
+ * @param fail callback on fail
+ * @returns whether the request was successful or not
+ */
+async function articleAction(
+    options: {
+        method: string;
+        body: object;
+    },
+    success: () => any,
+    fail: () => any,
+): Promise<boolean> {
     let failed: boolean;
-    await $fetch("/api/post", {
-        method: "POST",
-        body: {
-            token,
-            "project-id": projectId,
-            article: article.value,
-            images: images.value,
-        },
-    })
+    await $fetch("/api/article", options)
         .then(() => (failed = false))
         .catch(() => (failed = true));
-    if (failed) {
-        displayAction(false, "Could not create post");
-    } else {
-        displayAction(true, "Post created!");
-        exists.value = true;
-        // await useRouter().push(`/projects/${projectId}`);
-    }
+    if (failed) fail();
+    else success();
+
+    await refreshNuxtData();
+
+    return !failed;
 }
 
-async function editPost() {
-    let failed: boolean;
-    await $fetch("/api/post", {
-        method: "PUT",
-        body: {
-            token,
-            "project-id": projectId,
-            article: article.value,
-            images: images.value,
+const createArticle = async () =>
+    await articleAction(
+        {
+            method: "POST",
+            body: {
+                token,
+                "project-id": projectId,
+                content: content.value,
+                images: images.value,
+            },
         },
-    })
-        .then(() => (failed = false))
-        .catch(() => (failed = true));
-    if (failed) {
-        displayAction(false, "Could not edit post");
-    } else {
-        displayAction(true, "Post edited!");
-        // await useRouter().push(`/projects/${projectId}`);
-    }
-}
+        () => {
+            displayAction(true, "Article created!");
+            exists.value = true;
+        },
+        () => displayAction(false, "Could not create Article"),
+    );
 
-async function deletePost() {
-    let failed: boolean;
-    await $fetch("/api/post", {
-        method: "DELETE",
-        body: { token, "project-id": projectId },
-    })
-        .then(() => (failed = false))
-        .catch(() => (failed = true));
-    if (failed) {
-        displayAction(false, "Could not delete post");
-    } else {
-        await useRouter().push(`/projects`);
-    }
-}
+const editArticle = async () =>
+    await articleAction(
+        {
+            method: "PUT",
+            body: {
+                token,
+                "project-id": projectId,
+                content: content.value,
+                images: images.value,
+            },
+        },
+        () => displayAction(true, "Article edited!"),
+        () => displayAction(false, "Could not edit Article"),
+    );
+
+const deleteArticle = async () =>
+    await articleAction(
+        {
+            method: "DELETE",
+            body: { token, "project-id": projectId },
+        },
+        async () => await useRouter().push(`/projects`),
+        () => displayAction(false, "Could not delete Article"),
+    );
 
 function addImage() {
     images.value.push(newImage.value);
@@ -200,7 +211,7 @@ function addImage() {
 }
 </script>
 
-<style>
+<style scoped>
 .v-enter-active,
 .v-leave-active {
     transition: all 0.5s ease;

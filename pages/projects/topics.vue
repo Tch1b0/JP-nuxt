@@ -10,23 +10,24 @@
 </template>
 
 <script setup lang="ts">
-import { colorFromLang, getRepos } from "~~/utility";
+import { colorFromLang, getProjectMetas } from "~~/utility";
 
-useMeta({
+useHead({
     title: "Johannes Pour - Topics",
 });
 
-const repos = await getRepos();
+const projects = await getProjectMetas();
 
 const rawTopics = [];
 const topics: Array<{ text: string; style: string[] }> = [];
 
-for (const repo of repos) {
-    for (const topic of repo.topics) {
+for (const project of projects) {
+    for (const topic of project.topics) {
         if (rawTopics.includes(topic)) continue;
         rawTopics.push(topic);
         const color =
-            colorFromLang((repo.language ?? "python").toLowerCase()) ?? "white";
+            colorFromLang((project.language ?? "python").toLowerCase()) ??
+            "white";
         topics.push({
             text: topic,
             style: [`bg-${color}-500`],

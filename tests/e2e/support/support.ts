@@ -7,7 +7,7 @@ Cypress.Commands.add("login", () => {
         cy.get("input").first().type(credentials["username"]);
         cy.get("input").last().type(credentials["password"]);
     });
-    cy.get("button").click();
+    cy.get("button").first().click();
     cy.wait(500);
 });
 
@@ -21,6 +21,6 @@ Cypress.Commands.add("createPost", () => {
     cy.contains("create").first().click();
     cy.wait(500);
     cy.get("textarea").type("Test");
-    cy.get("button").last().click();
+    cy.contains("Create Article").first().click();
     cy.wait(200);
 });

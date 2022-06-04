@@ -32,4 +32,10 @@ describe("Visit Site as a User", () => {
         // URI should END with /projects, and not go on
         cy.url().should("not.include", "/projects/");
     });
+
+    it("Visit /impressum", () => {
+        cy.visit("/");
+        cy.contains("Impressum").click();
+        cy.url().should("include", "/impressum");
+    });
 });

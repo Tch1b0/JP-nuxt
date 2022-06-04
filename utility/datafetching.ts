@@ -1,46 +1,58 @@
-import { Profile, Repository } from "~~/server/classes/github";
+import { Profile } from "~~/server/classes/github";
+import { Article } from "~~/server/classes/project";
 
-export interface Post {
-    "project-id": number;
-    article: string;
-    images: string[];
-    views: number;
-}
-
-export interface PostMetadata {
-    "project-id": number;
-    title: string;
+export interface Project {
+    id: number;
+    name: string;
     description: string;
-    "pub-date": Date;
-    views: number;
+    url: string;
+    language: string;
+    topics: string[];
+    article?: Article;
 }
 
-export async function getRepo(id: number | string) {
-    return await getFromApi<Repository>("repository", `repo/${id}`);
+function articleResponseToArticle(article: Article): Article | undefined {
+    if (article === undefined || article === null) return undefined;
+    return {
+        content: article.content,
+        images: article.images,
+        publishDate: new Date(article["publish-date"]),
+        viewCount: article["view-count"],
+    };
 }
 
-export async function getPost(id: number | string) {
-    return await getFromApi<Post>("post", `post/${id}`);
+export async function getProject(id: number | string): Promise<Project> {
+    const project = await getFromApi<Project>(`project-${id}`, `project/${id}`);
+
+    return project;
 }
 
-export async function getRepos(): Promise<Repository[]> {
-    return await getFromApi<Repository[]>("repositories", "repos");
+export async function getProjects(): Promise<Project[]> {
+    const projects = await getFromApi<Project[]>("projects", "projects");
+
+    return [...projects];
 }
 
 export async function getProfile(): Promise<Profile> {
     return await getFromApi<Profile>("profile", "profile");
 }
 
-export async function getPosts(): Promise<Post[]> {
-    return await getFromApi<Post[]>("posts", "posts");
+export async function getProjectMeta(): Promise<Project> {
+    const project = await getFromApi<Project>("project-meta", "projects-meta");
+    return project;
 }
 
-export async function getPostsMetadata(): Promise<PostMetadata[]> {
-    return await getFromApi<PostMetadata[]>("posts-metadata", "posts-metadata");
+export async function getProjectMetas(): Promise<Project[]> {
+    const projects = await getFromApi<Project[]>(
+        "project-metas",
+        "project-metas",
+    );
+
+    return [...projects];
 }
 
-export async function getPostIds(): Promise<number[]> {
-    return await getFromApi<number[]>("post-ids", "post-ids");
+export async function getProjectIds(): Promise<number[]> {
+    return await getFromApi<number[]>("project-ids", "project-ids");
 }
 
 /**
@@ -53,10 +65,29 @@ export async function getPostIds(): Promise<number[]> {
  * getFromApi<number>("count", "count/value");
  * ```
  * => requests `<localhost>/api/count/value` and returns a number
+ *
+ * @returns the response of the request as the type `Response`
  */
 async function getFromApi<Response>(key: string, route: string) {
-    const response = await useAsyncData<Response>(key, () =>
-        $fetch(`/api/${route}`),
+    const response = await useAsyncData<Response>(
+        key,
+        () => $fetch(`/api/${route}`),
+        {
+            transform(data) {
+                if (data instanceof Array) {
+                    for (const val of data) {
+                        if ("article" in val) {
+                            val["article"] = articleResponseToArticle(
+                                val["article"],
+                            );
+                        }
+                    }
+                } else if ("article" in data) {
+                    data["article"] = articleResponseToArticle(data["article"]);
+                }
+                return data;
+            },
+        },
     );
 
     return response.data.value;

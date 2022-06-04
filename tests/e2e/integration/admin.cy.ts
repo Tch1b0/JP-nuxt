@@ -7,14 +7,8 @@ describe("Visit Site as an Admin", () => {
     });
 
     it("Visit /admin/login", () => {
-        cy.visit("/admin/login");
-        cy.wait(200);
-        cy.fixture("admin").then((credentials) => {
-            cy.get("input").first().type(credentials["username"]);
-            cy.get("input").last().type(credentials["password"]);
-        });
-        cy.get("button").click();
-        cy.wait(500);
+        // @ts-ignore
+        cy.login();
         cy.url().should("not.include", "/admin/login");
     });
 
@@ -33,16 +27,16 @@ describe("Visit Site as an Admin", () => {
         cy.createPost();
     });
 
-    xit("Edit Post", () => {
+    it("Edit Post", () => {
         // @ts-ignore
         cy.login();
         cy.wait(300);
         cy.visit("/");
         cy.wait(500);
-        cy.get("button").first().click();
-        cy.get("button").should("contain", "Edit").click();
+        cy.contains("read article").click();
+        cy.contains("Edit").click();
         cy.get("textarea").type("2");
-        cy.get(".grid > button").first().click();
+        cy.contains("Edit Article").click();
         cy.wait(5000);
         cy.get("button").first().click();
         cy.wait(500);
@@ -56,9 +50,9 @@ describe("Visit Site as an Admin", () => {
         cy.wait(300);
         cy.visit("/");
         cy.wait(500);
-        cy.get("button").first().click();
-        cy.get("button").should("contain", "Edit").click();
-        cy.get(".grid > button").last().click();
+        cy.contains("read article").click();
+        cy.contains("Edit").click();
+        cy.contains("Delete").click();
         cy.wait(200);
         cy.url().should("not.include", "/admin/post");
     });

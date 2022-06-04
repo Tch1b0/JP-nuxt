@@ -8,15 +8,15 @@
             <h4 class="text-base text-gray-500">
                 Total views: {{ totalViews }}
             </h4>
-            <post-chart :posts="posts" :repos="repos"></post-chart>
+            <post-chart :projects="projects"></post-chart>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { getPosts, getRepos, getProfile } from "~~/utility/index";
+import { getProjectMetas, getProfile } from "~~/utility/index";
 
-useMeta({
+useHead({
     title: "Johannes Pour - Admin",
 });
 
@@ -25,11 +25,12 @@ definePageMeta({
 });
 
 const profile = await getProfile();
-const posts = await getPosts();
-const repos = await getRepos();
+const projects = await getProjectMetas();
 
 const totalViews =
-    posts.length != 0
-        ? posts.map((post) => post.views).reduce((a, b) => a + b)
+    projects.length != 0
+        ? projects
+              .map((project) => project?.article?.viewCount ?? 0)
+              .reduce((a, b) => a + b)
         : 0;
 </script>

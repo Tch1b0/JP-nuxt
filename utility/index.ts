@@ -1,22 +1,7 @@
 import { Remarkable } from "remarkable";
-import { Repository } from "~~/server/classes/github";
-import { Post, PostMetadata } from "./datafetching";
+import { Project } from "./datafetching";
 
 export * from "./datafetching";
-
-export function getPostFromRepo<T = Post | PostMetadata>(
-    repo: Repository,
-    posts: T[],
-): T {
-    return posts.find((post) => post["project-id"] === repo.id);
-}
-
-export function getRepoFromPost(
-    post: Post | PostMetadata,
-    repos: Repository[],
-): Repository {
-    return repos.find((repo) => repo.id === post["project-id"]);
-}
 
 export function colorFromLang(lang: string): string | undefined {
     const colors: Map<string, string> = new Map([
@@ -64,7 +49,7 @@ export function basicMdToHtml(markdownContent: string): string {
 }
 
 /**
- * Calls a callback every `days` days
+ * calls a callback every `days` days
  * @param callback The callback that should be called after the days passed
  * @param days How many days to wait
  */
@@ -97,33 +82,20 @@ export function calculateAge(birthdate: Date): number {
 }
 
 /**
- * get the views of a post to a repository or -1
- * @param repo the repo to evaluate the views from
+ * get the views of a project or -1
+ * @param project the project to evaluate the views from
  * @returns the views or -1
  */
-export function viewsOrNot<T = Post | PostMetadata>(
-    repo: Repository,
-    posts: T[],
-): number {
-    const postIds = posts.map((post: T) => post["project-id"]);
-    return postIds.includes(repo.id)
-        ? getPostFromRepo(repo, posts)["views"]
-        : -1;
+export function viewsOrNot(project: Project): number {
+    return project.article?.viewCount ?? -1;
 }
 
 /**
- * sorts a repository array from: *has no post* -> *has post* -> *has most views*
- * @param a the first repostiory
- * @param b the second repository
+ * sorts a project array from: *has no article* -> *has article* -> *has most views*
+ * @param a the first project
+ * @param b the second project
  * @returns the difference between `a` and `b`
  */
-export function projectSort<T = Post | PostMetadata>(
-    a: Repository,
-    b: Repository,
-    posts: T[],
-): number {
-    const aValue = viewsOrNot(a, posts);
-    const bValue = viewsOrNot(b, posts);
-
-    return aValue - bValue;
+export function projectSort(a: Project, b: Project): number {
+    return viewsOrNot(a) - viewsOrNot(b);
 }
