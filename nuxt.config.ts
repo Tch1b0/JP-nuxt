@@ -27,6 +27,7 @@ export default defineNuxtConfig({
         postcss: {
             postcssOptions: require("./postcss.config.js"),
         },
+        transpile: ["chart.js"],
     },
     ssr: true,
 });
