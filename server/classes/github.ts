@@ -53,7 +53,7 @@ export default class GitHub {
 
     on(
         event: "profileFetch" | "reposFetch",
-        listener: (...args: any[]) => any,
+        listener: (arg: Profile | Repository[]) => void,
     ) {
         this.events.on(event, listener);
     }
