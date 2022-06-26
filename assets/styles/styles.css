@@ -3,5 +3,24 @@
 @tailwind utilities;
 
 body {
-    @apply bg-gray-900 text-white;
+    @apply bg-gray-900 text-white overflow-x-hidden;
+}
+
+.page-enter-from {
+    opacity: 0;
+    transform: translateX(-5%);
+}
+
+.page-enter-active,
+.page-leave-active {
+    transition: all 0.25s ease-in-out;
+}
+
+.page-enter,
+.page-leave-to {
+    opacity: 0;
+}
+
+.page-leave-to {
+    transform: translateX(5%);
 }
