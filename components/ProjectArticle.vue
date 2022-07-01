@@ -14,7 +14,7 @@ const props = defineProps({
 });
 watch(props, () => render());
 
-const markdownContent = reactive(ref(""));
+const markdownContent = ref("");
 
 function urify(str: string): string {
     let newStr = "";
@@ -124,6 +124,8 @@ ${props.content}`);
 }
 
 render();
+console.log("MARKDOWN CONTENT:");
+console.log(markdownContent.value);
 </script>
 
 <style>
