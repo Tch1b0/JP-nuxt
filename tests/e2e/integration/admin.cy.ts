@@ -27,7 +27,7 @@ describe("Visit Site as an Admin", () => {
         cy.createPost();
     });
 
-    it("Edit Post", () => {
+    xit("Edit Post", () => {
         // @ts-ignore
         cy.login();
         cy.wait(300);
