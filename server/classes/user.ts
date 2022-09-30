@@ -1,6 +1,6 @@
 import { hashSync, compareSync } from "bcrypt";
 import { nanoid } from "nanoid";
-import { setDayInterval } from "~~/utility";
+import { setDayInterval } from "~~/utility/utility";
 
 /**
  * a user-representation in the backend

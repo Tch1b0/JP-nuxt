@@ -2,7 +2,7 @@ import { IncomingMessage, ServerResponse } from "http";
 import { github, projectCollection } from "./api";
 import jstoxml from "jstoxml";
 const { toXML } = jstoxml;
-import { basicMdToHtml } from "~~/utility";
+import { basicMdToHtml } from "~~/utility/utility";
 import { Profile } from "./classes/github";
 
 const url = "johannespour.de";
