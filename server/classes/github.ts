@@ -1,5 +1,6 @@
 import { Octokit } from "@octokit/rest";
 import { EventEmitter } from "node:events";
+import { timeInMillis } from "~~/utility";
 
 /**
  * the global representation of a github-repository
@@ -48,7 +49,7 @@ export default class GitHub {
         setInterval(async () => {
             await this.fetchRepos();
             await this.fetchProfile();
-        }, 10 * 60 * 1000);
+        }, timeInMillis({ minutes: 10 }));
     }
 
     on(

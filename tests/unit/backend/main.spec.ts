@@ -3,6 +3,7 @@ import { Project } from "~~/server/classes/project";
 import { User } from "~~/server/classes/user";
 import Router from "~~/server/router";
 import ProjectCollection from "~~/server/classes/projectCollection";
+import { timeInMillis } from "~~/utility";
 
 describe("Test Backend", () => {
     it("Test User", () => {
@@ -48,5 +49,15 @@ describe("Test Backend", () => {
         expect(pc.projects.length).to.equal(1);
         expect(pc.projects[0]).to.be.instanceOf(Project);
         expect(pc.projects[0].id).to.equal(1234);
+    });
+
+    it("Test Utility", () => {
+        expect(timeInMillis({ seconds: 30 })).to.equal(30 * 1000);
+        expect(timeInMillis({ minutes: 2 })).to.equal(2 * 60 * 1000);
+        expect(timeInMillis({ hours: 1, minutes: 5 })).to.equal(
+            60 * 60 * 1000 + 5 * 60 * 1000,
+        );
+        expect(timeInMillis({ days: 1 })).to.equal(24 * 60 * 60 * 1000);
+        expect(timeInMillis({ months: 2 })).to.equal(60 * 24 * 60 * 60 * 1000);
     });
 });

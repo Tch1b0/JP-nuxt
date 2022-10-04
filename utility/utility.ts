@@ -20,7 +20,7 @@ export function colorFromLang(lang: string): string | undefined {
 
 export function getAuthCookie() {
     return useCookie("Authorization", {
-        maxAge: 60 * 60 * 24 * 30,
+        maxAge: timeInSeconds({ months: 1 }),
         secure: true,
         path: "/",
     });
@@ -53,17 +53,17 @@ export function basicMdToHtml(markdownContent: string): string {
  */
 export function setDayInterval(callback: () => void, days: number): void {
     let daysPassed = 0;
-    const secondsOfDay = 24 * 60 * 60 * 1000;
+    const millisOfDay = timeInMillis({ days: 1 });
     const timeoutCallback = () => {
         daysPassed++;
         if (daysPassed === days) {
             callback();
             daysPassed = 0;
         }
-        setTimeout(() => timeoutCallback(), secondsOfDay);
+        setTimeout(() => timeoutCallback(), millisOfDay);
     };
 
-    setTimeout(() => timeoutCallback(), secondsOfDay);
+    setTimeout(() => timeoutCallback(), millisOfDay);
 }
 
 /**
@@ -96,4 +96,35 @@ export function viewsOrNot(project: Project): number {
  */
 export function projectSort(a: Project, b: Project): number {
     return viewsOrNot(a) - viewsOrNot(b);
+}
+
+interface TimeConfig {
+    milliseconds?: number;
+    seconds?: number;
+    minutes?: number;
+    hours?: number;
+    days?: number;
+    months?: number;
+}
+
+export function timeInSeconds(config: TimeConfig): number {
+    const millis = timeInMillis(config);
+    if (millis === 0) {
+        return millis;
+    }
+
+    return millis / 1000;
+}
+
+export function timeInMillis(config: TimeConfig): number {
+    const { milliseconds, seconds, minutes, hours, days, months } = config;
+
+    return (
+        (milliseconds ?? 0) +
+        (seconds ?? 0) * 1000 +
+        (minutes ?? 0) * 60 * 1000 +
+        (hours ?? 0) * 60 * 60 * 1000 +
+        (days ?? 0) * 24 * 60 * 60 * 1000 +
+        (months ?? 0) * 30 * 24 * 60 * 60 * 1000
+    );
 }
