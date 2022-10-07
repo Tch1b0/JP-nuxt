@@ -25,8 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { getProfile, calculateAge, basicMdToHtml } from "~~/utility";
-import { getAbout } from "~~/utility/datafetching";
+import { getProfile, calculateAge, basicMdToHtml, getAbout } from "~~/utility";
 
 const birthdate = "04/18/2005";
 const age = calculateAge(new Date(birthdate));
