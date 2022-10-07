@@ -9,8 +9,8 @@ import { readFileSync, existsSync } from "node:fs";
 export class User {
     username: string;
     password: string;
-    description: string;
     token: string;
+    description = "";
 
     /**
      * create a new user
