@@ -123,6 +123,10 @@ app.get("/profile", async (_, res) => {
     sendJson(res, await github.getProfile());
 });
 
+app.get("/about", async (_, res) => {
+    res.end(admin.description);
+});
+
 app.post("/login", async (req, res) => {
     const { username, password } = await useBody<{
         username: string;

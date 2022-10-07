@@ -3,19 +3,8 @@
         <div
             class="grid grid-cols-3 grid-rows-2 justify-center pl-2 pr-2 pt-2 gap-5">
             <div
-                class="col-span-3 md:col-span-2 p-2 bg-gradient-to-br from-gray-900 to-gray-800 rounded-md order-1">
-                <p>
-                    Hi! My name is <b>Johannes Pour</b>(aka. <b>Tch1b0</b>) and
-                    I am a {{ age }}-year-old developer from Germany. I mostly
-                    use <a href="https://www.python.org/">Python</a>,
-                    <a href="https://www.typescriptlang.org/">TypeScript</a>,
-                    <a href="https://vuejs.org/">Vue</a> and
-                    <a href="https://godotengine.org/">Godot</a>, sometimes
-                    <a href="https://go.dev/">Golang</a> and
-                    <a href="https://crystal-lang.org/">Crystal</a>, but I am
-                    always looking for new technologies to learn.
-                </p>
-            </div>
+                class="col-span-3 md:col-span-2 p-2 bg-gradient-to-br from-gray-900 to-gray-800 rounded-md order-1"
+                v-html="renderedDescription"></div>
             <div
                 class="flex justify-end md:justify-center col-span-2 md:col-span-1 order-3 md:order-2">
                 <img
@@ -36,22 +25,15 @@
 </template>
 
 <script setup lang="ts">
-import { getProfile, calculateAge } from "~~/utility";
+import { getProfile, calculateAge, basicMdToHtml } from "~~/utility";
+import { getAbout } from "~~/utility/datafetching";
 
 const birthdate = "04/18/2005";
 const age = calculateAge(new Date(birthdate));
+const description = await getAbout();
+const renderedDescription = basicMdToHtml(
+    description.replace(/\{\{ ?age ?\}\}/, age.toString()),
+);
 
 const profile = await getProfile();
 </script>
-
-<style scoped>
-ul {
-    @apply ml-5 list-disc;
-}
-a {
-    @apply text-blue-300 underline underline-offset-2 hover:text-blue-500 transition;
-}
-p > a {
-    @apply no-underline hover:underline;
-}
-</style>
