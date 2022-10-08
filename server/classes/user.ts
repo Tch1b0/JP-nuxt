@@ -31,11 +31,16 @@ export class User {
         this.genToken();
         this.loadDescription();
 
-        setInterval(() => this.loadDescription(), timeInMillis({ minutes: 5 }));
-
         if (autoRegenerateToken) {
             // regenerate the token every `regenerationIntervalDays` days
             setDayInterval(() => this.genToken(), regenerationIntervalDays);
+        }
+
+        if (process.env.NODE_ENV === "production") {
+            setInterval(
+                () => this.loadDescription(),
+                timeInMillis({ minutes: 5 }),
+            );
         }
     }
 
