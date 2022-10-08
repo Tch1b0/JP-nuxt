@@ -49,7 +49,7 @@ GH_USERNAME
 
 ### From [docker-hub](https://hub.docker.com/)
 
-Create the file `docker-compose.yml`
+`docker-compose.yml`
 
 ```yaml
 version: "3.8"
@@ -68,6 +68,17 @@ services:
         volumes:
             - "./data:/app/data"
 ```
+<br>
+
+`data/about.md`
+
+```md
+Inside [this file](data/about.md),
+you can _tell_ something
+about **yourself**
+```
+
+<br>
 
 ```bash
 $ docker-compose up -d

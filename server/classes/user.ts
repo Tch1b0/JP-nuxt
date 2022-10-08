@@ -1,6 +1,7 @@
 import { hashSync, compareSync } from "bcrypt";
 import { nanoid } from "nanoid";
-import { setDayInterval } from "~~/utility/utility";
+import { setDayInterval, timeInMillis } from "~~/utility/utility";
+import { readFileSync, existsSync } from "node:fs";
 
 /**
  * a user-representation in the backend
@@ -9,6 +10,7 @@ export class User {
     username: string;
     password: string;
     token: string;
+    description = "";
 
     /**
      * create a new user
@@ -27,9 +29,18 @@ export class User {
         this.password = hashSync(password, 10);
 
         this.genToken();
+        this.loadDescription();
+
         if (autoRegenerateToken) {
             // regenerate the token every `regenerationIntervalDays` days
             setDayInterval(() => this.genToken(), regenerationIntervalDays);
+        }
+
+        if (process.env.NODE_ENV === "production") {
+            setInterval(
+                () => this.loadDescription(),
+                timeInMillis({ minutes: 5 }),
+            );
         }
     }
 
@@ -49,6 +60,17 @@ export class User {
     public genToken(): string {
         this.token = nanoid(36);
         return this.token;
+    }
+
+    public loadDescription() {
+        console.log("Loading Description");
+
+        const filepath = "./data/about.md";
+        if (existsSync(filepath)) {
+            this.description = readFileSync(filepath).toString();
+        } else if (this.description.length === 0) {
+            this.description = "Add an about.md file inside the data directory";
+        }
     }
 
     public toJSON(): object {

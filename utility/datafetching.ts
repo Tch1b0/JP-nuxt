@@ -37,6 +37,10 @@ export async function getProfile(): Promise<Profile> {
     return await getFromApi<Profile>("profile", "profile");
 }
 
+export async function getAbout(): Promise<string> {
+    return await getFromApi<string>("about", "about");
+}
+
 export async function getProjectMeta(): Promise<Project> {
     const project = await getFromApi<Project>("project-meta", "projects-meta");
     return project;
@@ -75,7 +79,9 @@ async function getFromApi<Response>(key: string, route: string) {
         () => $fetch(`/api/${route}`),
         {
             transform(data) {
-                if (data instanceof Array) {
+                if (typeof data === "string" || typeof data === "number") {
+                    return data;
+                } else if (data instanceof Array) {
                     for (const val of data) {
                         if ("article" in val) {
                             val["article"] = articleResponseToArticle(
