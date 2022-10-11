@@ -98,7 +98,7 @@ export function projectSort(a: Project, b: Project): number {
     return viewsOrNot(a) - viewsOrNot(b);
 }
 
-interface TimeConfig {
+export interface TimeConfig {
     milliseconds?: number;
     seconds?: number;
     minutes?: number;
