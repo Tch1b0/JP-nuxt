@@ -11,6 +11,22 @@ export function getTimestamp(): number {
     return new Date().getTime();
 }
 
+/**
+ * cache a value that will be recomputed every `time`
+ * @param name the name of the cached value
+ * @param callback the callback for computing the value to be cached
+ * @param time the time after which the value will be recomputed
+ * @returns the requested value from cache
+ * @example
+ * ```js
+ * let z = cacheValue(
+ *  "z-calculation",
+ *  () => 2 * 16,
+ *  { minutes: 5 }
+ * )
+ * // z = 32
+ * ```
+ */
 export async function cacheValue<T>(
     name: string,
     callback: (() => T) | (() => Promise<T>),
