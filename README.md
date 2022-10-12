@@ -98,7 +98,7 @@ $ cd ./JP-nuxt
 $ touch ./.env
 ```
 
-Now add your [environmental variables](#env-variables) in the `.env` file
+Now add your [environmental variables](#env-variables) in the `.env` file. After that, create a `about.md` file inside the `data` directory.
 
 ```bash
 $ docker-compose build

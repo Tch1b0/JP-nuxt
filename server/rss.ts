@@ -2,7 +2,7 @@ import { IncomingMessage, ServerResponse } from "http";
 import { github, projectCollection } from "./api";
 import jstoxml from "jstoxml";
 const { toXML } = jstoxml;
-import { basicMdToHtml } from "~~/utility/utility";
+import { basicMdToHtml, cacheValue } from "~~/utility";
 import { Profile } from "./classes/github";
 
 const url = "johannespour.de";
@@ -31,11 +31,10 @@ async function createRssPosts(profile: Profile): Promise<object> {
     return rssPosts;
 }
 
-// respond with the rss feed
-export default async (_: IncomingMessage, res: ServerResponse) => {
-    res.setHeader("Content-Type", "text/xml");
+async function createXmlResponse(): Promise<string> {
     const profile = await github.getProfile();
-    const xml = toXML(
+
+    return toXML(
         {
             _name: "rss",
             _attrs: {
@@ -57,6 +56,17 @@ export default async (_: IncomingMessage, res: ServerResponse) => {
             header: true,
         },
     );
+}
 
-    res.end(xml);
+// respond with the rss feed
+export default async (_: IncomingMessage, res: ServerResponse) => {
+    res.setHeader("Content-Type", "text/xml");
+
+    const xmlResponse = await cacheValue(
+        "rss-feed",
+        async () => await createXmlResponse(),
+        { minutes: 5 },
+    );
+
+    res.end(xmlResponse);
 };

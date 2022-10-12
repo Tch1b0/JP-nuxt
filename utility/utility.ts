@@ -98,7 +98,7 @@ export function projectSort(a: Project, b: Project): number {
     return viewsOrNot(a) - viewsOrNot(b);
 }
 
-interface TimeConfig {
+export interface TimeConfig {
     milliseconds?: number;
     seconds?: number;
     minutes?: number;
@@ -109,9 +109,6 @@ interface TimeConfig {
 
 export function timeInSeconds(config: TimeConfig): number {
     const millis = timeInMillis(config);
-    if (millis === 0) {
-        return millis;
-    }
 
     return millis / 1000;
 }

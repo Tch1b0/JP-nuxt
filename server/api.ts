@@ -5,7 +5,7 @@ import Router, {
     sendError,
     idFromReq,
 } from "./router";
-import { useBody, CompatibilityEvent } from "h3";
+import { readBody, CompatibilityEvent } from "h3";
 import { User } from "./classes/user";
 import ProjectCollection from "./classes/projectCollection";
 import type { IncomingMessage, ServerResponse } from "http";
@@ -27,7 +27,7 @@ export const projectCollection = new ProjectCollection();
  */
 async function validate(req: CompatibilityEvent): Promise<boolean> {
     // get token from body and compare it with the admin-token
-    return (await useBody<{ token: string }>(req)).token === admin.token;
+    return (await readBody<{ token: string }>(req)).token === admin.token;
 }
 
 github.on("reposFetch", (repos: Repository[]) => {
@@ -88,7 +88,7 @@ app.post("/article", async (req, res) => {
         content,
         images,
         "project-id": projectId,
-    } = await useBody<{
+    } = await readBody<{
         content: string;
         images: string[];
         "project-id": number;
@@ -108,7 +108,7 @@ app.put("/article", async (req, res) => {
         content,
         images,
         "project-id": projectId,
-    } = await useBody<{
+    } = await readBody<{
         content: string;
         images: string[];
         "project-id": number;
@@ -128,7 +128,7 @@ app.get("/about", async (_, res) => {
 });
 
 app.post("/login", async (req, res) => {
-    const { username, password } = await useBody<{
+    const { username, password } = await readBody<{
         username: string;
         password: string;
     }>(req as CompatibilityEvent);
