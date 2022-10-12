@@ -19,7 +19,7 @@ export function sendUnauthorized(res: ServerResponse): void {
 
 export function sendError(
     res: ServerResponse,
-    message = "an error occured",
+    message: string,
     errorCode: ErrorCode,
 ): void {
     res.statusCode = errorCode;
