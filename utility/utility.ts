@@ -109,9 +109,6 @@ export interface TimeConfig {
 
 export function timeInSeconds(config: TimeConfig): number {
     const millis = timeInMillis(config);
-    if (millis === 0) {
-        return millis;
-    }
 
     return millis / 1000;
 }
