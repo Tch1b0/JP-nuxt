@@ -1,11 +1,11 @@
 import { timeInMillis, TimeConfig } from "./utility";
 
-interface CacheValue<T> {
+interface CacheValue<T = unknown> {
     value: T;
     lastComputed: number;
 }
 
-const cachedValues = new Map<string, CacheValue<unknown>>();
+const cachedValues = new Map<string, CacheValue>();
 
 export function getTimestamp(): number {
     return new Date().getTime();
