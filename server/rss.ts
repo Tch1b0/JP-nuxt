@@ -59,8 +59,8 @@ async function createXmlResponse(): Promise<string> {
 }
 
 // respond with the rss feed
-export default async (_: IncomingMessage, res: ServerResponse) => {
-    res.setHeader("Content-Type", "text/xml");
+export default eventHandler(async (e) => {
+    e.res.setHeader("Content-Type", "text/xml");
 
     const xmlResponse = await cacheValue(
         "rss-feed",
@@ -68,5 +68,5 @@ export default async (_: IncomingMessage, res: ServerResponse) => {
         { minutes: 5 },
     );
 
-    res.end(xmlResponse);
-};
+    e.res.end(xmlResponse);
+});

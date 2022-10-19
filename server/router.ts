@@ -1,9 +1,7 @@
+import type { H3Event } from "h3";
 import type { IncomingMessage, ServerResponse } from "http";
 
-type RequestCallback = (
-    req: IncomingMessage,
-    res: ServerResponse,
-) => Promise<void> | void;
+type RequestCallback = (event: H3Event) => Promise<void> | void;
 
 export type ErrorCode = 500 | 404;
 
@@ -46,14 +44,14 @@ export default class Router {
         ["DELETE", new Map([])],
     ]);
 
-    async handle(req: IncomingMessage, res: ServerResponse) {
-        const url = "/" + req.url.split("/")[1];
+    async handle(e: H3Event) {
+        const url = "/" + e.req.url.split("/")[1];
 
-        if (this.handlers.get(req.method).has(url)) {
-            await this.handlers.get(req.method).get(url)(req, res);
+        if (this.handlers.get(e.req.method).has(url)) {
+            await this.handlers.get(e.req.method).get(url)(e);
         } else {
-            res.statusCode = 404;
-            res.end();
+            e.res.statusCode = 404;
+            e.res.end();
         }
     }
 
