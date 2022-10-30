@@ -114,7 +114,7 @@ function render() {
     try {
         tableOfContents = createTableOfContents(props.content);
     } catch (err) {
-        console.warn(`table of content could not be generated: ${err}`)
+        console.warn(`table of content could not be generated: ${err}`);
     }
 
     const htmlArticle = markdownParser.render(`# Content
