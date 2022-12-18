@@ -18,7 +18,7 @@ useHead({
 
 const projects = await getProjectMetas();
 
-const rawTopics = [];
+const rawTopics = [] as string[];
 const topics: Array<{ text: string; style: string[] }> = [];
 
 for (const project of projects) {

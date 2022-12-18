@@ -93,6 +93,10 @@ app.post("/article", async (e) => {
         "project-id": number;
     }>(e);
     const project = projectCollection.getProjectById(projectId);
+    if (project === undefined) {
+        sendError(e.res, "Article not found", 404);
+        return;
+    }
     project.addArticle(content, images);
     projectCollection.save();
     e.res.end("Ok");
@@ -113,6 +117,10 @@ app.put("/article", async (e) => {
         "project-id": number;
     }>(e);
     const project = projectCollection.getProjectById(projectId);
+    if (project === undefined) {
+        sendError(e.res, "Article not found", 404);
+        return;
+    }
     project.updateArticle(content, images);
     projectCollection.save();
     e.res.end("Ok");
@@ -160,10 +168,14 @@ app.delete("/article", async (e) => {
         sendUnauthorized(e.res);
         return;
     }
-    const { "project-id": projectId } = await useBody<{ "project-id": number }>(
-        e,
-    );
+    const { "project-id": projectId } = await readBody<{
+        "project-id": number;
+    }>(e);
     const project = projectCollection.getProjectById(projectId);
+    if (project === undefined) {
+        sendError(e.res, "Article not found", 404);
+        return;
+    }
     project.deleteArticle();
     projectCollection.save();
     e.res.end("Ok");

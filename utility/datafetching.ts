@@ -97,5 +97,9 @@ async function getFromApi<Response>(key: string, route: string) {
         },
     );
 
+    if (response.data.value === null) {
+        throw new Error("Impossible");
+    }
+
     return response.data.value;
 }

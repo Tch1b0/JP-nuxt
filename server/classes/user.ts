@@ -9,7 +9,7 @@ import { readFileSync, existsSync } from "node:fs";
 export class User {
     username: string;
     password: string;
-    token: string;
+    token!: string;
     description = "";
 
     /**
@@ -73,14 +73,16 @@ export class User {
         }
     }
 
-    public toJSON(): object {
+    public toJSON() {
         return {
             username: this.username,
             password: this.password,
         };
     }
 
-    public static fromJSON(json: object): User {
+    public static fromJSON(
+        json: ReturnType<typeof User.prototype.toJSON>,
+    ): User {
         return new User(json["username"], json["password"]);
     }
 }

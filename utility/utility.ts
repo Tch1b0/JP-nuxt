@@ -31,10 +31,10 @@ export function getAuthCookie() {
  */
 export async function validate(): Promise<boolean> {
     const auth = getAuthCookie();
-    if (auth.value === undefined) return false;
+    if (auth.value === undefined || auth.value === null) return false;
 
     const token = auth.value.replace(/^Bearer /, "");
-    let valid: boolean;
+    let valid = false;
     await $fetch("/api/validate", { method: "POST", body: { token } })
         .then(() => (valid = true))
         .catch(() => (valid = false));

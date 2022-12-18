@@ -95,15 +95,10 @@ const projectId = Number(useRoute().params.project);
 const project = await getProject(projectId);
 useHead({
     title: `Johannes Pour - Edit ${project.name}`,
-    meta: [
-        {
-            description: project.description,
-        },
-    ],
 });
 
 // the token to create/edit/delete a post
-const token = getAuthCookie().value.replace(/^Bearer /, "");
+const token = getAuthCookie().value?.replace(/^Bearer /, "");
 
 // make article object reactive
 const content = reactive(ref(""));
@@ -119,7 +114,7 @@ let exists = reactive(ref(false));
 
 content.value = project?.article?.content ?? "";
 images.value = project?.article?.images ?? [];
-exists.value = project?.article !== undefined;
+exists.value = project?.article !== undefined ?? false;
 
 function handleArticle() {
     exists.value ? editArticle() : createArticle();
@@ -147,10 +142,10 @@ async function articleAction(
         method: string;
         body: object;
     },
-    success: () => any,
-    fail: () => any,
+    success: () => void,
+    fail: () => void,
 ): Promise<boolean> {
-    let failed: boolean;
+    let failed = false;
     await $fetch("/api/article", options)
         .then(() => (failed = false))
         .catch(() => (failed = true));

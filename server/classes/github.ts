@@ -36,8 +36,8 @@ export interface Profile {
 
 export default class GitHub {
     username: string;
-    _repos: Repository[];
-    _profile: Profile;
+    _repos!: Repository[];
+    _profile!: Profile;
     api: Octokit;
     events = new EventEmitter();
 
@@ -52,9 +52,11 @@ export default class GitHub {
         }, timeInMillis({ minutes: 10 }));
     }
 
-    on(
-        event: "profileFetch" | "reposFetch",
-        listener: (arg: Profile | Repository[]) => void,
+    on<T extends string | symbol = "profileFetch" | "reposFetch">(
+        event: T,
+        listener: (
+            arg: T extends "profileFetch" ? Profile : Repository[],
+        ) => void,
     ) {
         this.events.on(event, listener);
     }

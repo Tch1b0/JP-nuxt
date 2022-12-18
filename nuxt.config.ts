@@ -1,32 +1,33 @@
-import { defineNuxtConfig } from "nuxt";
-
 // https://v3.nuxtjs.org/docs/directory-structure/nuxt.config
 export default defineNuxtConfig({
     css: ["@/assets/styles/styles.css"],
-    serverMiddleware: [
+    serverHandlers: [
         {
-            path: "/api/",
             handler: "~/server/api.ts",
+            route: "/api/",
         },
         {
-            path: "/feed",
             handler: "~/server/rss.ts",
+            route: "/feed",
         },
     ],
-    meta: {
-        link: [
-            {
-                rel: "alternate",
-                type: "application/rss+xml",
-                title: "johannespour.de",
-                href: "/feed",
-            },
-        ],
+    app: {
+        head: {
+            meta: [
+                {
+                    property: "link",
+                    "data-rel": "alternate",
+                    "data-type": "application/rss+xml",
+                    "data-title": "johannespour.de",
+                    "data-href": "/feed",
+                },
+            ],
+        },
+    },
+    postcss: {
+        config: require("./postcss.config.js"),
     },
     build: {
-        postcss: {
-            postcssOptions: require("./postcss.config.js"),
-        },
         transpile: ["chart.js"],
     },
     ssr: true,

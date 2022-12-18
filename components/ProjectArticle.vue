@@ -12,7 +12,7 @@ const props = defineProps({
         required: true,
     },
 });
-watch(props, () => render());
+watch(reactive(props), () => render());
 
 const markdownContent = ref("");
 
@@ -28,6 +28,10 @@ function urify(str: string): string {
     return newStr;
 }
 
+function isUndefined(x: unknown): x is undefined {
+    return x === undefined;
+}
+
 function createTableOfContents(content: string): string {
     // create a new table
     let table = "";
@@ -35,6 +39,7 @@ function createTableOfContents(content: string): string {
     // iterate over every level 1 heading
     for (const h1Raw of content.matchAll(/# ([\s\S])*?(?=([^#]# |$))/g)) {
         // Get the content of the title
+        // @ts-ignore
         const h1 = h1Raw
             .toString()
             .split("\n")
@@ -49,6 +54,7 @@ function createTableOfContents(content: string): string {
             .toString()
             .matchAll(/## ([\s\S])*?(?=([^#]## |$|[^#]# ))/g)) {
             // Get the content of the title
+            // @ts-ignore
             const h2 = h2Raw
                 .toString()
                 .split("\n")
@@ -63,6 +69,7 @@ function createTableOfContents(content: string): string {
                 .toString()
                 .matchAll(/### ([\s\S])*?(?=([^#]### |$|[^#]#?# ))/g)) {
                 // Get the content of the title
+                // @ts-ignore
                 const h3 = h3Raw
                     .toString()
                     .split("\n")
@@ -110,16 +117,19 @@ function render() {
         html: true,
     });
 
+    // props.content may be type of Ref or string
+    const propContent = props.content;
+
     let tableOfContents: string | undefined;
     try {
-        tableOfContents = createTableOfContents(props.content);
+        tableOfContents = createTableOfContents(propContent);
     } catch (err) {
         console.warn(`table of content could not be generated: ${err}`);
     }
 
     const htmlArticle = markdownParser.render(`# Content
 ${tableOfContents ?? ""}
-${props.content}`);
+${propContent}`);
 
     markdownContent.value = addIdsToHeadings(htmlArticle);
 
@@ -131,6 +141,4 @@ ${props.content}`);
 }
 
 render();
-console.log("MARKDOWN CONTENT:");
-console.log(markdownContent.value);
 </script>

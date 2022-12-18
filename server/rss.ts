@@ -1,4 +1,3 @@
-import { IncomingMessage, ServerResponse } from "http";
 import { github, projectCollection } from "./api";
 import jstoxml from "jstoxml";
 const { toXML } = jstoxml;
@@ -15,7 +14,7 @@ const url = "johannespour.de";
 async function createRssPosts(profile: Profile): Promise<object> {
     const rssPosts = [];
     for (const project of projectCollection.projects) {
-        if (project.article === undefined) continue;
+        if (project?.article?.content === undefined) continue;
         rssPosts.push({
             item: {
                 title: project.name,

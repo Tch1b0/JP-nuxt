@@ -21,11 +21,7 @@ export default class ProjectCollection {
     saveable: boolean;
     migrationRanOnce = false;
 
-    constructor(
-        projects?: Project[],
-        loadable: boolean = undefined,
-        saveable: boolean = undefined,
-    ) {
+    constructor(projects?: Project[], loadable?: boolean, saveable?: boolean) {
         this.projects = projects ?? [];
         const isProduction = process.env.NODE_ENV === "production";
         this.loadable = loadable ?? isProduction;
@@ -125,7 +121,9 @@ export default class ProjectCollection {
      * @param json the json to create the project collection from
      * @returns a project collection
      */
-    static fromJSON(json: object[]): ProjectCollection {
+    static fromJSON(
+        json: ReturnType<typeof Project.prototype.toJSON>[],
+    ): ProjectCollection {
         const collection = new ProjectCollection();
         collection.projects = json.map((project) => Project.fromJSON(project));
         return collection;

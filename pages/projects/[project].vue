@@ -13,7 +13,7 @@
             <div
                 class="flex-2 ml-5 shadow-md lg:ml-28 mt-5 bg-gray-800 w-11/12 lg:w-7/12 rounded-lg">
                 <project-article
-                    :content="project.article.content"></project-article>
+                    :content="project.article!.content!"></project-article>
             </div>
             <div class="flex-1 m-5 gap-3">
                 <div
