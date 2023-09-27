@@ -82,6 +82,7 @@ async function getFromApi<Response extends object | string | number>(
 ) {
     const response = await useAsyncData<Response>(
         key,
+        // @ts-ignore skip the type checking for the next line, because it would result with a recursion error
         () => $fetch(`/api/${route}`),
         {
             transform(data) {
