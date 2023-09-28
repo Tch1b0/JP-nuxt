@@ -107,7 +107,7 @@ useHead({
 const token = getAuthCookie().value.replace(/^Bearer /, "");
 
 // make article object reactive
-const content = reactive(ref(""));
+const content = ref("");
 
 const newImage = ref("");
 const images = ref<string[]>([]);
