@@ -121,13 +121,17 @@ function render() {
 ${tableOfContents ?? ""}
 ${props.content}`);
 
-    markdownContent.value = addIdsToHeadings(htmlArticle);
+    try {
+        markdownContent.value = addIdsToHeadings(htmlArticle);
 
-    // Add a horizontal line beneath every </h1>
-    markdownContent.value = markdownContent.value.replace(
-        /<\/h1>/g,
-        "</h1>\n<hr>",
-    );
+        // Add a horizontal line beneath every </h1>
+        markdownContent.value = markdownContent.value.replace(
+            /<\/h1>/g,
+            "</h1>\n<hr>",
+        );
+    } catch (err) {
+        console.warn(`id's could not be added to headings: ${err}`);
+    }
 }
 
 render();
