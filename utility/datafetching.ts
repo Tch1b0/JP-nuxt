@@ -59,6 +59,10 @@ export async function getProjectIds(): Promise<number[]> {
     return await getFromApi<number[]>("project-ids", "project-ids");
 }
 
+function ensureExtendsObject(obj: any): obj is object {
+    return true;
+}
+
 /**
  * request a ressource from the local API
  * @param key the key of the request
@@ -72,16 +76,26 @@ export async function getProjectIds(): Promise<number[]> {
  *
  * @returns the response of the request as the type `Response`
  */
-async function getFromApi<Response>(key: string, route: string) {
+async function getFromApi<Response extends object | string | number>(
+    key: string,
+    route: string,
+) {
     const response = await useAsyncData<Response>(
         key,
         // @ts-ignore skip the type checking for the next line, because it would result with a recursion error
         () => $fetch(`/api/${route}`),
         {
             transform(data) {
+                // this is a special case that is used for parsing articles into the object the right way
+                // it is kinda hard to read, so
+                // TODO: simplify all of this
+
+                // skip if the data is just a normal value
                 if (typeof data === "string" || typeof data === "number") {
                     return data;
-                } else if (data instanceof Array) {
+                }
+                // if this data is an array, it might contain articles, so look through it
+                else if (data instanceof Array) {
                     for (const val of data) {
                         if ("article" in val) {
                             val["article"] = articleResponseToArticle(
@@ -89,8 +103,10 @@ async function getFromApi<Response>(key: string, route: string) {
                             );
                         }
                     }
-                } else if ("article" in data) {
-                    data["article"] = articleResponseToArticle(data["article"]);
+                } else if (ensureExtendsObject(data) && "article" in data) {
+                    // ensure typescript that the `article` key IS contained
+                    const obj: Response | { article: Article } = data;
+                    data["article"] = articleResponseToArticle(obj["article"]);
                 }
                 return data;
             },

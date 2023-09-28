@@ -31,7 +31,9 @@ const birthdate = "04/18/2005";
 const age = calculateAge(new Date(birthdate));
 const description = await getAbout();
 const renderedDescription = basicMdToHtml(
-    description.replace(/\{\{ ?age ?\}\}/, age.toString()),
+    description
+        .replace(/\{\{ ?age ?\}\}/, age.toString())
+        .replace(/\{\{ ?a-age ?\}\}/, age === 18 ? "an" : "a"),
 );
 
 const profile = await getProfile();

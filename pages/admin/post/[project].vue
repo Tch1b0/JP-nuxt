@@ -97,7 +97,8 @@ useHead({
     title: `Johannes Pour - Edit ${project.name}`,
     meta: [
         {
-            description: project.description,
+            name: "description",
+            content: project.description,
         },
     ],
 });
@@ -147,8 +148,8 @@ async function articleAction(
         method: string;
         body: object;
     },
-    success: () => any,
-    fail: () => any,
+    success: () => void,
+    fail: () => void,
 ): Promise<boolean> {
     let failed: boolean;
     await $fetch("/api/article", options)
