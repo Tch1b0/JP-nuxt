@@ -8,6 +8,7 @@ import Router, {
 import { readBody, H3Event } from "h3";
 import { User } from "./classes/user";
 import ProjectCollection from "./classes/projectCollection";
+import { Project } from "./classes/project";
 
 const app = new Router();
 const admin = new User(
@@ -18,6 +19,8 @@ const admin = new User(
 export const github = new GitHub(process.env["GH_USERNAME"] || "Tch1b0");
 
 export const projectCollection = new ProjectCollection();
+
+let latestProject: Project | null;
 
 /**
  * validate that the user is authenticated
@@ -45,6 +48,15 @@ app.get("/project", (e) => {
     const project = projectCollection.getProjectById(id);
     if (!project) {
         sendError(e.res, "Project not found", 404);
+        return;
+    }
+    sendJson(e.res, project.toJSON());
+});
+
+app.get("/project-latest", (e) => {
+    const project = latestProject ?? projectCollection.getRandomProject();
+    if (!project) {
+        sendError(e.res, "No projects found", 404);
         return;
     }
     sendJson(e.res, project.toJSON());
@@ -95,6 +107,7 @@ app.post("/article", async (e) => {
     const project = projectCollection.getProjectById(projectId);
     project.addArticle(content, images);
     projectCollection.save();
+    latestProject = project;
     e.res.end("Ok");
 });
 

@@ -27,6 +27,15 @@ export async function getProject(id: number | string): Promise<Project> {
     return project;
 }
 
+export async function getLatestProjectMeta(): Promise<Project> {
+    const project = await getFromApi<Project>(
+        `project-latest`,
+        `project-latest`,
+    );
+
+    return project;
+}
+
 export async function getProjects(): Promise<Project[]> {
     const projects = await getFromApi<Project[]>("projects", "projects");
 

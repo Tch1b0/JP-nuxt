@@ -90,6 +90,15 @@ export default class ProjectCollection {
         return this.projects.find((project) => project.id === id);
     }
 
+    getRandomProject(): Project {
+        const projectsWithArticle = this.projects.filter(
+            (p) => p.article !== null && p.article !== undefined,
+        );
+        return projectsWithArticle[
+            Math.floor(Math.random() * projectsWithArticle.length)
+        ];
+    }
+
     /**
      * checks if there are outdated posts to migrate, and migrates them
      */
