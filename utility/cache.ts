@@ -29,7 +29,7 @@ export function getTimestamp(): number {
  */
 export async function cacheValue<T>(
     name: string,
-    callback: (() => T) | (() => Promise<T>),
+    compute: (() => T) | (() => Promise<T>),
     time: TimeConfig,
 ): Promise<T> {
     const now = getTimestamp();
@@ -40,7 +40,7 @@ export async function cacheValue<T>(
         cachedVal.lastComputed + timeInMillis(time) <= now
     ) {
         cachedVal = {
-            value: await callback(),
+            value: await compute(),
             lastComputed: now,
         };
 
