@@ -15,20 +15,30 @@
             </div>
         </div>
         <div class="flex justify-center items-center mb-5">
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-3 gap-4">
                 <simple-button @clicked="$router.push('/projects')">
                     All Projects
                 </simple-button>
                 <simple-button @clicked="$router.push('/projects/topics')"
                     >All Topics</simple-button
                 >
+                <simple-button @clicked="$router.push('/impressum')"
+                    >Impressum</simple-button
+                >
             </div>
         </div>
+
+        <!-- Padding. Yeah I know I shouldn't use <br />, but who will stop me? -->
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
     </div>
 </template>
 
 <script setup lang="ts">
-import { getProjectMetas, projectSort } from "~~/utility";
+import { getProjectMetas, projectSort, getLatestProjectMeta } from "~~/utility";
 
 useHead({
     title: "Johannes Pour - German Developer",
@@ -39,8 +49,10 @@ useHead({
         },
     ],
 });
-const projects = (await getProjectMetas()).sort(projectSort).reverse();
+let allProjects = (await getProjectMetas()).sort(projectSort).reverse();
+const latestProject = await getLatestProjectMeta();
 
-// Only take the first 3 projects
-projects.splice(3);
+allProjects = allProjects.filter((v) => v.id !== latestProject.id);
+
+let projects = [latestProject, allProjects[0], allProjects[1]];
 </script>
