@@ -35,6 +35,7 @@ describe("Visit Site as a User", () => {
 
     it("Visit /impressum", () => {
         cy.visit("/");
+        cy.wait(1000);
         cy.contains("Impressum").click();
         cy.url().should("include", "/impressum");
     });

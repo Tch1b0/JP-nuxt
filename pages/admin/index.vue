@@ -28,7 +28,7 @@ const profile = await getProfile();
 const projects = await getProjectMetas();
 
 const totalViews =
-    projects.length != 0
+    projects.length !== 0
         ? projects
               .map((project) => project?.article?.viewCount ?? 0)
               .reduce((a, b) => a + b)

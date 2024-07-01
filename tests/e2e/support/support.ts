@@ -2,7 +2,7 @@
 // @ts-ignore
 Cypress.Commands.add("login", () => {
     cy.visit("/admin/login");
-    cy.wait(200);
+    cy.wait(1000);
     cy.fixture("admin").then((credentials) => {
         cy.get("input").first().type(credentials["username"]);
         cy.get("input").last().type(credentials["password"]);

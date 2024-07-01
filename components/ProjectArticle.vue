@@ -18,10 +18,13 @@ const markdownContent = ref("");
 
 function urify(str: string): string {
     let newStr = "";
+    const whitespaceRegEx = / /;
+    const nonSpecialRegEx = /[^\.\!\?\*]/;
+
     for (const s of str) {
-        if (/ /.test(s)) {
+        if (whitespaceRegEx.test(s)) {
             newStr += "-";
-        } else if (/[^\.\!\?\*]/.test(s)) {
+        } else if (nonSpecialRegEx.test(s)) {
             newStr += s.toLowerCase();
         }
     }
