@@ -2,7 +2,7 @@ import { github, projectCollection } from "./api";
 import jstoxml from "jstoxml";
 const { toXML } = jstoxml;
 import { basicMdToHtml, cacheValue } from "~~/utility";
-import { Profile } from "./classes/github";
+import type { Profile } from "./classes/github";
 
 const url = "johannespour.de";
 
@@ -14,7 +14,11 @@ const url = "johannespour.de";
 async function createRssPosts(profile: Profile): Promise<object> {
     const rssPosts = [];
     for (const project of projectCollection.projects) {
-        if (project.article === undefined) continue;
+        if (
+            project.article === undefined ||
+            project.article.content === undefined
+        )
+            continue;
         rssPosts.push({
             item: {
                 title: project.name,
