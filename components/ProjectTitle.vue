@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { Project } from "~~/utility";
+import type { Project } from "~~/utility";
 
 defineProps<{
     project: Project;
